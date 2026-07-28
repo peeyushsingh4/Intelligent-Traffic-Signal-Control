@@ -1,0 +1,20 @@
+<configuration>
+    <input>
+        <net-file value="../network/vashi_navimumbai.net.xml"/>
+        <route-files value="../routes/vashi_navimumbai.rou.xml"/>
+        <additional-files value="../additional/detectors.add.xml"/>
+    </input>
+    <time>
+        <begin value="0"/>
+        <end value="3600"/>
+        <step-length value="0.5"/>
+    </time>
+    <output>
+        <emission-output value="../output/emissions/vashi_navimumbai_emissions.xml"/>
+        <tripinfo-output value="../output/tripinfo/vashi_navimumbai_tripinfo.xml"/>
+        <statistic-output value="../output/statistics/vashi_navimumbai_statistics.xml"/>
+    </output>
+    <processing>
+        <lateral-resolution value="0.8"/>
+    </processing>
+</configuration>

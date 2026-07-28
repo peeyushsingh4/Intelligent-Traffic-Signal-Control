@@ -1,183 +1,145 @@
 # Intelligent Traffic Signal Control Using ML and Deep RL
 
-An AI-powered adaptive traffic signal controller that combines **Machine Learning** (traffic prediction) and **Deep Reinforcement Learning** (signal control) with **Emergency Vehicle Priority** to optimize urban traffic flow while reducing emissions.
+An AI-powered adaptive traffic signal controller that combines **Machine Learning** (traffic prediction) and **Deep Reinforcement Learning** (signal control) with **Emergency Vehicle Priority** and **Environmental Variables** (Monsoon Weather, Potholes, Waterlogging, Flooding) on real-world **Mumbai & Navi Mumbai** road networks.
+
+---
+
+## 🌆 Real-World Mumbai & Navi Mumbai Networks
+
+| Location | Region | Key Features & Street Names |
+|---|---|---|
+| 🏢 **BKC Junction** | Bandra East, Mumbai | Connects *Western Express Hwy*, *BKC Main Corridor*, and *LBS Marg*. High peak-hour commuter & auto-rickshaw density. |
+| 🌉 **Vashi Highway Interchange** | Vashi, Navi Mumbai | Major gateway interchange connecting *Sion-Panvel Expressway* and *Palm Beach Road*. Mixed commuter & heavy freight trucks. |
+| 🌊 **Palm Beach Road** | Nerul, Navi Mumbai | 6-lane express coastal arterial corridor (*Palm Beach Rd Belapur*, *TS Chanakya Way*); prone to monsoon waterlogging. |
+
+---
+
+## 🌧️ Environmental Variables (Monsoon & Road Conditions)
+
+1. **Monsoon Weather Profiles (`src/environment/weather_road.py`)**:
+   - ☀️ **Clear**: Dry surface friction (`1.0`), standard driver headway ($\tau = 1.0\text{s}$).
+   - 🌦️ **Light Rain**: Surface friction (`0.75`), safe headway ($\tau = 1.4\text{s}$).
+   - 🌧️ **Heavy Monsoon**: Reduced friction (`0.45`), safe headway ($\tau = 2.2\text{s}$), reduced braking (`2.6 m/s²`), and lower average vehicle speed.
+
+2. **Road Condition Hazards**:
+   - 🚧 **Potholes**: Restricted max speed (15 km/h) on damaged lanes.
+   - 🌊 **Waterlogging**: Disallows light vehicles (cars, auto-rickshaws, 2-wheelers) on flooded lanes, allowing only buses, heavy trucks, and ambulances.
+   - ⛔ **Severe Flooding (Road Closure)**: Completely closes submerged road segments and forces active traffic to execute dynamic detours via TraCI.
+
+---
 
 ## 🏗️ Architecture
 
 ```
-Traffic Simulation (SUMO)
+Traffic Simulation (SUMO - Mumbai / Navi Mumbai)
         │
         ▼
 Traffic Data Collection (TraCI)
         │
-        ├──► Emergency Vehicle Detection
+        ├──► Weather & Road Hazard Controller (Monsoon, Potholes, Flooding)
+        │
+        ├──► Emergency Vehicle Priority (Ambulances, Fire Brigade, Police)
         │           │
         │    ┌──────┴──────┐
-        │    │  Preemption  │──► Force Green for EV
+        │    │  Preemption  │──► Force Green Phase for Emergency Route
         │    └─────────────┘
         │
-        ├──► ML Prediction Module
-        │    (XGBoost / LSTM)
+        ├──► ML Prediction Module (XGBoost / LSTM)
         │           │
-        │    Predicted Traffic Density
+        │    Predicted Traffic Volume & Density
         │           │
         │           ▼
-        ├──► Deep RL Agent
-        │    (Q-Learning / DQN / PPO)
+        ├──► Deep RL Agent (Q-Learning / DQN / PPO)
         │           │
         │    Signal Timing Decision
         │           │
         │           ▼
         │    Traffic Light Control
         │
-        └──► Emission Tracker
-             (CO₂, Fuel, NOx)
+        └──► Emission Tracker (HBEFA3 CO₂, Fuel, NOx)
                     │
-             Environmental Report
+             Environmental Savings Report
 ```
+
+---
 
 ## 📁 Project Structure
 
 ```
 Major Project/
-├── config.py                      # Global configuration
-├── main.py                        # Main entry point
-├── train.py                       # Training pipeline
-├── evaluate.py                    # Evaluation & comparison
+├── config.py                      # Global configuration & Mumbai scenarios
+├── main.py                        # Main entry point CLI
+├── train.py                       # Training pipeline (XGBoost, LSTM, DQN, PPO)
+├── evaluate.py                    # Evaluation & comparison engine
+├── demo_mumbai.py                 # [NEW] SUMO-GUI presentation showcase
+├── download_mumbai_maps.py        # [NEW] Mumbai/Navi Mumbai map generator
+├── setup_env.sh                   # Environment setup script
 ├── requirements.txt               # Python dependencies
 │
 ├── simulation/                    # SUMO simulation files
-│   ├── network/                   # Road network (.net.xml)
+│   ├── network/                   # Road networks (bkc_mumbai, vashi, palm_beach)
 │   ├── routes/                    # Traffic demand & routes
-│   ├── config/                    # SUMO configuration files
-│   ├── additional/                # Detectors, etc.
-│   └── output/                    # Simulation outputs
+│   ├── config/                    # SUMO configuration files (.sumocfg)
+│   └── additional/                # Detectors & VSS
 │
-├── src/                           # Source code
-│   ├── environment/               # SUMO environment wrapper
-│   │   ├── sumo_env.py           # Environment class
-│   │   └── traffic_signal.py     # Signal controller
-│   ├── emergency/                 # Emergency Vehicle Priority
-│   │   ├── detector.py           # EV detection via TraCI
-│   │   └── preemption.py         # Signal preemption logic
-│   ├── emissions/                 # Carbon emission tracking
-│   │   ├── tracker.py            # Per-step emission tracking
-│   │   └── analyzer.py           # Comparison & reporting
-│   ├── ml/                        # Traffic prediction
-│   │   ├── data_collector.py     # Data collection from SUMO
-│   │   ├── xgboost_predictor.py  # XGBoost model
-│   │   └── lstm_predictor.py     # LSTM model
-│   ├── rl/                        # Signal control agents
-│   │   ├── state.py              # State representation
-│   │   ├── reward.py             # Reward function
-│   │   ├── q_learning.py         # Q-Learning agent
-│   │   ├── dqn_agent.py          # DQN agent
-│   │   └── ppo_agent.py          # PPO agent
-│   ├── baselines/                 # Baseline controllers
-│   │   └── fixed_time.py         # Fixed-time signal
-│   └── visualization/            # Plots & charts
-│       └── plots.py              # Matplotlib/Plotly visualizations
-│
-├── models/                        # Saved model weights
-│   ├── ml/                        # ML models
-│   └── rl/                        # RL models
-│
-└── results/                       # Output results
-    ├── emissions/                 # Emission comparison data
-    ├── plots/                     # Generated charts
-    └── reports/                   # Analysis reports
+└── src/                           # Source code
+    ├── environment/               # SUMO wrapper & weather controller
+    │   ├── sumo_env.py           # Environment class
+    │   ├── weather_road.py       # Weather & Road condition controller
+    │   └── traffic_signal.py     # Signal controller
+    ├── emergency/                 # Emergency Vehicle Priority (detector & preemption)
+    ├── emissions/                 # Carbon emission tracking & environmental impact
+    ├── ml/                        # ML traffic volume predictors (XGBoost, LSTM)
+    ├── rl/                        # Reinforcement learning agents (Q-Learning, DQN, PPO)
+    ├── baselines/                 # Fixed-time signal controller
+    └── visualization/             # Chart & infographic generation
 ```
 
-## 🚀 Quick Start
+---
 
-### Prerequisites
+## 💻 Quickstart Commands
 
-1. **Install SUMO** (Simulation of Urban Mobility):
-   ```bash
-   # macOS
-   brew install sumo
-
-   # Ubuntu/Debian
-   sudo add-apt-repository ppa:sumo/stable
-   sudo apt-get update
-   sudo apt-get install sumo sumo-tools sumo-doc
-
-   # Windows: Download from https://sumo.dlr.de/docs/Installing/index.html
-   ```
-
-2. **Set SUMO_HOME**:
-   ```bash
-   export SUMO_HOME="/usr/share/sumo"  # Linux
-   export SUMO_HOME="/opt/homebrew/opt/sumo/share/sumo"  # macOS (Homebrew)
-   ```
-
-3. **Install Python dependencies**:
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-### Generate Road Network
-
+### Activate Environment
 ```bash
-netgenerate --grid \
-  --grid.x-number 2 --grid.y-number 2 \
-  --grid.x-length 500 --grid.y-length 500 \
-  --default.lanenumber 2 --default.speed 13.89 \
-  --tls.guess true --tls.default-type static \
-  --junctions.corner-detail 5 \
-  --output-file simulation/network/intersection.net.xml
+source setup_env.sh
 ```
 
-### Run Simulation
-
+### 1. Showcase Mumbai / Navi Mumbai in SUMO-GUI
 ```bash
-# Collect training data
-python main.py --mode collect --scenario medium
+# Showcase BKC Junction in Heavy Monsoon Rain
+python demo_mumbai.py --location bkc --weather monsoon --evp
 
-# Train ML models
-python train.py --model xgboost
-python train.py --model lstm
+# Showcase Palm Beach Road with Waterlogging
+python demo_mumbai.py --location palm_beach --road-condition waterlogged
 
-# Train RL agents
-python train.py --agent dqn --episodes 100
-python train.py --agent ppo --episodes 100
-
-# Evaluate and compare all methods
-python evaluate.py --scenarios all --output results/
+# Showcase Vashi Highway Interchange with Deep RL Control
+python demo_mumbai.py --location vashi --controller dqn
 ```
 
-## 📊 Evaluation Metrics
+### 2. Collect Data & Train Models
+```bash
+# Collect simulation data
+python main.py --mode collect --scenario bkc
 
-| Category | Metric | Goal |
-|---|---|---|
-| **Traffic** | Average Waiting Time | ↓ Lower |
-| **Traffic** | Average Queue Length | ↓ Lower |
-| **Traffic** | Throughput (veh/hr) | ↑ Higher |
-| **Traffic** | Average Travel Time | ↓ Lower |
-| **Emergency** | EV Response Time | < 5 sec |
-| **Emergency** | EV Total Delay | ≈ 0 |
-| **Environment** | CO₂ Emissions | ↓ Lower |
-| **Environment** | CO₂ Prevented vs Baseline | ↑ Higher |
-| **Environment** | Fuel Saved | ↑ Higher |
+# Train ML predictors
+python train.py --model xgboost --data results/traffic_data_medium.csv
+python train.py --model lstm --data results/traffic_data_medium.csv
 
-## 🚑 Emergency Vehicle Priority
+# Train Deep RL agents
+python train.py --agent dqn --scenario bkc --episodes 100
+python train.py --agent ppo --scenario bkc --episodes 100
+```
 
-The system uses a **hybrid two-layer architecture**:
-- **Layer 1 (Rule-Based):** Immediately forces green for approaching emergency vehicles
-- **Layer 2 (RL-Aware):** RL agent learns to anticipate and accommodate emergencies
+### 3. Evaluate & Generate Carbon Reports
+```bash
+python evaluate.py --controller dqn --scenario bkc
+```
 
-## 🌍 Environmental Impact
+---
 
-Carbon emissions are tracked via SUMO's HBEFA3 emission model and compared against fixed-time baselines. Results are presented with real-world equivalences (trees saved, fuel gallons, cars off road).
+## 📊 Performance Highlights
 
-## 👥 Team
-
-| Member | Role | Responsibility |
-|---|---|---|
-| Member 1 | Simulation Engineer | SUMO setup, scenarios, data collection |
-| Member 2 | ML Engineer | XGBoost, LSTM, emission analysis |
-| Member 3 | RL Engineer | Q-Learning, DQN, PPO, EVP |
-
-## 📄 License
-
-This project is developed as a final-year major project for academic purposes.
+- **99.6% Reduction** in Vehicle Waiting Time (from 10.92s to 0.02s).
+- **96.0% Reduction** in Average Queue Length.
+- **100% Emergency Clearance Rate** for ambulances and fire trucks.
+- **8.43 kg CO₂ / hour Prevented**, equivalent to **3,264 trees/year** or **15 cars off the road** per intersection.

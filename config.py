@@ -295,6 +295,24 @@ TRAFFIC_SCENARIOS = {
         "veh_per_hour": 500,
         "description": "Medium traffic with emergency vehicles at t=120,300,500,800",
     },
+    "bkc": {
+        "name": "BKC Junction (Bandra East, Mumbai)",
+        "config": "simulation/config/bkc_mumbai.sumocfg",
+        "veh_per_hour": 800,
+        "description": "Real BKC Mumbai multi-lane junction with peak traffic & monsoon conditions",
+    },
+    "vashi": {
+        "name": "Vashi Highway Interchange (Navi Mumbai)",
+        "config": "simulation/config/vashi_navimumbai.sumocfg",
+        "veh_per_hour": 1000,
+        "description": "Real Vashi Navi Mumbai highway interchange with commuter & heavy freight traffic",
+    },
+    "palm_beach": {
+        "name": "Palm Beach Road (Nerul, Navi Mumbai)",
+        "config": "simulation/config/palm_beach_nerul.sumocfg",
+        "veh_per_hour": 600,
+        "description": "Real 6-lane Palm Beach express corridor with monsoon waterlogging & flood closures",
+    },
 }
 
 

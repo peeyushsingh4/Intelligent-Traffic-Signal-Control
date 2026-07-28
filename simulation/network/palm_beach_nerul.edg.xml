@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<edges>
+    <edge id="A0B0"  from="A0"  to="B0"  numLanes="3" speed="19.44" name="Palm Beach Rd Vashi"/>
+    <edge id="B0A0"  from="B0"  to="A0"  numLanes="3" speed="19.44" name="Palm Beach Rd Vashi Out"/>
+    <edge id="C0B0"  from="C0"  to="B0"  numLanes="3" speed="19.44" name="Palm Beach Rd Belapur"/>
+    <edge id="B0C0"  from="B0"  to="C0"  numLanes="3" speed="19.44" name="Palm Beach Rd Belapur Out"/>
+    <edge id="B1B0"  from="B1"  to="B0"  numLanes="3" speed="19.44" name="Nerul Sector 20 Ave"/>
+    <edge id="B0B1"  from="B0"  to="B1"  numLanes="3" speed="19.44" name="Nerul Sector 20 Ave Out"/>
+    <edge id="B-1B0" from="B-1" to="B0"  numLanes="3" speed="19.44" name="TS Chanakya Way"/>
+    <edge id="B0B-1" from="B0"  to="B-1" numLanes="3" speed="19.44" name="TS Chanakya Way Out"/>
+</edges>

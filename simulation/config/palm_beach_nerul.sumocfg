@@ -1,0 +1,20 @@
+<configuration>
+    <input>
+        <net-file value="../network/palm_beach_nerul.net.xml"/>
+        <route-files value="../routes/palm_beach_nerul.rou.xml"/>
+        <additional-files value="../additional/detectors.add.xml"/>
+    </input>
+    <time>
+        <begin value="0"/>
+        <end value="3600"/>
+        <step-length value="0.5"/>
+    </time>
+    <output>
+        <emission-output value="../output/emissions/palm_beach_nerul_emissions.xml"/>
+        <tripinfo-output value="../output/tripinfo/palm_beach_nerul_tripinfo.xml"/>
+        <statistic-output value="../output/statistics/palm_beach_nerul_statistics.xml"/>
+    </output>
+    <processing>
+        <lateral-resolution value="0.8"/>
+    </processing>
+</configuration>
