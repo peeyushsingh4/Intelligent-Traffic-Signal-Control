@@ -1,0 +1,35 @@
+# Virtual Environment
+venv/
+env/
+ENV/
+.venv
+
+# Python Bytecode & Caches
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+
+# SUMO Output Files
+*.xml.gz
+simulation/output/emissions/*.xml
+simulation/output/tripinfo/*.xml
+simulation/output/statistics/*.xml
+!simulation/output/emissions/.gitkeep
+!simulation/output/tripinfo/.gitkeep
+!simulation/output/statistics/.gitkeep
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# IDEs & Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Project Temporary Logs & Checkpoints
+*.log
+scratch/

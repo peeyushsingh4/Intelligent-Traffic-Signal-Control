@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+  Node definitions for a single 4-way intersection.
+  B0 is the center junction (traffic-light controlled).
+  A0=West, C0=East, B1=North, B-1=South (each 500m away).
+-->
+<nodes>
+    <node id="B0"  x="0.0"    y="0.0"    type="traffic_light"/>
+    <node id="A0"  x="-500.0" y="0.0"    type="priority"/>
+    <node id="C0"  x="500.0"  y="0.0"    type="priority"/>
+    <node id="B1"  x="0.0"    y="500.0"  type="priority"/>
+    <node id="B-1" x="0.0"    y="-500.0" type="priority"/>
+</nodes>

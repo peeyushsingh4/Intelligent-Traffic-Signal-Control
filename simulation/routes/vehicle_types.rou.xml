@@ -1,0 +1,7 @@
+<routes>
+    <vType id="car" vClass="passenger" maxSpeed="13.89" emissionClass="HBEFA3/PC_G_EU4"/>
+    <vType id="bus" vClass="bus" maxSpeed="11.11" emissionClass="HBEFA3/Bus"/>
+    <vType id="ambulance" vClass="emergency" guiShape="emergency" maxSpeed="38.89" has.bluelight.device="true"/>
+    <vType id="firetruck" vClass="emergency" guiShape="firebrigade" maxSpeed="33.33" has.bluelight.device="true"/>
+    <vType id="police" vClass="emergency" guiShape="police" maxSpeed="41.67" has.bluelight.device="true"/>
+</routes>

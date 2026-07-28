@@ -1,0 +1,8 @@
+CARBON EMISSION PREVENTION REPORT
+Generated at: 2026-07-28 22:28:57
+============================================================
+  controller   scenario  evp_enabled  total_steps  simulation_time_sec  wall_time_sec  avg_waiting_time  avg_queue_length  throughput  total_co2_kg  total_fuel_liters  co2_per_vehicle_g  ev_total_preemptions  ev_avg_response_time  ev_avg_delay  ev_avg_recovery_time
+0      fixed     medium         True         7402               3701.0      31.568169         10.919143          1.006350           1    250.756980       79847.580341      250756.979682                     0                   1.2           0.0                  12.5
+1        dqn     medium         True         7376               3688.0      29.098416          0.016066          0.036198           1    242.329949       77163.728940      242329.949124                     0                   1.2           0.0                  12.5
+2      fixed  emergency         True         7427               3713.5      32.417087         10.378821          0.933082           1    251.390376       80055.613330      251390.375832                     4                   1.2          29.5                  12.5
+3        dqn  emergency         True         7370               3685.0      29.805445          0.044573          0.041384           1    244.310379       77798.263211      244310.379198                     4                   1.2          29.5                  12.5

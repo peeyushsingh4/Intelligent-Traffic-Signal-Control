@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Edge definitions for a single 4-way intersection.
+  8 edges (bidirectional on each arm): W↔Center, E↔Center, N↔Center, S↔Center
+  Each edge: 2 lanes, 500m, speed limit 13.89 m/s (50 km/h)
+-->
+<edges>
+    <!-- West ↔ Center -->
+    <edge id="A0B0"  from="A0"  to="B0"  numLanes="2" speed="13.89"/>
+    <edge id="B0A0"  from="B0"  to="A0"  numLanes="2" speed="13.89"/>
+
+    <!-- East ↔ Center -->
+    <edge id="C0B0"  from="C0"  to="B0"  numLanes="2" speed="13.89"/>
+    <edge id="B0C0"  from="B0"  to="C0"  numLanes="2" speed="13.89"/>
+
+    <!-- North ↔ Center -->
+    <edge id="B1B0"  from="B1"  to="B0"  numLanes="2" speed="13.89"/>
+    <edge id="B0B1"  from="B0"  to="B1"  numLanes="2" speed="13.89"/>
+
+    <!-- South ↔ Center -->
+    <edge id="B-1B0" from="B-1" to="B0"  numLanes="2" speed="13.89"/>
+    <edge id="B0B-1" from="B0"  to="B-1" numLanes="2" speed="13.89"/>
+</edges>

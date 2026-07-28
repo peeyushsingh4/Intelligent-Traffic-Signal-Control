@@ -1,0 +1,18 @@
+<additional>
+    <!-- Detectors 100m before intersection (pos=400.0 on 500m roads) -->
+    <!-- West approach (A0B0) -->
+    <e1Detector id="det_A0B0_0" lane="A0B0_0" pos="400.0" freq="60" file="../output/detectors_output.xml"/>
+    <e1Detector id="det_A0B0_1" lane="A0B0_1" pos="400.0" freq="60" file="../output/detectors_output.xml"/>
+
+    <!-- East approach (C0B0) -->
+    <e1Detector id="det_C0B0_0" lane="C0B0_0" pos="400.0" freq="60" file="../output/detectors_output.xml"/>
+    <e1Detector id="det_C0B0_1" lane="C0B0_1" pos="400.0" freq="60" file="../output/detectors_output.xml"/>
+
+    <!-- North approach (B1B0) -->
+    <e1Detector id="det_B1B0_0" lane="B1B0_0" pos="400.0" freq="60" file="../output/detectors_output.xml"/>
+    <e1Detector id="det_B1B0_1" lane="B1B0_1" pos="400.0" freq="60" file="../output/detectors_output.xml"/>
+
+    <!-- South approach (B-1B0) -->
+    <e1Detector id="det_B-1B0_0" lane="B-1B0_0" pos="400.0" freq="60" file="../output/detectors_output.xml"/>
+    <e1Detector id="det_B-1B0_1" lane="B-1B0_1" pos="400.0" freq="60" file="../output/detectors_output.xml"/>
+</additional>
