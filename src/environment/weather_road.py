@@ -3,7 +3,7 @@ Weather & Road Condition Controller for SUMO Simulation.
 
 Models environmental variables:
 1. Monsoon Weather (Clear, Light Rain, Heavy Monsoon)
-   - Friction surface reduction (1.0 -> 0.45)
+   - Vehicle type friction surface reduction (1.0 -> 0.45)
    - Safe driver headway tau increase (1.0s -> 2.2s)
    - Deceleration/braking reduction (4.5 -> 2.6 m/s²)
    - Speed factor reduction (1.0 -> 0.70)
@@ -60,20 +60,13 @@ class WeatherRoadController:
         self.current_weather = condition
 
         try:
-            # 1. Update lane surface friction across network
-            for lane_id in traci.lane.getIDList():
-                try:
-                    traci.lane.setFriction(lane_id, params["friction"])
-                except traci.exceptions.TraCIException:
-                    pass
-
-            # 2. Update vehicle type driver behaviors
+            # Update vehicle type driver behaviors & surface friction
             for vtype_id in traci.vehicletype.getIDList():
                 try:
                     traci.vehicletype.setTau(vtype_id, params["tau"])
                     traci.vehicletype.setDecel(vtype_id, params["decel"])
                     traci.vehicletype.setSpeedFactor(vtype_id, params["speed_factor"])
-                except traci.exceptions.TraCIException:
+                except Exception:
                     pass
 
             print(f"  🌧️ [WEATHER CHANGE] Environment set to '{condition}': "
@@ -111,14 +104,12 @@ class WeatherRoadController:
                 lane_id = f"{edge_id}_{i}"
                 traci.lane.setDisallowed(lane_id, ["all"])
 
-            # High travel time penalty for routing engine
             traci.edge.setAdaptationWeight(edge_id, 999999.0)
 
-            # Reroute active vehicles
             for veh_id in traci.vehicle.getIDList():
                 try:
                     traci.vehicle.rerouteTraveltime(veh_id)
-                except traci.exceptions.TraCIException:
+                except Exception:
                     pass
 
             if edge_id not in self.flooded_edges:

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Interactive SUMO-GUI Presentation Showcase for Mumbai & Navi Mumbai.
+Interactive SUMO Presentation Showcase for Mumbai & Navi Mumbai.
 
 Usage:
   python demo_mumbai.py --location bkc --weather monsoon --evp
@@ -43,7 +43,7 @@ LOCATIONS = {
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description="SUMO-GUI Showcase for Mumbai & Navi Mumbai")
+    parser = argparse.ArgumentParser(description="SUMO Showcase for Mumbai & Navi Mumbai")
     parser.add_argument("--location", choices=["bkc", "vashi", "palm_beach"], default="bkc",
                         help="Location: bkc (Mumbai), vashi (Navi Mumbai), palm_beach (Navi Mumbai)")
     parser.add_argument("--weather", choices=["clear", "light_rain", "monsoon"], default="monsoon",
@@ -54,8 +54,10 @@ def parse_args():
                         help="Traffic light controller")
     parser.add_argument("--evp", action="store_true", default=True,
                         help="Enable Emergency Vehicle Priority preemption")
-    parser.add_argument("--delay", type=float, default=0.1,
-                        help="Visualization delay step in seconds for presentation viewing")
+    parser.add_argument("--gui", action="store_true", default=False,
+                        help="Force SUMO-GUI mode (requires X11/XQuartz on macOS)")
+    parser.add_argument("--delay", type=float, default=0.01,
+                        help="Visualization delay step in seconds")
     return parser.parse_args()
 
 
@@ -66,7 +68,7 @@ def load_dqn_agent():
         model_path = os.path.join(config.rl.model_dir, "dqn_model.pth")
         if os.path.exists(model_path):
             agent.load(model_path)
-            agent.epsilon = 0.0  # Greedy exploitation mode
+            agent.epsilon = 0.0  # Exploitation mode
             print(f"  🧠 Loaded pre-trained Deep RL (DQN) model from {model_path}")
         return agent
     except Exception as e:
@@ -79,15 +81,15 @@ def main():
     loc_info = LOCATIONS[args.location]
 
     print("=" * 75)
-    print(f"  🌆 SUMO-GUI SHOWCASE: {loc_info['name'].upper()}")
+    print(f"  🌆 SUMO SHOWCASE: {loc_info['name'].upper()}")
     print(f"  🌧️ Weather: {args.weather.upper()} | 🚧 Road Hazard: {args.road_condition.upper()}")
     print(f"  🎮 Controller: {args.controller.upper()} | 🚑 EVP: {'ENABLED' if args.evp else 'DISABLED'}")
     print("=" * 75)
 
-    # 1. Initialize SUMO GUI Environment
+    # 1. Initialize SUMO Environment
     env = SumoEnvironment(
         config_or_path=loc_info["sumocfg"],
-        use_gui=True,
+        use_gui=args.gui,
         step_length=0.5,
         junction_id="B0",
         tls_id="B0"
@@ -113,22 +115,25 @@ def main():
     else:
         agent = FixedTimeController()
 
-    print("\n🚀 Starting SUMO-GUI... (Close GUI window to finish demo)")
-    state = env.reset()
+    print("\n🚀 Launching simulation... (Press Ctrl+C to stop)")
+    env.reset()
 
     # Apply Weather
     weather_map = {"clear": "CLEAR", "light_rain": "LIGHT_RAIN", "monsoon": "HEAVY_MONSOON"}
     weather_controller.set_weather(weather_map[args.weather])
 
-    # Apply Road Hazards after step 10
     step = 0
+    phase_names = {0: "NS Green", 1: "NS Yellow", 2: "EW Green", 3: "EW Yellow"}
 
     try:
-        while env.is_running():
+        while env.is_running() and step < 1000:
             step += 1
             current_time = step * 0.5
 
-            # Apply hazards dynamically
+            # Get 11-dimensional RL state
+            state = state_processor.get_state(env, ev_detector, preemption_controller)
+
+            # Apply road hazards dynamically at step 20
             if step == 20:
                 if args.road_condition == "potholes":
                     weather_controller.apply_potholes("A0B0_0", max_speed_kmh=15.0)
@@ -150,10 +155,21 @@ def main():
                     action = agent.get_action(int(current_time))
                 signal_controller.apply_action(action)
 
-            # Advance simulation step
-            state = env.step()
+            # Step simulation
+            env.step()
 
-            # Presentation viewing pace
+            # Dashboard progress output every 100 steps (50s)
+            if step % 100 == 0:
+                queues = env.get_queue_lengths()
+                total_q = sum(queues.values())
+                phase_idx = int(signal_controller.get_current_phase())
+                phase_str = phase_names.get(phase_idx, f"Phase {phase_idx}")
+                evp_str = "🚑 PREEMPTION ACTIVE" if (preemption_controller and preemption_controller.is_active) else "Normal"
+
+                print(f"  ⏱️ Step {step:4d} ({current_time:5.1f}s) | "
+                      f"Signal: {phase_str:<10} | Total Queue: {total_q:2d} veh | "
+                      f"EVP: {evp_str}")
+
             if args.delay > 0:
                 time.sleep(args.delay)
 
@@ -161,7 +177,7 @@ def main():
         print("\n  Demo stopped by user.")
     finally:
         env.close()
-        print("\n✅ Demo session closed.")
+        print("\n🎉 Showcase simulation run complete!")
 
 
 if __name__ == "__main__":

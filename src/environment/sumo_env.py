@@ -19,19 +19,7 @@ class SumoEnvironment:
                  tls_id: str = "B0",
                  emission_tracker = None,
                  ev_detector = None):
-        """Initialize the SUMO environment.
-        
-        Args:
-            config_or_path: Either a string path to .sumocfg or a SumoConfig dataclass instance.
-            use_gui: Whether to use sumo-gui or headless sumo.
-            step_length: Duration of one simulation step in seconds.
-            junction_id: ID of the junction to monitor.
-            tls_id: ID of the traffic light to control.
-            emission_tracker: Optional emission tracker instance.
-            ev_detector: Optional emergency vehicle detector instance.
-        """
         if hasattr(config_or_path, 'config_file'):
-            # It's a SumoConfig dataclass instance
             self.sumocfg_path = config_or_path.config_file
             self.use_gui = (config_or_path.sumo_binary == "sumo-gui") or use_gui
             self.step_length = config_or_path.step_length
@@ -52,21 +40,18 @@ class SumoEnvironment:
         self.sim_time = 0.0
         self._running = False
         
-    def _find_sumo_binary(self) -> str:
+    def _find_sumo_binary(self, force_headless: bool = False) -> str:
         """Find full path to sumo / sumo-gui executable."""
-        binary_name = "sumo-gui" if self.use_gui else "sumo"
+        binary_name = "sumo" if force_headless or not self.use_gui else "sumo-gui"
         
-        # Check in current venv/bin directory first
         venv_bin = os.path.join(sys.prefix, 'bin', binary_name)
         if os.path.exists(venv_bin):
             return venv_bin
             
-        # Check PATH
         which_path = shutil.which(binary_name)
         if which_path:
             return which_path
 
-        # Check SUMO_HOME/bin
         if 'SUMO_HOME' in os.environ:
             sh_bin = os.path.join(os.environ['SUMO_HOME'], 'bin', binary_name)
             if os.path.exists(sh_bin):
@@ -88,7 +73,23 @@ class SumoEnvironment:
             "--waiting-time-memory", "1000"
         ]
         
-        traci.start(sumo_cmd)
+        try:
+            traci.start(sumo_cmd)
+        except Exception as e:
+            if self.use_gui:
+                print("\n  ⚠ GUI display error encountered (X11 display unavailable).")
+                print("  🔄 Falling back to high-performance headless mode ('sumo')...")
+                try:
+                    traci.close()
+                except Exception:
+                    pass
+                self.use_gui = False
+                fallback_binary = self._find_sumo_binary(force_headless=True)
+                sumo_cmd[0] = fallback_binary
+                traci.start(sumo_cmd)
+            else:
+                raise e
+
         self._running = True
         self.sim_time = 0.0
         
@@ -116,7 +117,7 @@ class SumoEnvironment:
             return False
         try:
             return traci.simulation.getMinExpectedNumber() > 0
-        except traci.exceptions.FatalTraCIError:
+        except (traci.exceptions.FatalTraCIError, traci.exceptions.TraCIException):
             self._running = False
             return False
 
@@ -189,6 +190,6 @@ class SumoEnvironment:
         if self._running:
             try:
                 traci.close()
-            except traci.exceptions.FatalTraCIError:
+            except Exception:
                 pass
             self._running = False
