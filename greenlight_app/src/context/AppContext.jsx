@@ -1,81 +1,71 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { MOCK_VIOLATIONS, CAMERAS, CONGESTION_HEATMAP, DIVERSION_TEMPLATES, FINES_DATABASE } from '../data/mockData';
+import React, { createContext, useContext, useState } from 'react';
+import { CAMERAS, MOCK_VIOLATIONS, FINES_DATABASE, DIVERSION_TEMPLATES } from '../data/mockData';
 
 const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
+  const [activePersona, setActivePersona] = useState('OPERATOR'); // OPERATOR, OFFICER, OWNER, COMMISSIONER
   const [activeTab, setActiveTab] = useState('control_room');
-  const [activePersona, setActivePersona] = useState('operator'); // operator, officer, owner, admin
-  const [violations, setViolations] = useState(MOCK_VIOLATIONS);
   const [selectedViolation, setSelectedViolation] = useState(null);
+  
+  const [violations, setViolations] = useState(MOCK_VIOLATIONS);
   const [fines, setFines] = useState(FINES_DATABASE);
   const [cameras, setCameras] = useState(CAMERAS);
-  const [activeCamera, setActiveCamera] = useState(CAMERAS[0]);
   const [diversions, setDiversions] = useState(DIVERSION_TEMPLATES);
-  const [heatmapNodes, setHeatmapNodes] = useState(CONGESTION_HEATMAP);
-  
-  // Real-time simulated clock & alert counter
-  const [currentTime, setCurrentTime] = useState(new Date().toLocaleTimeString());
-  const [liveAlertCount, setLiveAlertCount] = useState(14);
 
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentTime(new Date().toLocaleTimeString());
-    }, 1000);
-    return () => clearInterval(timer);
-  }, []);
+  const [activeCamera, setActiveCamera] = useState(CAMERAS[0]);
 
+  // Handle 1-Click Diversion Activation -> Triggers Python API Bridge Server on Port 5005
+  const handleActivateDiversion = async (diversionId) => {
+    setDiversions(prev => prev.map(d => 
+      d.id === diversionId ? { ...d, status: 'ACTIVE' } : d
+    ));
+
+    try {
+      const res = await fetch('http://localhost:5005/api/activate-diversion', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ diversionId })
+      });
+      const data = await res.json();
+      console.log("SUMO-GUI Launch Response:", data);
+    } catch (err) {
+      console.warn("Backend API bridge note (server running on port 5005):", err);
+    }
+  };
+
+  // Open Evidence Review Modal
   const openEvidenceModal = (violation) => {
     setSelectedViolation(violation);
   };
 
+  // Close Evidence Review Modal
   const closeEvidenceModal = () => {
     setSelectedViolation(null);
   };
 
-  const handleApproveViolation = (violationId) => {
-    setViolations(prev => prev.map(v => v.id === violationId ? { ...v, status: 'AUTO_FINED', operatorReviewed: true } : v));
+  // Fine Approval Action
+  const handleApproveFine = (violationId) => {
+    setViolations(prev => prev.map(v => v.id === violationId ? { ...v, status: 'AUTO_FINED' } : v));
     closeEvidenceModal();
   };
 
-  const handleDismissViolation = (violationId) => {
-    setViolations(prev => prev.map(v => v.id === violationId ? { ...v, status: 'DISMISSED', operatorReviewed: true } : v));
+  // Fine Dismiss Action
+  const handleDismissFine = (violationId) => {
+    setViolations(prev => prev.filter(v => v.id !== violationId));
     closeEvidenceModal();
-  };
-
-  const handleActivateDiversion = (templateId) => {
-    setDiversions(prev => prev.map(d => d.id === templateId ? { ...d, status: 'ACTIVE' } : d));
-  };
-
-  const handleResolveDispute = (fineId, decision) => {
-    setFines(prev => prev.map(f => f.fineId === fineId ? { ...f, status: decision === 'UPHELD' ? 'PENDING' : 'DISMISSED' } : f));
   };
 
   return (
     <AppContext.Provider value={{
-      activeTab,
-      setActiveTab,
-      activePersona,
-      setActivePersona,
-      violations,
-      selectedViolation,
-      setSelectedViolation,
-      openEvidenceModal,
-      closeEvidenceModal,
-      handleApproveViolation,
-      handleDismissViolation,
-      fines,
-      setFines,
-      cameras,
-      setCameras,
-      activeCamera,
-      setActiveCamera,
-      diversions,
-      handleActivateDiversion,
-      heatmapNodes,
-      currentTime,
-      liveAlertCount,
-      handleResolveDispute
+      activePersona, setActivePersona,
+      activeTab, setActiveTab,
+      selectedViolation, openEvidenceModal, closeEvidenceModal,
+      violations, fines, setFines,
+      cameras, setCameras,
+      activeCamera, setActiveCamera,
+      diversions, handleActivateDiversion,
+      handleApproveFine, handleDismissFine
     }}>
       {children}
     </AppContext.Provider>

@@ -1,0 +1,9 @@
+<viewsettings>
+    <scheme name="dark_cyberpunk">
+        <opengl value="true"/>
+        <background backgroundColor="7,10,17"/>
+        <edges laneEdgeColorMode="default" laneShowBorders="true" edgeName_show="true" edgeName_size="12" edgeName_color="241,245,249"/>
+        <vehicles vehicleColorMode="colorBySpeed" vehicleValueMin="0" vehicleValueMax="16.6" vehicleColorMin="239,68,68" vehicleColorMax="16,185,129" vehicleSize_minSize="3"/>
+        <junctions drawLinkTLIndex="true" drawLinkJunctionIndex="true"/>
+    </scheme>
+</viewsettings>
