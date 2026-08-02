@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
 import { TrafficMap } from '../components/maps/TrafficMap';
+import { LiveVideoPlayer } from '../components/video/LiveVideoPlayer';
 import { 
   AlertTriangle, Shield, Video, Zap, ArrowRight, Eye, CheckCircle2, 
   XCircle, Sliders, Radio, Activity, Navigation, Play, RefreshCw 
@@ -112,43 +113,23 @@ export const ControlRoom = () => {
 
       </div>
 
-      {/* CENTER PANEL: Interactive Traffic Heatmap & Camera Stream Grid (5 cols) */}
+      {/* CENTER PANEL: Interactive Traffic Heatmap & Real Video Stream Player (5 cols) */}
       <div className="lg:col-span-5 flex flex-col space-y-4 h-full min-h-[500px]">
         
         {/* Interactive Map (Top Half) */}
-        <div className="h-3/5 relative glass-panel rounded-2xl overflow-hidden p-1">
+        <div className="h-1/2 relative glass-panel rounded-2xl overflow-hidden p-1">
           <TrafficMap />
         </div>
 
-        {/* Selected Live Camera Feed Stream Grid (Bottom Half) */}
-        <div className="h-2/5 glass-panel p-4 rounded-2xl flex flex-col justify-between relative overflow-hidden">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-              <Video className="w-4 h-4 text-emerald-400 animate-pulse" />
-              <h3 className="font-bold text-white text-xs font-display">Live Camera View: {activeCamera.name}</h3>
-            </div>
-            <span className="px-2 py-0.5 text-[10px] font-mono bg-emerald-500/20 text-emerald-400 rounded-full border border-emerald-500/30">
-              30 FPS • 4K AI Stream
-            </span>
-          </div>
-
-          {/* Simulated Video Stream Window */}
-          <div className="relative w-full h-40 mt-2 rounded-xl overflow-hidden bg-slate-900 border border-slate-800 flex items-center justify-center group">
-            <img 
-              src="https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&w=1200&q=80" 
-              alt="Live Camera Feed"
-              className="w-full h-full object-cover opacity-80"
-            />
-            {/* AI Bounding Box Overlays */}
-            <div className="absolute top-8 left-12 w-28 h-16 border-2 border-emerald-400 rounded bg-emerald-500/10 flex items-start p-1">
-              <span className="text-[9px] font-mono font-bold bg-emerald-500 text-slate-950 px-1 rounded">MH 02 CZ 4921</span>
-            </div>
-
-            <div className="absolute bottom-2 left-2 px-2 py-1 rounded bg-slate-950/80 backdrop-blur-md text-[10px] font-mono text-slate-300 flex items-center space-x-2">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
-              <span>LIVE • RTSP / H.265</span>
-            </div>
-          </div>
+        {/* Real Live Video Stream View with AI Canvas Bounding Boxes (Bottom Half) */}
+        <div className="h-1/2 glass-panel p-2 rounded-2xl relative overflow-hidden flex flex-col">
+          <LiveVideoPlayer 
+            videoUrl="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"
+            cameraName={activeCamera.name}
+            plateNumber="MH 02 CZ 4921"
+            violationTag="RED LIGHT RUNNING"
+            speedObserved={64}
+          />
         </div>
 
       </div>
@@ -163,7 +144,7 @@ export const ControlRoom = () => {
           <div className="space-y-2">
             <div className="flex justify-between items-center text-xs">
               <span className="text-slate-400">Detection Latency</span>
-              <span className="font-mono text-emerald-400 font-bold">1.4 seconds</span>
+              <span className="font-mono text-emerald-400 font-bold">1.38 seconds</span>
             </div>
             <div className="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
               <div className="bg-emerald-400 h-full w-[70%]"></div>

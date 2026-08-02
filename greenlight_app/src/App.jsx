@@ -6,6 +6,7 @@ import { ControlRoom } from './pages/ControlRoom';
 import { EvidenceViewer } from './pages/EvidenceViewer';
 import { DiversionPanel } from './pages/DiversionPanel';
 import { FineManagement } from './pages/FineManagement';
+import { TestingConsole } from './pages/TestingConsole';
 import { VehicleOwnerPortal } from './pages/VehicleOwnerPortal';
 import { FieldOfficerApp } from './pages/FieldOfficerApp';
 import { CameraManagement } from './pages/CameraManagement';
@@ -24,6 +25,8 @@ const AppContent = () => {
         return <DiversionPanel />;
       case 'fines':
         return <FineManagement />;
+      case 'testing':
+        return <TestingConsole />;
       case 'vehicle_owner_portal':
         return <VehicleOwnerPortal />;
       case 'field_officer':

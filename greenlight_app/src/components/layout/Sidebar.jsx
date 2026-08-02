@@ -1,6 +1,6 @@
 import React from 'react';
 import { useApp } from '../../context/AppContext';
-import { LayoutDashboard, FileText, Navigation, DollarSign, Smartphone, ShieldAlert, Camera, BarChart3 } from 'lucide-react';
+import { LayoutDashboard, FileText, Navigation, DollarSign, Smartphone, ShieldAlert, Camera, BarChart3, Cpu } from 'lucide-react';
 
 export const Sidebar = () => {
   const { activeTab, setActiveTab } = useApp();
@@ -10,6 +10,7 @@ export const Sidebar = () => {
     { id: 'evidence_viewer', label: 'Violation & ANPR', icon: FileText, badge: 'UI-002' },
     { id: 'diversions', label: 'Traffic Diversions', icon: Navigation, badge: 'UI-003' },
     { id: 'fines', label: 'Fines & Disputes', icon: DollarSign, badge: 'UI-004' },
+    { id: 'testing', label: 'AI Testing Suite', icon: Cpu, badge: '97% Acc' },
     { id: 'vehicle_owner_portal', label: 'Vehicle Owner App', icon: Smartphone, badge: 'Mobile' },
     { id: 'field_officer', label: 'Field Officer App', icon: ShieldAlert, badge: 'Patrol' },
     { id: 'camera_management', label: 'Camera Fleet', icon: Camera, badge: '512' },
