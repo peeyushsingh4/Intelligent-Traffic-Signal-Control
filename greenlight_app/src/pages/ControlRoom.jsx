@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
 import { TrafficMap } from '../components/maps/TrafficMap';
 import { LiveVideoPlayer } from '../components/video/LiveVideoPlayer';
+import { SignalPrioritizationSim } from '../components/simulation/SignalPrioritizationSim';
 import { 
   AlertTriangle, Shield, Video, Zap, ArrowRight, Eye, CheckCircle2, 
-  XCircle, Sliders, Radio, Activity, Navigation, Play, RefreshCw 
+  XCircle, Sliders, Radio, Activity, Navigation, Play, RefreshCw, Cpu 
 } from 'lucide-react';
 
 export const ControlRoom = () => {
@@ -14,6 +15,7 @@ export const ControlRoom = () => {
   } = useApp();
 
   const [filterSeverity, setFilterSeverity] = useState('ALL');
+  const [activeViewMode, setActiveViewMode] = useState('SIMULATION'); // SIMULATION, CAMERA_STREAM
 
   const filteredViolations = violations.filter(v => {
     if (filterSeverity === 'OPERATOR_REVIEW') return v.status === 'OPERATOR_REVIEW';
@@ -113,23 +115,52 @@ export const ControlRoom = () => {
 
       </div>
 
-      {/* CENTER PANEL: Interactive Traffic Heatmap & Real Video Stream Player (5 cols) */}
+      {/* CENTER PANEL: Microscopic Lane Prioritization Simulator & Camera Feed (5 cols) */}
       <div className="lg:col-span-5 flex flex-col space-y-4 h-full min-h-[500px]">
         
-        {/* Interactive Map (Top Half) */}
-        <div className="h-1/2 relative glass-panel rounded-2xl overflow-hidden p-1">
-          <TrafficMap />
+        {/* Toggle Switcher */}
+        <div className="flex justify-between items-center bg-slate-900/90 p-2 rounded-2xl border border-slate-800">
+          <span className="text-xs font-mono text-slate-400 ml-2 font-bold uppercase">Center Display Mode</span>
+          <div className="flex space-x-1 font-mono text-xs">
+            <button 
+              onClick={() => setActiveViewMode('SIMULATION')}
+              className={`px-3 py-1 rounded-xl transition ${
+                activeViewMode === 'SIMULATION' ? 'bg-emerald-500 text-slate-950 font-bold glow-emerald' : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              AI Signal Simulation
+            </button>
+            <button 
+              onClick={() => setActiveViewMode('CAMERA_STREAM')}
+              className={`px-3 py-1 rounded-xl transition ${
+                activeViewMode === 'CAMERA_STREAM' ? 'bg-cyan-500 text-slate-950 font-bold' : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              4K Video Feed
+            </button>
+          </div>
         </div>
 
-        {/* Real Live Video Stream View with AI Canvas Bounding Boxes (Bottom Half) */}
-        <div className="h-1/2 glass-panel p-2 rounded-2xl relative overflow-hidden flex flex-col">
-          <LiveVideoPlayer 
-            videoUrl="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"
-            cameraName={activeCamera.name}
-            plateNumber="MH 02 CZ 4921"
-            violationTag="RED LIGHT RUNNING"
-            speedObserved={64}
-          />
+        {/* Dynamic Display Component */}
+        <div className="flex-1 overflow-y-auto space-y-4">
+          {activeViewMode === 'SIMULATION' ? (
+            <SignalPrioritizationSim />
+          ) : (
+            <div className="h-full flex flex-col space-y-4">
+              <div className="h-1/2 relative glass-panel rounded-2xl overflow-hidden p-1">
+                <TrafficMap />
+              </div>
+              <div className="h-1/2 glass-panel p-2 rounded-2xl relative overflow-hidden flex flex-col">
+                <LiveVideoPlayer 
+                  videoUrl="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"
+                  cameraName={activeCamera.name}
+                  plateNumber="MH 02 CZ 4921"
+                  violationTag="RED LIGHT RUNNING"
+                  speedObserved={64}
+                />
+              </div>
+            </div>
+          )}
         </div>
 
       </div>
