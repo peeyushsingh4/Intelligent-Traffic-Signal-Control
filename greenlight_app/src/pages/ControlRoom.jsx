@@ -3,9 +3,10 @@ import { useApp } from '../context/AppContext';
 import { TrafficMap } from '../components/maps/TrafficMap';
 import { LiveVideoPlayer } from '../components/video/LiveVideoPlayer';
 import { SignalPrioritizationSim } from '../components/simulation/SignalPrioritizationSim';
+import { ThreeDTrafficSim } from '../components/simulation/ThreeDTrafficSim';
 import { 
   AlertTriangle, Shield, Video, Zap, ArrowRight, Eye, CheckCircle2, 
-  XCircle, Sliders, Radio, Activity, Navigation, Play, RefreshCw, Cpu 
+  XCircle, Sliders, Radio, Activity, Navigation, Play, RefreshCw, Cpu, Layers 
 } from 'lucide-react';
 
 export const ControlRoom = () => {
@@ -15,7 +16,7 @@ export const ControlRoom = () => {
   } = useApp();
 
   const [filterSeverity, setFilterSeverity] = useState('ALL');
-  const [activeViewMode, setActiveViewMode] = useState('SIMULATION'); // SIMULATION, CAMERA_STREAM
+  const [activeViewMode, setActiveViewMode] = useState('3D_WEBGL'); // 3D_WEBGL, SIMULATION, CAMERA_STREAM
 
   const filteredViolations = violations.filter(v => {
     if (filterSeverity === 'OPERATOR_REVIEW') return v.status === 'OPERATOR_REVIEW';
@@ -115,35 +116,45 @@ export const ControlRoom = () => {
 
       </div>
 
-      {/* CENTER PANEL: Microscopic Lane Prioritization Simulator & Camera Feed (5 cols) */}
+      {/* CENTER PANEL: 3D WebGL / Signal Simulation / Video Stream (5 cols) */}
       <div className="lg:col-span-5 flex flex-col space-y-4 h-full min-h-[500px]">
         
-        {/* Toggle Switcher */}
+        {/* Toggle Switcher Toolbar */}
         <div className="flex justify-between items-center bg-slate-900/90 p-2 rounded-2xl border border-slate-800">
-          <span className="text-xs font-mono text-slate-400 ml-2 font-bold uppercase">Center Display Mode</span>
+          <span className="text-xs font-mono text-slate-400 ml-2 font-bold uppercase">Center Engine Display</span>
           <div className="flex space-x-1 font-mono text-xs">
+            <button 
+              onClick={() => setActiveViewMode('3D_WEBGL')}
+              className={`px-3 py-1 rounded-xl transition ${
+                activeViewMode === '3D_WEBGL' ? 'bg-emerald-500 text-slate-950 font-bold glow-emerald' : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              3D WebGL Sim
+            </button>
             <button 
               onClick={() => setActiveViewMode('SIMULATION')}
               className={`px-3 py-1 rounded-xl transition ${
-                activeViewMode === 'SIMULATION' ? 'bg-emerald-500 text-slate-950 font-bold glow-emerald' : 'text-slate-400 hover:text-white'
+                activeViewMode === 'SIMULATION' ? 'bg-cyan-500 text-slate-950 font-bold' : 'text-slate-400 hover:text-white'
               }`}
             >
-              AI Signal Simulation
+              2D Queue Sim
             </button>
             <button 
               onClick={() => setActiveViewMode('CAMERA_STREAM')}
               className={`px-3 py-1 rounded-xl transition ${
-                activeViewMode === 'CAMERA_STREAM' ? 'bg-cyan-500 text-slate-950 font-bold' : 'text-slate-400 hover:text-white'
+                activeViewMode === 'CAMERA_STREAM' ? 'bg-amber-500 text-slate-950 font-bold' : 'text-slate-400 hover:text-white'
               }`}
             >
-              4K Video Feed
+              4K Feed
             </button>
           </div>
         </div>
 
         {/* Dynamic Display Component */}
         <div className="flex-1 overflow-y-auto space-y-4">
-          {activeViewMode === 'SIMULATION' ? (
+          {activeViewMode === '3D_WEBGL' ? (
+            <ThreeDTrafficSim />
+          ) : activeViewMode === 'SIMULATION' ? (
             <SignalPrioritizationSim />
           ) : (
             <div className="h-full flex flex-col space-y-4">
