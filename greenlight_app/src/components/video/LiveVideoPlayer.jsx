@@ -1,18 +1,26 @@
 import React, { useRef, useEffect, useState } from 'react';
-import { Play, Pause, Volume2, VolumeX, Maximize2, ShieldAlert, Eye, Camera, RefreshCw } from 'lucide-react';
+import { Play, Pause, Volume2, VolumeX, Eye, ShieldAlert, Camera, RefreshCw } from 'lucide-react';
 
 export const LiveVideoPlayer = ({ 
-  videoUrl = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
-  cameraName = "BKC Junction (Bandra East)",
-  plateNumber = "MH 02 CZ 4921",
-  violationTag = "RED LIGHT RUNNING",
-  speedObserved = 64
+  activeCamera = {
+    name: "BKC Junction (Bandra East, Mumbai)",
+    videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+    livePlate: "MH 02 CZ 4921",
+    speedObserved: 64,
+    violationTag: "RED LIGHT RUNNING"
+  }
 }) => {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(true);
   const [isMuted, setIsMuted] = useState(true);
   const [showBoundingBoxes, setShowBoundingBoxes] = useState(true);
+
+  const videoUrl = activeCamera.videoUrl || "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4";
+  const cameraName = activeCamera.name || "BKC Junction (Bandra East, Mumbai)";
+  const plateNumber = activeCamera.livePlate || "MH 02 CZ 4921";
+  const speedObserved = activeCamera.speedObserved || 64;
+  const violationTag = activeCamera.violationTag || "RED LIGHT RUNNING";
 
   // Animated Bounding Box Canvas Effect
   useEffect(() => {
@@ -95,6 +103,7 @@ export const LiveVideoPlayer = ({
       <div className="relative flex-1 bg-black overflow-hidden flex items-center justify-center">
         <video 
           ref={videoRef}
+          key={videoUrl}
           src={videoUrl}
           autoPlay
           loop
@@ -115,7 +124,7 @@ export const LiveVideoPlayer = ({
         <div className="absolute top-3 left-3 z-20 flex items-center space-x-2 bg-slate-950/80 backdrop-blur-md px-3 py-1.5 rounded-xl border border-slate-800 text-xs font-mono">
           <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
           <span className="text-white font-bold">{cameraName}</span>
-          <span className="text-slate-400">| 4K AI Feed</span>
+          <span className="text-slate-400">| 4K Stream</span>
         </div>
 
         {/* AI Bounding Box Toggle Button */}
@@ -137,12 +146,12 @@ export const LiveVideoPlayer = ({
           <button onClick={() => setIsMuted(!isMuted)} className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-white">
             {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
           </button>
-          <span className="text-slate-400 text-[11px]">RTSP Stream • 30 FPS • Sub-2s Latency</span>
+          <span className="text-slate-400 text-[11px]">RTSP Live Stream • 30 FPS</span>
         </div>
 
         <div className="flex items-center space-x-2">
           <span className="px-2 py-0.5 text-[10px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-full">
-            ANPR Match: 96.4%
+            ANPR Accuracy: 96.4%
           </span>
         </div>
       </div>
