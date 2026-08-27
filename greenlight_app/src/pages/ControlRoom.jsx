@@ -4,9 +4,10 @@ import { TrafficMap } from '../components/maps/TrafficMap';
 import { LiveVideoPlayer } from '../components/video/LiveVideoPlayer';
 import { SignalPrioritizationSim } from '../components/simulation/SignalPrioritizationSim';
 import { ThreeDTrafficSim } from '../components/simulation/ThreeDTrafficSim';
+import { IndianRoadDatasetFeed } from '../components/video/IndianRoadDatasetFeed';
 import { 
   AlertTriangle, Shield, Video, Zap, ArrowRight, Eye, CheckCircle2, 
-  XCircle, Sliders, Radio, Activity, Navigation, Play, RefreshCw, Cpu, Layers 
+  XCircle, Sliders, Radio, Activity, Navigation, Play, RefreshCw, Cpu, Database 
 } from 'lucide-react';
 
 export const ControlRoom = () => {
@@ -16,7 +17,7 @@ export const ControlRoom = () => {
   } = useApp();
 
   const [filterSeverity, setFilterSeverity] = useState('ALL');
-  const [activeViewMode, setActiveViewMode] = useState('3D_WEBGL'); // 3D_WEBGL, SIMULATION, CAMERA_STREAM
+  const [activeViewMode, setActiveViewMode] = useState('INDIAN_DATASET'); // INDIAN_DATASET, 3D_WEBGL, SIMULATION, CAMERA_STREAM
 
   const filteredViolations = violations.filter(v => {
     if (filterSeverity === 'OPERATOR_REVIEW') return v.status === 'OPERATOR_REVIEW';
@@ -116,7 +117,7 @@ export const ControlRoom = () => {
 
       </div>
 
-      {/* CENTER PANEL: 3D WebGL / Signal Simulation / Video Stream (5 cols) */}
+      {/* CENTER PANEL: Indian Road Dataset / 3D WebGL / Signal Simulation / Video Stream (5 cols) */}
       <div className="lg:col-span-5 flex flex-col space-y-4 h-full min-h-[500px]">
         
         {/* Toggle Switcher Toolbar */}
@@ -124,35 +125,38 @@ export const ControlRoom = () => {
           <span className="text-xs font-mono text-slate-400 ml-2 font-bold uppercase">Center Engine Display</span>
           <div className="flex space-x-1 font-mono text-xs">
             <button 
-              onClick={() => setActiveViewMode('3D_WEBGL')}
-              className={`px-3 py-1 rounded-xl transition ${
-                activeViewMode === '3D_WEBGL' ? 'bg-emerald-500 text-slate-950 font-bold glow-emerald' : 'text-slate-400 hover:text-white'
+              onClick={() => setActiveViewMode('INDIAN_DATASET')}
+              className={`px-3 py-1 rounded-xl transition flex items-center space-x-1 ${
+                activeViewMode === 'INDIAN_DATASET' ? 'bg-cyan-500 text-slate-950 font-bold glow-emerald' : 'text-slate-400 hover:text-white'
               }`}
             >
-              3D WebGL Sim
+              <Database className="w-3.5 h-3.5" />
+              <span>Indian Road Dataset</span>
+            </button>
+            <button 
+              onClick={() => setActiveViewMode('3D_WEBGL')}
+              className={`px-3 py-1 rounded-xl transition ${
+                activeViewMode === '3D_WEBGL' ? 'bg-emerald-500 text-slate-950 font-bold' : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              3D WebGL
             </button>
             <button 
               onClick={() => setActiveViewMode('SIMULATION')}
               className={`px-3 py-1 rounded-xl transition ${
-                activeViewMode === 'SIMULATION' ? 'bg-cyan-500 text-slate-950 font-bold' : 'text-slate-400 hover:text-white'
+                activeViewMode === 'SIMULATION' ? 'bg-amber-500 text-slate-950 font-bold' : 'text-slate-400 hover:text-white'
               }`}
             >
-              2D Queue Sim
-            </button>
-            <button 
-              onClick={() => setActiveViewMode('CAMERA_STREAM')}
-              className={`px-3 py-1 rounded-xl transition ${
-                activeViewMode === 'CAMERA_STREAM' ? 'bg-amber-500 text-slate-950 font-bold' : 'text-slate-400 hover:text-white'
-              }`}
-            >
-              4K Feed
+              2D Queue
             </button>
           </div>
         </div>
 
         {/* Dynamic Display Component */}
         <div className="flex-1 overflow-y-auto space-y-4">
-          {activeViewMode === '3D_WEBGL' ? (
+          {activeViewMode === 'INDIAN_DATASET' ? (
+            <IndianRoadDatasetFeed />
+          ) : activeViewMode === '3D_WEBGL' ? (
             <ThreeDTrafficSim />
           ) : activeViewMode === 'SIMULATION' ? (
             <SignalPrioritizationSim />
