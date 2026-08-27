@@ -15,6 +15,7 @@ export const LiveVideoPlayer = ({
   const [isPlaying, setIsPlaying] = useState(true);
   const [isMuted, setIsMuted] = useState(true);
   const [showBoundingBoxes, setShowBoundingBoxes] = useState(true);
+  const [videoError, setVideoError] = useState(false);
 
   const videoUrl = activeCamera.videoUrl || "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4";
   const cameraName = activeCamera.name || "BKC Junction (Bandra East, Mumbai)";
@@ -22,47 +23,92 @@ export const LiveVideoPlayer = ({
   const speedObserved = activeCamera.speedObserved || 64;
   const violationTag = activeCamera.violationTag || "RED LIGHT RUNNING";
 
-  // Animated Bounding Box Canvas Effect
+  // Animated Traffic Canvas (Fallback + Bounding Boxes)
   useEffect(() => {
     let animId;
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
 
-    let boxX = 80;
-    let boxY = 60;
-    let dirX = 1.5;
-    let dirY = 0.8;
+    let boxX = 120;
+    let boxY = 80;
+    let dirX = 2.0;
+    let dirY = 0.6;
+
+    // Traffic lane vehicle particles for fallback
+    const trafficVehicles = [
+      { x: 40, y: 120, speed: 2.2, color: '#38bdf8', type: 'Car' },
+      { x: 180, y: 160, speed: 1.8, color: '#f59e0b', type: 'Auto' },
+      { x: 320, y: 110, speed: 2.5, color: '#10b981', type: 'Car' },
+      { x: 460, y: 150, speed: 1.5, color: '#a855f7', type: 'Bus' }
+    ];
 
     const draw = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+      // If video error or fallback active, draw synthetic road traffic background
+      if (videoError) {
+        // Draw Dark Asphalt Road
+        ctx.fillStyle = '#0f172a';
+        ctx.fillRect(0, 80, canvas.width, 160);
+
+        // Draw Road Borders
+        ctx.fillStyle = '#334155';
+        ctx.fillRect(0, 76, canvas.width, 4);
+        ctx.fillRect(0, 240, canvas.width, 4);
+
+        // Dashed Lane Lines
+        ctx.strokeStyle = '#f59e0b';
+        ctx.setLineDash([15, 15]);
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(0, 160);
+        ctx.lineTo(canvas.width, 160);
+        ctx.stroke();
+        ctx.setLineDash([]); // reset
+
+        // Draw Moving Traffic Vehicles
+        trafficVehicles.forEach(v => {
+          v.x += v.speed;
+          if (v.x > canvas.width + 40) v.x = -60;
+
+          // Vehicle Body
+          ctx.fillStyle = v.color;
+          ctx.beginPath();
+          ctx.roundRect(v.x, v.y, 50, 26, 6);
+          ctx.fill();
+
+          // Vehicle Windshield
+          ctx.fillStyle = '#070a11';
+          ctx.fillRect(v.x + 30, v.y + 4, 12, 18);
+        });
+      }
+
+      // Draw AI Bounding Boxes Overlay
       if (showBoundingBoxes) {
-        // Move bounding box slightly to simulate vehicle motion
         boxX += dirX;
         boxY += dirY;
-        if (boxX > canvas.width - 160 || boxX < 40) dirX = -dirX;
-        if (boxY > canvas.height - 100 || boxY < 40) dirY = -dirY;
+        if (boxX > canvas.width - 180 || boxX < 60) dirX = -dirX;
+        if (boxY > canvas.height - 120 || boxY < 50) dirY = -dirY;
 
         // Vehicle Bounding Box (Emerald Green)
         ctx.strokeStyle = '#10b981';
         ctx.lineWidth = 2;
-        ctx.strokeRect(boxX, boxY, 150, 90);
+        ctx.strokeRect(boxX, boxY, 160, 95);
 
-        // Corner accents
+        // Corner Accents
         const len = 12;
         ctx.strokeStyle = '#34d399';
         ctx.lineWidth = 3;
-        // Top Left
         ctx.beginPath(); ctx.moveTo(boxX, boxY + len); ctx.lineTo(boxX, boxY); ctx.lineTo(boxX + len, boxY); ctx.stroke();
-        // Bottom Right
-        ctx.beginPath(); ctx.moveTo(boxX + 150 - len, boxY + 90); ctx.lineTo(boxX + 150, boxY + 90); ctx.lineTo(boxX + 150, boxY + 90 - len); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(boxX + 160 - len, boxY + 95); ctx.lineTo(boxX + 160, boxY + 95); ctx.lineTo(boxX + 160, boxY + 95 - len); ctx.stroke();
 
         // License Plate Tag Box
         ctx.fillStyle = '#0f172a';
-        ctx.fillRect(boxX, boxY - 24, 130, 22);
+        ctx.fillRect(boxX, boxY - 24, 140, 22);
         ctx.strokeStyle = '#10b981';
-        ctx.strokeRect(boxX, boxY - 24, 130, 22);
+        ctx.lineWidth = 1;
+        ctx.strokeRect(boxX, boxY - 24, 140, 22);
 
         ctx.fillStyle = '#34d399';
         ctx.font = 'bold 11px "JetBrains Mono", monospace';
@@ -71,14 +117,14 @@ export const LiveVideoPlayer = ({
         // Speed radar tag
         ctx.fillStyle = '#f59e0b';
         ctx.font = 'bold 10px "JetBrains Mono", monospace';
-        ctx.fillText(`SPD: ${speedObserved} km/h`, boxX + 158, boxY + 20);
+        ctx.fillText(`SPD: ${speedObserved} km/h`, boxX + 168, boxY + 20);
 
         // Violation Warning Tag
         ctx.fillStyle = '#ef4444';
-        ctx.fillRect(boxX, boxY + 95, 150, 20);
+        ctx.fillRect(boxX, boxY + 100, 160, 20);
         ctx.fillStyle = '#ffffff';
         ctx.font = 'bold 9px sans-serif';
-        ctx.fillText(`⚠ ${violationTag}`, boxX + 8, boxY + 109);
+        ctx.fillText(`⚠ ${violationTag}`, boxX + 8, boxY + 114);
       }
 
       animId = requestAnimationFrame(draw);
@@ -86,7 +132,7 @@ export const LiveVideoPlayer = ({
 
     draw();
     return () => cancelAnimationFrame(animId);
-  }, [showBoundingBoxes, plateNumber, speedObserved, violationTag]);
+  }, [showBoundingBoxes, plateNumber, speedObserved, violationTag, videoError]);
 
   const togglePlay = () => {
     if (videoRef.current) {
@@ -100,19 +146,22 @@ export const LiveVideoPlayer = ({
     <div className="relative w-full h-full rounded-2xl overflow-hidden bg-slate-950 border border-slate-800 flex flex-col group">
       
       {/* Video Stream Container */}
-      <div className="relative flex-1 bg-black overflow-hidden flex items-center justify-center">
-        <video 
-          ref={videoRef}
-          key={videoUrl}
-          src={videoUrl}
-          autoPlay
-          loop
-          muted={isMuted}
-          playsInline
-          className="w-full h-full object-cover opacity-85"
-        />
+      <div className="relative flex-1 bg-black overflow-hidden flex items-center justify-center min-h-[300px]">
+        {!videoError && (
+          <video 
+            ref={videoRef}
+            key={videoUrl}
+            src={videoUrl}
+            autoPlay
+            loop
+            muted={isMuted}
+            playsInline
+            onError={() => setVideoError(true)}
+            className="w-full h-full object-cover opacity-85"
+          />
+        )}
 
-        {/* Canvas Bounding Box Overlay */}
+        {/* Canvas Overlay (Renders Bounding Boxes + Animated Road Traffic Fallback) */}
         <canvas 
           ref={canvasRef} 
           width={640} 
@@ -124,7 +173,7 @@ export const LiveVideoPlayer = ({
         <div className="absolute top-3 left-3 z-20 flex items-center space-x-2 bg-slate-950/80 backdrop-blur-md px-3 py-1.5 rounded-xl border border-slate-800 text-xs font-mono">
           <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
           <span className="text-white font-bold">{cameraName}</span>
-          <span className="text-slate-400">| 4K Stream</span>
+          <span className="text-slate-400">| 4K Feed</span>
         </div>
 
         {/* AI Bounding Box Toggle Button */}
@@ -146,7 +195,7 @@ export const LiveVideoPlayer = ({
           <button onClick={() => setIsMuted(!isMuted)} className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-white">
             {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
           </button>
-          <span className="text-slate-400 text-[11px]">RTSP Live Stream • 30 FPS</span>
+          <span className="text-slate-400 text-[11px]">RTSP Stream • 30 FPS</span>
         </div>
 
         <div className="flex items-center space-x-2">

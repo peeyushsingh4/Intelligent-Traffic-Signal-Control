@@ -5,8 +5,8 @@ export const IndianRoadDatasetFeed = () => {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(true);
-  const [activeClassFilter, setActiveClassFilter] = useState('ALL'); // ALL, AUTO_RICKSHAW, MOTORCYCLE, VIOLATIONS
-  const [showConfidence, setShowConfidence] = useState(true);
+  const [activeClassFilter, setActiveClassFilter] = useState('ALL');
+  const [videoError, setVideoError] = useState(false);
 
   // ThirdEye Labs Indian Road Dataset Sample Detections (BDD100K Format)
   const detections = [
@@ -16,7 +16,7 @@ export const IndianRoadDatasetFeed = () => {
     { id: 4, label: 'bus', conf: '96%', color: '#a855f7', box: { x: 520, y: 80, w: 160, h: 140 } }
   ];
 
-  // Dynamic Bounding Box Canvas Drawing
+  // Dynamic Bounding Box + Fallback Asphalt Traffic Render
   useEffect(() => {
     let animId;
     const canvas = canvasRef.current;
@@ -24,18 +24,55 @@ export const IndianRoadDatasetFeed = () => {
     const ctx = canvas.getContext('2d');
 
     let t = 0;
+    const trafficVehicles = [
+      { x: 40, y: 120, speed: 2.2, color: '#38bdf8', type: 'Car' },
+      { x: 180, y: 160, speed: 1.8, color: '#f59e0b', type: 'Auto' },
+      { x: 320, y: 110, speed: 2.5, color: '#10b981', type: 'Car' },
+      { x: 460, y: 150, speed: 1.5, color: '#a855f7', type: 'Bus' }
+    ];
 
     const draw = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       t += 0.02;
 
+      // Draw Synthetic Road Traffic Fallback when video errors
+      if (videoError) {
+        ctx.fillStyle = '#0f172a';
+        ctx.fillRect(0, 80, canvas.width, 160);
+
+        ctx.fillStyle = '#334155';
+        ctx.fillRect(0, 76, canvas.width, 4);
+        ctx.fillRect(0, 240, canvas.width, 4);
+
+        ctx.strokeStyle = '#f59e0b';
+        ctx.setLineDash([15, 15]);
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(0, 160);
+        ctx.lineTo(canvas.width, 160);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        trafficVehicles.forEach(v => {
+          v.x += v.speed;
+          if (v.x > canvas.width + 40) v.x = -60;
+
+          ctx.fillStyle = v.color;
+          ctx.beginPath();
+          ctx.roundRect(v.x, v.y, 50, 26, 6);
+          ctx.fill();
+
+          ctx.fillStyle = '#070a11';
+          ctx.fillRect(v.x + 30, v.y + 4, 12, 18);
+        });
+      }
+
+      // Draw Bounding Boxes
       detections.forEach((d) => {
-        // Apply class filters
         if (activeClassFilter === 'AUTO_RICKSHAW' && d.label !== 'auto_rickshaw') return;
         if (activeClassFilter === 'MOTORCYCLE' && d.label !== 'motorcycle') return;
         if (activeClassFilter === 'VIOLATIONS' && !d.isViolation) return;
 
-        // Animate box slightly with vehicle motion
         const offsetX = Math.sin(t + d.id) * 12;
         const offsetY = Math.cos(t * 0.8 + d.id) * 6;
 
@@ -44,19 +81,16 @@ export const IndianRoadDatasetFeed = () => {
         const bw = d.box.w;
         const bh = d.box.h;
 
-        // Bounding Box Rectangle
         ctx.strokeStyle = d.color;
         ctx.lineWidth = 2;
         ctx.strokeRect(bx, by, bw, bh);
 
-        // Corner Accents
         const len = 10;
         ctx.strokeStyle = '#ffffff';
         ctx.lineWidth = 3;
         ctx.beginPath(); ctx.moveTo(bx, by + len); ctx.lineTo(bx, by); ctx.lineTo(bx + len, by); ctx.stroke();
-        ctx.beginPath(); ctx.moveTo(bx + bw - len, by + bh); ctx.lineTo(bx + bw, by + bh); ctx.lineTo(bx + bw, by + bh - len); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(bx + bw - len, by + bh); ctx.lineTo(bx + bw); ctx.lineTo(bx + bw, by + bh - len); ctx.stroke();
 
-        // Label Badge Tag
         const tagText = `${d.label.toUpperCase()} ${d.conf}`;
         ctx.font = 'bold 10px "JetBrains Mono", monospace';
         const textWidth = ctx.measureText(tagText).width;
@@ -70,7 +104,6 @@ export const IndianRoadDatasetFeed = () => {
         ctx.fillStyle = d.color;
         ctx.fillText(tagText, bx + 6, by - 8);
 
-        // Optional Plate / Violation Extra Tag
         if (d.plate) {
           ctx.fillStyle = '#10b981';
           ctx.font = 'bold 9px "JetBrains Mono", monospace';
@@ -91,7 +124,7 @@ export const IndianRoadDatasetFeed = () => {
 
     draw();
     return () => cancelAnimationFrame(animId);
-  }, [activeClassFilter, showConfidence]);
+  }, [activeClassFilter, videoError]);
 
   const togglePlay = () => {
     if (videoRef.current) {
@@ -104,7 +137,7 @@ export const IndianRoadDatasetFeed = () => {
   return (
     <div className="relative w-full h-full min-h-[420px] rounded-3xl overflow-hidden glass-panel border border-slate-800 flex flex-col">
       
-      {/* ThirdEye Labs Dataset Header Bar */}
+      {/* Header */}
       <div className="p-4 bg-slate-900/90 border-b border-slate-800 flex flex-col md:flex-row justify-between items-start md:items-center gap-3 z-10">
         <div className="flex items-center space-x-2">
           <div className="p-2 rounded-xl bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 glow-emerald">
@@ -158,17 +191,20 @@ export const IndianRoadDatasetFeed = () => {
         </div>
       </div>
 
-      {/* Video & Canvas Overlay Player Container */}
+      {/* Video / Canvas Container */}
       <div className="flex-1 w-full h-full min-h-[350px] relative bg-black flex items-center justify-center overflow-hidden">
-        <video 
-          ref={videoRef}
-          src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="w-full h-full object-cover opacity-85"
-        />
+        {!videoError && (
+          <video 
+            ref={videoRef}
+            src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"
+            autoPlay
+            loop
+            muted
+            playsInline
+            onError={() => setVideoError(true)}
+            className="w-full h-full object-cover opacity-85"
+          />
+        )}
 
         {/* Dynamic Canvas Bounding Box Overlay */}
         <canvas 
