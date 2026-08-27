@@ -196,7 +196,7 @@ export const IndianRoadDatasetFeed = () => {
         {!videoError && (
           <video 
             ref={videoRef}
-            src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"
+            src="https://assets.mixkit.co/videos/1755/1755-720.mp4"
             autoPlay
             loop
             muted

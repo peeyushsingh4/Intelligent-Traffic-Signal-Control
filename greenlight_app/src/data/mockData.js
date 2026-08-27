@@ -1,6 +1,15 @@
 // greenlight.exe — Master Production Mock Data Engine
 // Integrated with Kaggle Indian Vehicle License Plate Dataset (saisirishan/indian-vehicle-dataset)
-// & Real Intersection Video Feeds for Mumbai & Navi Mumbai Corridors
+// & Real Intersection Video Feeds from Mixkit (Royalty-Free, No Watermark)
+
+// Verified real traffic intersection videos from Mixkit (all return HTTP 200 video/mp4)
+const VIDEO_FEEDS = {
+  bkc:    'https://assets.mixkit.co/videos/1755/1755-720.mp4',   // City busy traffic intersection time-lapse
+  vashi:  'https://assets.mixkit.co/videos/4272/4272-720.mp4',   // Traffic light directing traffic at intersection
+  palm:   'https://assets.mixkit.co/videos/36261/36261-720.mp4', // Many cars speeding through an intersection
+  dadar:  'https://assets.mixkit.co/videos/11/11-720.mp4',       // Aerial view of city traffic at night
+  weh:    'https://assets.mixkit.co/videos/60/60-720.mp4',       // Busy intersection aerial view
+};
 
 export const CAMERAS = [
   { 
@@ -13,7 +22,7 @@ export const CAMERAS = [
     ip: '192.168.1.101', 
     lat: 19.0657, 
     lng: 72.8686,
-    videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
+    videoUrl: VIDEO_FEEDS.bkc,
     livePlate: 'MH 02 CZ 4921',
     speedObserved: 64,
     violationTag: 'RED LIGHT RUNNING'
@@ -28,7 +37,7 @@ export const CAMERAS = [
     ip: '192.168.1.102', 
     lat: 19.0770, 
     lng: 72.9986,
-    videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4',
+    videoUrl: VIDEO_FEEDS.vashi,
     livePlate: 'MH 04 ER 8812',
     speedObserved: 94,
     violationTag: 'OVERSPEEDING (94 in 80)'
@@ -43,7 +52,7 @@ export const CAMERAS = [
     ip: '192.168.1.103', 
     lat: 19.0330, 
     lng: 73.0160,
-    videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4',
+    videoUrl: VIDEO_FEEDS.palm,
     livePlate: 'KA 03 MN 9210',
     speedObserved: 72,
     violationTag: 'RED LIGHT RUNNING (2X REPEAT)'
@@ -58,7 +67,7 @@ export const CAMERAS = [
     ip: '192.168.1.104', 
     lat: 19.0178, 
     lng: 72.8478,
-    videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoybacks.mp4',
+    videoUrl: VIDEO_FEEDS.dadar,
     livePlate: 'DL 01 AB 3490',
     speedObserved: 48,
     violationTag: 'NO HELMET / PASSENGER SAFETY'
@@ -73,7 +82,7 @@ export const CAMERAS = [
     ip: '192.168.1.105', 
     lat: 19.1197, 
     lng: 72.8464,
-    videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4',
+    videoUrl: VIDEO_FEEDS.weh,
     livePlate: 'GJ 01 KL 5543',
     speedObserved: 88,
     violationTag: 'WRONG LANE OVERTAKE'
