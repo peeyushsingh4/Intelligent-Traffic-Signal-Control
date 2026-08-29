@@ -61,8 +61,14 @@ class SumoEnvironment:
 
     def reset(self) -> np.ndarray:
         """Reset the simulation environment and start TraCI."""
-        if self._running:
-            self.close()
+        # Always safely close any active TraCI connection to avoid 'Connection default is already active' error
+        try:
+            if traci.isLoaded():
+                traci.close()
+        except Exception:
+            pass
+            
+        self._running = False
             
         binary = self._find_sumo_binary()
         sumo_cmd = [
@@ -88,7 +94,12 @@ class SumoEnvironment:
                 sumo_cmd[0] = fallback_binary
                 traci.start(sumo_cmd)
             else:
-                raise e
+                # If already active, attempt close and retry once
+                try:
+                    traci.close()
+                    traci.start(sumo_cmd)
+                except Exception:
+                    raise e
 
         self._running = True
         self.sim_time = 0.0
@@ -109,44 +120,47 @@ class SumoEnvironment:
         if self.emission_tracker:
             self.emission_tracker.collect()
             
+        if self.emergency_detector:
+            self.emergency_detector.detect()
+            
         return self._get_observation()
-
+        
     def is_running(self) -> bool:
-        """Check if simulation is active and has expected vehicles remaining."""
+        """Check if simulation is currently active and vehicles remain."""
         if not self._running:
             return False
         try:
             return traci.simulation.getMinExpectedNumber() > 0
-        except (traci.exceptions.FatalTraCIError, traci.exceptions.TraCIException):
+        except traci.exceptions.TraCIException:
             self._running = False
             return False
-
-    def get_waiting_times(self) -> Dict[str, float]:
-        """Get accumulated waiting times per approach edge."""
-        approach_edges = ["B1B0", "B-1B0", "C0B0", "A0B0"]
-        waiting_times = {}
-        for edge in approach_edges:
-            try:
-                waiting_times[edge] = float(traci.edge.getWaitingTime(edge))
-            except traci.exceptions.TraCIException:
-                waiting_times[edge] = 0.0
-        return waiting_times
-
+            
     def get_queue_lengths(self) -> Dict[str, int]:
-        """Get halting vehicle count per approach edge."""
-        approach_edges = ["B1B0", "B-1B0", "C0B0", "A0B0"]
+        """Get queue lengths for all incoming edges."""
+        incoming_edges = ["B1B0", "B-1B0", "C0B0", "A0B0"]
         queues = {}
-        for edge in approach_edges:
+        for edge in incoming_edges:
             try:
-                queues[edge] = int(traci.edge.getLastStepHaltingNumber(edge))
+                queues[edge] = traci.edge.getLastStepHaltingNumber(edge)
             except traci.exceptions.TraCIException:
                 queues[edge] = 0
         return queues
-
-    def get_throughput(self) -> int:
-        """Get total departed / arrived vehicles count."""
+        
+    def get_waiting_times(self) -> Dict[str, float]:
+        """Get total waiting time per incoming edge."""
+        incoming_edges = ["B1B0", "B-1B0", "C0B0", "A0B0"]
+        waits = {}
+        for edge in incoming_edges:
+            try:
+                waits[edge] = traci.edge.getWaitingTime(edge)
+            except traci.exceptions.TraCIException:
+                waits[edge] = 0.0
+        return waits
+        
+    def get_vehicle_count(self) -> int:
+        """Get total number of active vehicles in simulation."""
         try:
-            return int(traci.simulation.getArrivedNumber())
+            return traci.vehicle.getIDCount()
         except traci.exceptions.TraCIException:
             return 0
 
@@ -187,9 +201,9 @@ class SumoEnvironment:
         
     def close(self):
         """Close the simulation environment."""
-        if self._running:
-            try:
+        try:
+            if traci.isLoaded():
                 traci.close()
-            except Exception:
-                pass
-            self._running = False
+        except Exception:
+            pass
+        self._running = False

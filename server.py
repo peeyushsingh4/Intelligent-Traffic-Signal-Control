@@ -35,18 +35,8 @@ INCOMING_EDGES = ("B1B0", "B-1B0", "C0B0", "A0B0")
 
 def find_sumo_home() -> Path | None:
     """Find a SUMO installation in virtualenv, PATH, or OS locations."""
-    # The official eclipse-sumo package exposes a self-contained SUMO home.
-    # This also supports the project's local .venv-sumo environment.
-    try:
-        import sumo
-        package_home = Path(sumo.SUMO_HOME)
-        if (package_home / "bin").is_dir():
-            return package_home
-    except ImportError:
-        pass
-
-    venv_sumo = BASE_DIR / ".venv-sumo" / "lib" / f"python{sys.version_info.major}.{sys.version_info.minor}" / "site-packages" / "sumo"
-    if (venv_sumo / "bin").is_dir():
+    venv_sumo = BASE_DIR / "venv" / "lib" / f"python{sys.version_info.major}.{sys.version_info.minor}" / "site-packages" / "sumo"
+    if venv_sumo.is_dir():
         return venv_sumo
 
     configured = os.environ.get("SUMO_HOME")
@@ -114,6 +104,14 @@ class SimulationBridge:
         self.env = None
         self.controller = None
         self.state = {"status": "idle", "vehicles": []}
+        
+        # Safely ensure TraCI default connection is unloaded
+        try:
+            import traci
+            if traci.isLoaded():
+                traci.close()
+        except Exception:
+            pass
 
     def tick(self) -> dict[str, Any]:
         with self.lock:
@@ -210,7 +208,6 @@ class RequestHandler(BaseHTTPRequestHandler):
                 BRIDGE.stop()
                 self._json(200, {"status": "stopped"})
             elif self.path == "/api/activate-diversion":
-                # Launch desktop graphical SUMO-GUI window in background subprocess
                 script_path = str(BASE_DIR / "demo_diversion_gui.py")
                 subprocess.Popen([sys.executable, script_path], cwd=str(BASE_DIR))
                 self._json(200, {
