@@ -1,11 +1,11 @@
 import React from 'react';
 import { MapContainer, TileLayer, Marker, Popup, Polyline, CircleMarker } from 'react-leaflet';
 import L from 'leaflet';
-import { useApp } from '../../context/AppContext';
+import { useApp, DEFAULT_HEATMAP_NODES } from '../../context/AppContext';
 
 // Custom Map Pins
 const createCameraIcon = (status) => {
-  const color = status === 'active' ? '#10b981' : '#f59e0b';
+  const color = status === 'ONLINE' || status === 'active' ? '#10b981' : '#f59e0b';
   return L.divIcon({
     className: 'custom-map-pin',
     html: `<div style="background-color: ${color}; width: 14px; height: 14px; border-radius: 50%; border: 2px solid white; box-shadow: 0 0 10px ${color};"></div>`,
@@ -15,7 +15,10 @@ const createCameraIcon = (status) => {
 };
 
 export const TrafficMap = ({ selectedIntersection = null, showDiversions = false }) => {
-  const { cameras, heatmapNodes, setActiveCamera, openEvidenceModal, violations } = useApp();
+  const app = useApp();
+  const cameras = app.cameras || [];
+  const heatmapNodes = (app.heatmapNodes && app.heatmapNodes.length > 0) ? app.heatmapNodes : (DEFAULT_HEATMAP_NODES || []);
+  const setActiveCamera = app.setActiveCamera || (() => {});
 
   // Center on Mumbai coordinates
   const mumbaiCenter = [19.0550, 72.8800];
@@ -28,11 +31,11 @@ export const TrafficMap = ({ selectedIntersection = null, showDiversions = false
   ];
 
   return (
-    <div className="relative w-full h-full rounded-2xl overflow-hidden border border-slate-800 shadow-2xl">
+    <div className="relative w-full h-full min-h-[350px] rounded-2xl overflow-hidden border border-slate-800 shadow-2xl">
       <MapContainer 
         center={mumbaiCenter} 
-        zoom={12} 
-        style={{ width: '100%', height: '100%', backgroundColor: '#070a11' }}
+        zoom={11} 
+        style={{ width: '100%', height: '100%', minHeight: '350px', backgroundColor: '#070a11' }}
         zoomControl={false}
       >
         {/* Dark Mode Map Tiles (CartoDB Dark Matter) */}
@@ -47,10 +50,10 @@ export const TrafficMap = ({ selectedIntersection = null, showDiversions = false
           <CircleMarker
             key={node.id}
             center={[node.lat, node.lng]}
-            radius={node.score / 2.5}
+            radius={Math.max(8, node.score / 2.5)}
             pathOptions={{
-              color: node.color,
-              fillColor: node.color,
+              color: node.color || '#ef4444',
+              fillColor: node.color || '#ef4444',
               fillOpacity: 0.35,
               weight: 2
             }}
@@ -86,7 +89,7 @@ export const TrafficMap = ({ selectedIntersection = null, showDiversions = false
             <Popup>
               <div className="p-1 font-sans text-xs">
                 <strong className="text-emerald-400">{cam.id}</strong> — {cam.name}
-                <div className="text-slate-400">{cam.intersection} ({cam.lanes} Lanes)</div>
+                <div className="text-slate-400">{cam.zone || cam.name} ({cam.speedLimitKmh || 60} km/h)</div>
               </div>
             </Popup>
           </Marker>

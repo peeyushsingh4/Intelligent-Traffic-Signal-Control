@@ -1,6 +1,14 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { CAMERAS, MOCK_VIOLATIONS, FINES_DATABASE, DIVERSION_TEMPLATES } from '../data/mockData';
 
+export const DEFAULT_HEATMAP_NODES = [
+  { id: 'node-bkc', name: 'BKC Junction (Bandra East)', lat: 19.0657, lng: 72.8686, score: 85, color: '#ef4444', status: 'Severe Congestion', queue: 42, avgSpeed: 14 },
+  { id: 'node-vashi', name: 'Vashi Highway Interchange', lat: 19.0770, lng: 72.9986, score: 72, color: '#f97316', status: 'Heavy Flow', queue: 28, avgSpeed: 38 },
+  { id: 'node-palm', name: 'Palm Beach Road (Nerul)', lat: 19.0330, lng: 73.0160, score: 45, color: '#eab308', status: 'Moderate Flow', queue: 12, avgSpeed: 52 },
+  { id: 'node-dadar', name: 'Dadar TT Circle', lat: 19.0178, lng: 72.8478, score: 68, color: '#f97316', status: 'Dense Urban Queue', queue: 24, avgSpeed: 22 },
+  { id: 'node-weh', name: 'WEH Airport Flyover', lat: 19.1197, lng: 72.8464, score: 32, color: '#10b981', status: 'Free Flow', queue: 6, avgSpeed: 64 }
+];
+
 const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
@@ -12,6 +20,7 @@ export const AppProvider = ({ children }) => {
   const [fines, setFines] = useState(FINES_DATABASE);
   const [cameras, setCameras] = useState(CAMERAS);
   const [diversions, setDiversions] = useState(DIVERSION_TEMPLATES);
+  const [heatmapNodes, setHeatmapNodes] = useState(DEFAULT_HEATMAP_NODES);
 
   const [activeCamera, setActiveCamera] = useState(CAMERAS[0]);
 
@@ -75,6 +84,9 @@ export const AppProvider = ({ children }) => {
       activeCamera, setActiveCamera,
       diversions, handleActivateDiversion,
       handleApproveFine, handleDismissFine,
+      handleApproveViolation: handleApproveFine,
+      handleDismissViolation: handleDismissFine,
+      heatmapNodes, setHeatmapNodes,
       currentTime, liveAlertCount
     }}>
       {children}
@@ -82,4 +94,4 @@ export const AppProvider = ({ children }) => {
   );
 };
 
-export const useApp = () => useContext(AppContext);
+export const useApp = () => useContext(AppContext) || {};
