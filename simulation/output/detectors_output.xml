@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- generated on 2026-08-29T17:16:46.752696+05:30 by Eclipse SUMO sumo 1.27.1
+<!-- generated on 2026-08-29T17:27:01.915953+05:30 by Eclipse SUMO sumo 1.27.1
 <sumoConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/sumoConfiguration.xsd">
 
     <input>
-        <net-file value="/Users/peeyush/Developer/Major Project/simulation/config/../network/vashi_navimumbai.net.xml"/>
-        <route-files value="/Users/peeyush/Developer/Major Project/simulation/config/../routes/vashi_navimumbai.rou.xml"/>
+        <net-file value="/Users/peeyush/Developer/Major Project/simulation/config/../network/bkc_mumbai.net.xml"/>
+        <route-files value="/Users/peeyush/Developer/Major Project/simulation/config/../routes/bkc_mumbai.rou.xml"/>
         <additional-files value="/Users/peeyush/Developer/Major Project/simulation/config/../additional/detectors.add.xml"/>
     </input>
 
     <output>
-        <emission-output value="/Users/peeyush/Developer/Major Project/simulation/config/../output/emissions/vashi_navimumbai_emissions.xml"/>
-        <tripinfo-output value="/Users/peeyush/Developer/Major Project/simulation/config/../output/tripinfo/vashi_navimumbai_tripinfo.xml"/>
-        <statistic-output value="/Users/peeyush/Developer/Major Project/simulation/config/../output/statistics/vashi_navimumbai_statistics.xml"/>
+        <emission-output value="/Users/peeyush/Developer/Major Project/simulation/config/../output/emissions/bkc_mumbai_emissions.xml"/>
+        <tripinfo-output value="/Users/peeyush/Developer/Major Project/simulation/config/../output/tripinfo/bkc_mumbai_tripinfo.xml"/>
+        <statistic-output value="/Users/peeyush/Developer/Major Project/simulation/config/../output/statistics/bkc_mumbai_statistics.xml"/>
     </output>
 
     <time>
@@ -31,7 +31,7 @@
     </report>
 
     <traci_server>
-        <remote-port value="49570"/>
+        <remote-port value="49841"/>
     </traci_server>
 
 </sumoConfiguration>

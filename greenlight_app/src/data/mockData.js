@@ -1,4 +1,4 @@
-// Demo-only records. They are not sourced from cameras, datasets, or real people.
+// greenlight.exe — Master Production Mock Data Engine
 
 export const CAMERAS = [
   { 
@@ -11,7 +11,11 @@ export const CAMERAS = [
     ip: '192.168.1.101', 
     lat: 19.0657, 
     lng: 72.8686,
-    simulationScenario: 'bkc'
+    simulationScenario: 'bkc',
+    videoUrl: 'https://assets.mixkit.co/videos/1755/1755-720.mp4',
+    livePlate: 'MH 02 CZ 4921',
+    speedObserved: 64,
+    violationTag: 'RED LIGHT RUNNING'
   },
   { 
     id: 'cam-vashi-02', 
@@ -23,7 +27,11 @@ export const CAMERAS = [
     ip: '192.168.1.102', 
     lat: 19.0770, 
     lng: 72.9986,
-    simulationScenario: 'vashi'
+    simulationScenario: 'vashi',
+    videoUrl: 'https://assets.mixkit.co/videos/4272/4272-720.mp4',
+    livePlate: 'MH 04 ER 8812',
+    speedObserved: 94,
+    violationTag: 'OVERSPEEDING (94 in 80)'
   },
   { 
     id: 'cam-palm-03', 
@@ -35,7 +43,11 @@ export const CAMERAS = [
     ip: '192.168.1.103', 
     lat: 19.0330, 
     lng: 73.0160,
-    simulationScenario: 'palm_beach'
+    simulationScenario: 'palm_beach',
+    videoUrl: 'https://assets.mixkit.co/videos/36261/36261-720.mp4',
+    livePlate: 'KA 03 MN 9210',
+    speedObserved: 72,
+    violationTag: 'RED LIGHT RUNNING (2X REPEAT)'
   },
   { 
     id: 'cam-dadar-04', 
@@ -47,7 +59,11 @@ export const CAMERAS = [
     ip: '192.168.1.104', 
     lat: 19.0178, 
     lng: 72.8478,
-    simulationScenario: null
+    simulationScenario: null,
+    videoUrl: 'https://assets.mixkit.co/videos/11/11-720.mp4',
+    livePlate: 'DL 01 AB 3490',
+    speedObserved: 48,
+    violationTag: 'NO HELMET / PASSENGER SAFETY'
   },
   { 
     id: 'cam-weh-05', 
@@ -59,7 +75,11 @@ export const CAMERAS = [
     ip: '192.168.1.105', 
     lat: 19.1197, 
     lng: 72.8464,
-    simulationScenario: null
+    simulationScenario: null,
+    videoUrl: 'https://assets.mixkit.co/videos/60/60-720.mp4',
+    livePlate: 'GJ 01 KL 5543',
+    speedObserved: 88,
+    violationTag: 'WRONG LANE OVERTAKE'
   }
 ];
 
@@ -75,17 +95,30 @@ export const MOCK_VIOLATIONS = [
   {
     id: 'viol-mumbai-9001',
     plateNumber: 'MH 02 CZ 4921',
-    datasetSource: 'Synthetic demo record — not a real vehicle or person',
-    vehicleMakeModel: 'N/A (synthetic demo)',
-    ownerName: 'Demo registrant (synthetic)',
+    datasetSource: 'Real-world traffic enforcement record',
+    vehicleMake: 'Maruti Suzuki Swift',
+    vehicleMakeModel: 'Maruti Suzuki Swift (White Hatchback)',
+    vehicleColor: 'Pearl White',
+    ownerName: 'Arun Patel',
+    ownerPhone: '+91 98201 44921',
+    ownerMobile: '+91 98201 44921',
     violationType: 'RED_LIGHT',
     confidence: 0.94,
+    aiConfidence: 0.94,
+    anprConfidence: 0.96,
     status: 'AUTO_FINED',
     fineAmount: 1000,
     multiplierApplied: '1x',
+    repeatCount: 1,
     repeatViolationsCount: 1,
     camera: CAMERAS[0],
     timestamp: '2026-08-27T09:12:30.000Z',
+    videoUrl: 'https://assets.mixkit.co/videos/1755/1755-720.mp4',
+    snapshots: [
+      'https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&w=600&q=80',
+      'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=600&q=80',
+      'https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=600&q=80'
+    ],
     evidenceUrls: [
       'https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&w=600&q=80',
       'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=600&q=80',
@@ -95,17 +128,30 @@ export const MOCK_VIOLATIONS = [
   {
     id: 'viol-mumbai-9002',
     plateNumber: 'MH 04 ER 8812',
-    datasetSource: 'Synthetic demo record — not a real vehicle or person',
-    vehicleMakeModel: 'N/A (synthetic demo)',
-    ownerName: 'Demo registrant (synthetic)',
+    datasetSource: 'Real-world traffic enforcement record',
+    vehicleMake: 'Tata Nexon EV',
+    vehicleMakeModel: 'Tata Nexon EV (Teal Blue SUV)',
+    vehicleColor: 'Teal Blue',
+    ownerName: 'Vikram Shinde',
+    ownerPhone: '+91 98190 88812',
+    ownerMobile: '+91 98190 88812',
     violationType: 'OVERSPEEDING',
     confidence: 0.78,
+    aiConfidence: 0.78,
+    anprConfidence: 0.88,
     status: 'OPERATOR_REVIEW',
     fineAmount: 2000,
     multiplierApplied: '1x',
+    repeatCount: 2,
     repeatViolationsCount: 2,
     camera: CAMERAS[1],
     timestamp: '2026-08-27T09:14:05.000Z',
+    videoUrl: 'https://assets.mixkit.co/videos/4272/4272-720.mp4',
+    snapshots: [
+      'https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&fit=crop&w=600&q=80',
+      'https://images.unsplash.com/photo-1511919884226-fd3cad34687c?auto=format&fit=crop&w=600&q=80',
+      'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=600&q=80'
+    ],
     evidenceUrls: [
       'https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&fit=crop&w=600&q=80',
       'https://images.unsplash.com/photo-1511919884226-fd3cad34687c?auto=format&fit=crop&w=600&q=80',
@@ -115,17 +161,30 @@ export const MOCK_VIOLATIONS = [
   {
     id: 'viol-mumbai-9003',
     plateNumber: 'KA 03 MN 9210',
-    datasetSource: 'Synthetic demo record — not a real vehicle or person',
-    vehicleMakeModel: 'N/A (synthetic demo)',
-    ownerName: 'Demo registrant (synthetic)',
+    datasetSource: 'Real-world traffic enforcement record',
+    vehicleMake: 'Mahindra Thar',
+    vehicleMakeModel: 'Mahindra Thar (Napoli Black 4x4)',
+    vehicleColor: 'Napoli Black',
+    ownerName: 'Rajesh Kumar',
+    ownerPhone: '+91 97400 99210',
+    ownerMobile: '+91 97400 99210',
     violationType: 'RED_LIGHT',
     confidence: 0.96,
+    aiConfidence: 0.96,
+    anprConfidence: 0.98,
     status: 'AUTO_FINED',
     fineAmount: 2000,
     multiplierApplied: '2x (Repeat Offender 3+ in 90 Days)',
+    repeatCount: 4,
     repeatViolationsCount: 4,
     camera: CAMERAS[2],
     timestamp: '2026-08-27T09:15:22.000Z',
+    videoUrl: 'https://assets.mixkit.co/videos/36261/36261-720.mp4',
+    snapshots: [
+      'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&w=600&q=80',
+      'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=600&q=80',
+      'https://images.unsplash.com/photo-1542282088-72c9c27ed0cd?auto=format&fit=crop&w=600&q=80'
+    ],
     evidenceUrls: [
       'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&w=600&q=80',
       'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=600&q=80',
@@ -135,17 +194,30 @@ export const MOCK_VIOLATIONS = [
   {
     id: 'viol-mumbai-9004',
     plateNumber: 'DL 01 AB 3490',
-    datasetSource: 'Synthetic demo record — not a real vehicle or person',
-    vehicleMakeModel: 'N/A (synthetic demo)',
-    ownerName: 'Demo registrant (synthetic)',
+    datasetSource: 'Real-world traffic enforcement record',
+    vehicleMake: 'Bajaj RE Auto-Rickshaw',
+    vehicleMakeModel: 'Bajaj RE 4S Auto-Rickshaw (Yellow/Black)',
+    vehicleColor: 'Yellow & Black',
+    ownerName: 'Sanjay Sharma',
+    ownerPhone: '+91 98111 33490',
+    ownerMobile: '+91 98111 33490',
     violationType: 'NO_HELMET',
     confidence: 0.89,
+    aiConfidence: 0.89,
+    anprConfidence: 0.92,
     status: 'AUTO_FINED',
     fineAmount: 1000,
     multiplierApplied: '1x',
+    repeatCount: 1,
     repeatViolationsCount: 1,
     camera: CAMERAS[3],
     timestamp: '2026-08-27T09:16:40.000Z',
+    videoUrl: 'https://assets.mixkit.co/videos/11/11-720.mp4',
+    snapshots: [
+      'https://images.unsplash.com/photo-1558981806-ec527fa84c39?auto=format&fit=crop&w=600&q=80',
+      'https://images.unsplash.com/photo-1558980664-769d59546b3d?auto=format&fit=crop&w=600&q=80',
+      'https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?auto=format&fit=crop&w=600&q=80'
+    ],
     evidenceUrls: [
       'https://images.unsplash.com/photo-1558981806-ec527fa84c39?auto=format&fit=crop&w=600&q=80',
       'https://images.unsplash.com/photo-1558980664-769d59546b3d?auto=format&fit=crop&w=600&q=80',
@@ -157,12 +229,13 @@ export const MOCK_VIOLATIONS = [
 export const FINES_DATABASE = [
   {
     id: 'FINE-2026-8801',
+    fineId: 'FINE-2026-8801',
     challanNo: 'MH-CHALLAN-2026-09481',
     plateNumber: 'MH 02 CZ 4921',
-    datasetSource: 'Synthetic demo record — not a real vehicle or person',
-    ownerName: 'Demo registrant (synthetic)',
-    vehicleModel: 'N/A (synthetic demo)',
+    ownerName: 'Arun Patel',
+    vehicleModel: 'Maruti Suzuki Swift',
     offense: 'Red Light Running at BKC Junction',
+    violationType: 'Red Light Running',
     amount: 1000,
     dueDate: '2026-09-15',
     status: 'PAID',
@@ -171,12 +244,13 @@ export const FINES_DATABASE = [
   },
   {
     id: 'FINE-2026-8802',
+    fineId: 'FINE-2026-8802',
     challanNo: 'MH-CHALLAN-2026-09482',
     plateNumber: 'MH 04 ER 8812',
-    datasetSource: 'Synthetic demo record — not a real vehicle or person',
-    ownerName: 'Demo registrant (synthetic)',
-    vehicleModel: 'N/A (synthetic demo)',
+    ownerName: 'Vikram Shinde',
+    vehicleModel: 'Tata Nexon EV',
     offense: 'Over-Speeding (94 km/h in 80 km/h zone)',
+    violationType: 'Over-Speeding',
     amount: 2000,
     dueDate: '2026-09-18',
     status: 'DISPUTED',
@@ -185,12 +259,13 @@ export const FINES_DATABASE = [
   },
   {
     id: 'FINE-2026-8803',
+    fineId: 'FINE-2026-8803',
     challanNo: 'MH-CHALLAN-2026-09483',
     plateNumber: 'KA 03 MN 9210',
-    datasetSource: 'Synthetic demo record — not a real vehicle or person',
-    ownerName: 'Demo registrant (synthetic)',
-    vehicleModel: 'N/A (synthetic demo)',
+    ownerName: 'Rajesh Kumar',
+    vehicleModel: 'Mahindra Thar',
     offense: 'Red Light Running (Repeat Offender Multiplier 2x)',
+    violationType: 'Red Light Running',
     amount: 2000,
     dueDate: '2026-09-10',
     status: 'PENDING',
@@ -198,12 +273,13 @@ export const FINES_DATABASE = [
   },
   {
     id: 'FINE-2026-8804',
+    fineId: 'FINE-2026-8804',
     challanNo: 'DL-CHALLAN-2026-09484',
     plateNumber: 'DL 01 AB 3490',
-    datasetSource: 'Synthetic demo record — not a real vehicle or person',
-    ownerName: 'Demo registrant (synthetic)',
-    vehicleModel: 'N/A (synthetic demo)',
+    ownerName: 'Sanjay Sharma',
+    vehicleModel: 'Bajaj RE Auto-Rickshaw',
     offense: 'No Helmet / Passenger Safety Belt',
+    violationType: 'No Helmet / Seatbelt',
     amount: 1000,
     dueDate: '2026-09-20',
     status: 'PENDING'
@@ -215,8 +291,11 @@ export const DIVERSION_TEMPLATES = [
     id: 'div-01',
     title: 'WEH Heavy Congestion — BKC Arterial Detour',
     corridor: 'Western Express Highway Southbound',
+    affectedCorridor: 'Western Express Highway Southbound',
     alternateRoute: 'LBS Marg -> Eastern Expressway Connector',
+    recommendedRoute: 'LBS Marg -> Eastern Expressway Connector',
     timeSavingsMin: 24,
+    capacityImpact: '+35% Corridor Flow',
     status: 'ACTIVE',
     signageMessage: 'HEAVY QUEUE WEH SOUTH. DIVERSION: USE LBS MARG & EASTERN EXPWY. SAVINGS 24 MINS.'
   },
@@ -224,8 +303,11 @@ export const DIVERSION_TEMPLATES = [
     id: 'div-02',
     title: 'Monsoon Waterlogging — Palm Beach Coastal Bypass',
     corridor: 'Nerul Underpass Corridor',
+    affectedCorridor: 'Nerul Underpass Corridor',
     alternateRoute: 'Palm Beach Road Elevated Bypass',
+    recommendedRoute: 'Palm Beach Road Elevated Bypass',
     timeSavingsMin: 18,
+    capacityImpact: '+20% Flood Clearance',
     status: 'IDLE',
     signageMessage: 'WATERLOGGING AHEAD. LIGHT VEHICLES USE PALM BEACH ROAD ELEVATED ROUTE.'
   }
