@@ -36,17 +36,17 @@ export const Navbar = () => {
       <div className="hidden lg:flex items-center space-x-6 px-4 py-1.5 rounded-full bg-slate-900/80 border border-slate-800/80 text-xs">
         <div className="flex items-center space-x-2 text-slate-300">
           <Video className="w-4 h-4 text-emerald-400" />
-          <span><strong className="text-white font-mono">512 / 512</strong> Feeds Active</span>
+          <span><strong className="text-white font-mono">3</strong> SUMO scenarios</span>
         </div>
         <div className="h-3 w-px bg-slate-800"></div>
         <div className="flex items-center space-x-2 text-slate-300">
           <Activity className="w-4 h-4 text-cyan-400" />
-          <span>Latency: <strong className="text-cyan-400 font-mono">1.4s</strong> (&lt;2s SLA)</span>
+          <span>Tracking: <strong className="text-cyan-300 font-mono">TraCI</strong></span>
         </div>
         <div className="h-3 w-px bg-slate-800"></div>
         <div className="flex items-center space-x-2 text-slate-300">
           <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-          <span>ANPR Acc: <strong className="text-emerald-400 font-mono">96.4%</strong></span>
+          <span>ANPR: <strong className="text-slate-200 font-mono">N/A</strong></span>
         </div>
         <div className="h-3 w-px bg-slate-800"></div>
         <div className="flex items-center space-x-2 text-slate-300 font-mono">

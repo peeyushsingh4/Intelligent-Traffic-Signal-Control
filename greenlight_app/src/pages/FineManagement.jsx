@@ -49,7 +49,7 @@ export const FineManagement = () => {
                 <span className="text-xs text-slate-400">Motor Vehicles (Amendment) Act Compliance Engine</span>
                 <span className="px-2 py-0.5 text-[9px] font-mono bg-amber-500/10 text-amber-400 border border-amber-500/20 rounded-full flex items-center space-x-1">
                   <Database className="w-3 h-3" />
-                  <span>Kaggle Dataset: saisirishan/indian-vehicle-dataset</span>
+                  <span>Synthetic demo records — not connected to a vehicle-owner database</span>
                 </span>
               </div>
             </div>
@@ -130,7 +130,7 @@ export const FineManagement = () => {
             <thead className="bg-slate-900/90 border-b border-slate-800 text-slate-400 uppercase text-[10px]">
               <tr>
                 <th className="p-4">E-Challan No.</th>
-                <th className="p-4">Indian Plate (Kaggle Dataset)</th>
+                <th className="p-4">Demo reference</th>
                 <th className="p-4">Vehicle Make & Owner</th>
                 <th className="p-4">Offense Details</th>
                 <th className="p-4 text-right">Penalty Fine</th>

@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
 import { TrafficMap } from '../components/maps/TrafficMap';
-import { LiveVideoPlayer } from '../components/video/LiveVideoPlayer';
 import { SignalPrioritizationSim } from '../components/simulation/SignalPrioritizationSim';
 import { ThreeDTrafficSim } from '../components/simulation/ThreeDTrafficSim';
 import { IndianRoadDatasetFeed } from '../components/video/IndianRoadDatasetFeed';
@@ -12,7 +11,7 @@ import {
 
 export const ControlRoom = () => {
   const { 
-    violations, cameras, activeCamera, setActiveCamera, 
+    violations,
     openEvidenceModal, diversions, handleActivateDiversion 
   } = useApp();
 
@@ -131,7 +130,7 @@ export const ControlRoom = () => {
               }`}
             >
               <Database className="w-3.5 h-3.5" />
-              <span>Indian Road Dataset</span>
+              <span>Live SUMO ground truth</span>
             </button>
             <button 
               onClick={() => setActiveViewMode('3D_WEBGL')}
@@ -165,14 +164,8 @@ export const ControlRoom = () => {
               <div className="h-1/2 relative glass-panel rounded-2xl overflow-hidden p-1">
                 <TrafficMap />
               </div>
-              <div className="h-1/2 glass-panel p-2 rounded-2xl relative overflow-hidden flex flex-col">
-                <LiveVideoPlayer 
-                  videoUrl="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"
-                  cameraName={activeCamera.name}
-                  plateNumber="MH 02 CZ 4921"
-                  violationTag="RED LIGHT RUNNING"
-                  speedObserved={64}
-                />
+              <div className="h-1/2 glass-panel p-5 rounded-2xl flex items-center justify-center text-center text-sm text-slate-300">
+                CCTV playback is not connected. Use Live SUMO ground truth for the real simulation feed.
               </div>
             </div>
           )}
@@ -185,23 +178,23 @@ export const ControlRoom = () => {
         
         {/* Quick System Stats */}
         <div className="glass-panel p-4 rounded-2xl space-y-3">
-          <h3 className="text-xs font-bold text-slate-400 font-mono uppercase">System Performance</h3>
+          <h3 className="text-xs font-bold text-slate-300 font-mono uppercase">Simulation status</h3>
           
           <div className="space-y-2">
             <div className="flex justify-between items-center text-xs">
-              <span className="text-slate-400">Detection Latency</span>
-              <span className="font-mono text-emerald-400 font-bold">1.38 seconds</span>
+              <span className="text-slate-300">Tracking source</span>
+              <span className="font-mono text-emerald-300 font-bold">TraCI ground truth</span>
             </div>
             <div className="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
-              <div className="bg-emerald-400 h-full w-[70%]"></div>
+              <div className="bg-emerald-400 h-full w-full"></div>
             </div>
 
             <div className="flex justify-between items-center text-xs pt-1">
-              <span className="text-slate-400">ANPR Match Rate</span>
-              <span className="font-mono text-cyan-400 font-bold">96.4%</span>
+              <span className="text-slate-300">Computer vision / ANPR</span>
+              <span className="font-mono text-cyan-300 font-bold">Not connected</span>
             </div>
             <div className="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
-              <div className="bg-cyan-400 h-full w-[96%]"></div>
+              <div className="bg-slate-600 h-full w-full"></div>
             </div>
           </div>
         </div>

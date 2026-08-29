@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
-import { LiveVideoPlayer } from '../components/video/LiveVideoPlayer';
+import { IndianRoadDatasetFeed } from '../components/video/IndianRoadDatasetFeed';
 import { Camera, Video, Plus, Activity, CheckCircle, AlertTriangle, RefreshCw, Server, MapPin } from 'lucide-react';
 
 export const CameraManagement = () => {
@@ -14,7 +14,7 @@ export const CameraManagement = () => {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-slate-800 pb-4">
         <div>
           <h2 className="text-xl font-bold text-white font-display">Citywide Camera Fleet & Stream Management</h2>
-          <p className="text-xs text-slate-400">RTSP Stream Health, FPS Metrics & Onboarding Wizard (512 Active Feeds)</p>
+          <p className="text-xs text-slate-300">The three configured SUMO intersections are available as simulation-ground-truth feeds.</p>
         </div>
 
         <button 
@@ -22,7 +22,7 @@ export const CameraManagement = () => {
           className="flex items-center space-x-2 px-4 py-2 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold rounded-xl text-xs transition glow-emerald font-mono"
         >
           <Plus className="w-4 h-4" />
-          <span>Register New RTSP Camera Feed</span>
+          <span>Feed registration</span>
         </button>
       </div>
 
@@ -39,9 +39,7 @@ export const CameraManagement = () => {
             <span className="text-xs font-mono text-emerald-400 font-bold">IP: {activeCamera.ip}</span>
           </div>
 
-          <div className="flex-1 min-h-[350px]">
-            <LiveVideoPlayer activeCamera={activeCamera} />
-          </div>
+          <div className="flex-1 min-h-[350px]"><IndianRoadDatasetFeed /></div>
         </div>
 
         {/* Camera Fleet Selector List (5 cols) */}
@@ -85,6 +83,10 @@ export const CameraManagement = () => {
         </div>
 
       </div>
+
+      {showAddWizard && <div role="dialog" aria-modal="true" aria-labelledby="feed-registration-title" className="fixed inset-0 z-50 grid place-items-center bg-slate-950/75 p-4">
+        <div className="glass-panel max-w-md rounded-2xl p-6"><h3 id="feed-registration-title" className="text-lg font-bold text-white">Feed registration</h3><p className="mt-2 text-sm text-slate-300">RTSP camera ingestion is not implemented in this SUMO-only build. The dashboard shows live TraCI simulation ground truth for BKC, Vashi, and Palm Beach instead.</p><button onClick={() => setShowAddWizard(false)} className="control-button control-button--secondary mt-5">Close</button></div>
+      </div>}
 
     </div>
   );

@@ -1,251 +1,122 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Play, Pause, Eye, ShieldAlert, Cpu, Filter, Layers, Database, Tag, CheckCircle2 } from 'lucide-react';
+import React, { useEffect, useMemo, useState } from 'react';
+import { Camera, CirclePause, CirclePlay, Database, Gauge, Radio, RefreshCw, Save, TriangleAlert } from 'lucide-react';
+
+const API = 'http://localhost:5005/api';
+const colors = ['#22d3ee', '#34d399', '#fbbf24', '#a78bfa', '#fb7185'];
+
+const vehicleColor = (type) => colors[[...type].reduce((sum, char) => sum + char.charCodeAt(0), 0) % colors.length];
+const readError = (error) => error?.message || 'The local SUMO bridge is unavailable.';
 
 export const IndianRoadDatasetFeed = () => {
-  const videoRef = useRef(null);
-  const canvasRef = useRef(null);
-  const [isPlaying, setIsPlaying] = useState(true);
-  const [activeClassFilter, setActiveClassFilter] = useState('ALL');
-  const [videoError, setVideoError] = useState(false);
+  const [state, setState] = useState({ status: 'idle', vehicles: [], metrics: {} });
+  const [scenario, setScenario] = useState('bkc');
+  const [isPolling, setIsPolling] = useState(false);
+  const [error, setError] = useState('');
+  const [captureName, setCaptureName] = useState('');
+  const [captureNotice, setCaptureNotice] = useState('');
 
-  // ThirdEye Labs Indian Road Dataset Sample Detections (BDD100K Format)
-  const detections = [
-    { id: 1, label: 'auto_rickshaw', conf: '94%', color: '#06b6d4', box: { x: 90, y: 140, w: 120, h: 100 } },
-    { id: 2, label: 'motorcycle', conf: '91%', isViolation: true, violationTag: 'NO HELMET', color: '#f59e0b', box: { x: 240, y: 160, w: 80, h: 90 } },
-    { id: 3, label: 'car', conf: '98%', plate: 'MH 02 CZ 4921', isViolation: true, violationTag: 'RED LIGHT RUNNING', color: '#ef4444', box: { x: 360, y: 110, w: 140, h: 95 } },
-    { id: 4, label: 'bus', conf: '96%', color: '#a855f7', box: { x: 520, y: 80, w: 160, h: 140 } }
-  ];
-
-  // Dynamic Bounding Box + Fallback Asphalt Traffic Render
-  useEffect(() => {
-    let animId;
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-
-    let t = 0;
-    const trafficVehicles = [
-      { x: 40, y: 120, speed: 2.2, color: '#38bdf8', type: 'Car' },
-      { x: 180, y: 160, speed: 1.8, color: '#f59e0b', type: 'Auto' },
-      { x: 320, y: 110, speed: 2.5, color: '#10b981', type: 'Car' },
-      { x: 460, y: 150, speed: 1.5, color: '#a855f7', type: 'Bus' }
-    ];
-
-    const draw = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      t += 0.02;
-
-      // Draw Synthetic Road Traffic Fallback when video errors
-      if (videoError) {
-        ctx.fillStyle = '#0f172a';
-        ctx.fillRect(0, 80, canvas.width, 160);
-
-        ctx.fillStyle = '#334155';
-        ctx.fillRect(0, 76, canvas.width, 4);
-        ctx.fillRect(0, 240, canvas.width, 4);
-
-        ctx.strokeStyle = '#f59e0b';
-        ctx.setLineDash([15, 15]);
-        ctx.lineWidth = 2;
-        ctx.beginPath();
-        ctx.moveTo(0, 160);
-        ctx.lineTo(canvas.width, 160);
-        ctx.stroke();
-        ctx.setLineDash([]);
-
-        trafficVehicles.forEach(v => {
-          v.x += v.speed;
-          if (v.x > canvas.width + 40) v.x = -60;
-
-          ctx.fillStyle = v.color;
-          ctx.beginPath();
-          ctx.roundRect(v.x, v.y, 50, 26, 6);
-          ctx.fill();
-
-          ctx.fillStyle = '#070a11';
-          ctx.fillRect(v.x + 30, v.y + 4, 12, 18);
-        });
-      }
-
-      // Draw Bounding Boxes
-      detections.forEach((d) => {
-        if (activeClassFilter === 'AUTO_RICKSHAW' && d.label !== 'auto_rickshaw') return;
-        if (activeClassFilter === 'MOTORCYCLE' && d.label !== 'motorcycle') return;
-        if (activeClassFilter === 'VIOLATIONS' && !d.isViolation) return;
-
-        const offsetX = Math.sin(t + d.id) * 12;
-        const offsetY = Math.cos(t * 0.8 + d.id) * 6;
-
-        const bx = d.box.x + offsetX;
-        const by = d.box.y + offsetY;
-        const bw = d.box.w;
-        const bh = d.box.h;
-
-        ctx.strokeStyle = d.color;
-        ctx.lineWidth = 2;
-        ctx.strokeRect(bx, by, bw, bh);
-
-        const len = 10;
-        ctx.strokeStyle = '#ffffff';
-        ctx.lineWidth = 3;
-        ctx.beginPath(); ctx.moveTo(bx, by + len); ctx.lineTo(bx, by); ctx.lineTo(bx + len, by); ctx.stroke();
-        ctx.beginPath(); ctx.moveTo(bx + bw - len, by + bh); ctx.lineTo(bx + bw, by + bh); ctx.lineTo(bx + bw, by + bh - len); ctx.stroke();
-
-        const tagText = `${d.label.toUpperCase()} ${d.conf}`;
-        ctx.font = 'bold 10px "JetBrains Mono", monospace';
-        const textWidth = ctx.measureText(tagText).width;
-
-        ctx.fillStyle = '#070a11';
-        ctx.fillRect(bx, by - 22, textWidth + 12, 20);
-        ctx.strokeStyle = d.color;
-        ctx.lineWidth = 1;
-        ctx.strokeRect(bx, by - 22, textWidth + 12, 20);
-
-        ctx.fillStyle = d.color;
-        ctx.fillText(tagText, bx + 6, by - 8);
-
-        if (d.plate) {
-          ctx.fillStyle = '#10b981';
-          ctx.font = 'bold 9px "JetBrains Mono", monospace';
-          ctx.fillText(`ANPR: ${d.plate}`, bx + 6, by + bh + 14);
-        }
-
-        if (d.isViolation) {
-          ctx.fillStyle = '#ef4444';
-          ctx.fillRect(bx, by + bh + 2, bw, 18);
-          ctx.fillStyle = '#ffffff';
-          ctx.font = 'bold 9px sans-serif';
-          ctx.fillText(`⚠ ${d.violationTag}`, bx + 4, by + bh + 14);
-        }
-      });
-
-      animId = requestAnimationFrame(draw);
-    };
-
-    draw();
-    return () => cancelAnimationFrame(animId);
-  }, [activeClassFilter, videoError]);
-
-  const togglePlay = () => {
-    if (videoRef.current) {
-      if (isPlaying) videoRef.current.pause();
-      else videoRef.current.play();
-      setIsPlaying(!isPlaying);
-    }
+  const start = async () => {
+    setError(''); setCaptureNotice('');
+    try {
+      const response = await fetch(`${API}/simulation/start`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ scenario }) });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error);
+      setState(data); setIsPolling(true);
+    } catch (requestError) { setError(readError(requestError)); }
   };
 
+  const stop = async () => {
+    await fetch(`${API}/simulation/stop`, { method: 'POST' }).catch(() => undefined);
+    setIsPolling(false); setState((current) => ({ ...current, status: 'stopped' }));
+  };
+
+  const capture = async () => {
+    setCaptureNotice('');
+    try {
+      const response = await fetch(`${API}/replays/capture`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ label: captureName }) });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error);
+      setCaptureNotice(`Captured ${data.label} at ${data.simTime}s.`); setCaptureName('');
+    } catch (requestError) { setError(readError(requestError)); }
+  };
+
+  useEffect(() => {
+    const restoreRunningState = async () => {
+      try {
+        const response = await fetch(`${API}/simulation/state`);
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error);
+        setState(data);
+        setIsPolling(data.status === 'running');
+        if (data.status === 'running') setError('');
+      } catch {
+        // Keep the initial idle state; the Start control presents any actionable error.
+      }
+    };
+    restoreRunningState();
+  }, []);
+
+  useEffect(() => {
+    if (!isPolling) return undefined;
+    const poll = async () => {
+      try {
+        const response = await fetch(`${API}/simulation/state`);
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error);
+        setState(data);
+        if (data.status !== 'running') setIsPolling(false);
+      } catch (requestError) { setError(readError(requestError)); setIsPolling(false); }
+    };
+    const interval = window.setInterval(poll, 500);
+    return () => window.clearInterval(interval);
+  }, [isPolling]);
+
+  const metrics = state.metrics || {};
+  const vehicles = useMemo(() => state.vehicles || [], [state.vehicles]);
   return (
-    <div className="relative w-full h-full min-h-[420px] rounded-3xl overflow-hidden glass-panel border border-slate-800 flex flex-col">
-      
-      {/* Header */}
-      <div className="p-4 bg-slate-900/90 border-b border-slate-800 flex flex-col md:flex-row justify-between items-start md:items-center gap-3 z-10">
-        <div className="flex items-center space-x-2">
-          <div className="p-2 rounded-xl bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 glow-emerald">
-            <Database className="w-4 h-4" />
-          </div>
-          <div>
-            <div className="flex items-center space-x-2">
-              <h3 className="text-sm font-bold text-white font-display">HuggingFace ThirdEye Labs Indian Road Dataset</h3>
-              <span className="px-2 py-0.5 text-[9px] font-mono bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 rounded-full">
-                646K Frames • 12 Classes
-              </span>
-            </div>
-            <p className="text-[11px] text-slate-400 font-mono">BDD100K Perception Architecture (Auto-Rickshaws, Tempos, Motorcycles, Taxis)</p>
-          </div>
+    <section className="glass-panel rounded-2xl overflow-hidden" aria-label="Live SUMO vehicle tracking">
+      <header className="p-4 border-b border-slate-700/70 flex flex-wrap gap-3 items-center justify-between">
+        <div className="flex items-center gap-3">
+          <span className={`status-dot ${state.status === 'running' ? 'status-dot--live' : ''}`} aria-hidden="true" />
+          <div><h3 className="text-base font-bold text-slate-100">SUMO simulation ground truth</h3><p className="text-xs text-slate-300">Vehicles are read directly from TraCI at each simulation tick.</p></div>
         </div>
+        <div className="flex gap-2 items-center">
+          <label className="sr-only" htmlFor="scenario">Intersection scenario</label>
+          <select id="scenario" value={scenario} disabled={isPolling} onChange={(event) => setScenario(event.target.value)} className="control-select">
+            <option value="bkc">BKC Junction</option><option value="vashi">Vashi Interchange</option><option value="palm_beach">Palm Beach Road</option>
+          </select>
+          <button onClick={isPolling ? stop : start} className="control-button control-button--primary">
+            {isPolling ? <CirclePause size={16} /> : <CirclePlay size={16} />} {isPolling ? 'Stop run' : 'Start SUMO'}
+          </button>
+        </div>
+      </header>
 
-        {/* Class Filter Bar */}
-        <div className="flex space-x-1.5 bg-slate-950 p-1 rounded-xl border border-slate-800 text-xs font-mono">
-          <button 
-            onClick={() => setActiveClassFilter('ALL')}
-            className={`px-2.5 py-1 rounded-lg transition ${
-              activeClassFilter === 'ALL' ? 'bg-emerald-500 text-slate-950 font-bold glow-emerald' : 'text-slate-400 hover:text-white'
-            }`}
-          >
-            All 12 Classes
-          </button>
-          <button 
-            onClick={() => setActiveClassFilter('AUTO_RICKSHAW')}
-            className={`px-2.5 py-1 rounded-lg transition ${
-              activeClassFilter === 'AUTO_RICKSHAW' ? 'bg-cyan-500 text-slate-950 font-bold' : 'text-slate-400 hover:text-white'
-            }`}
-          >
-            Auto-Rickshaw
-          </button>
-          <button 
-            onClick={() => setActiveClassFilter('MOTORCYCLE')}
-            className={`px-2.5 py-1 rounded-lg transition ${
-              activeClassFilter === 'MOTORCYCLE' ? 'bg-amber-500 text-slate-950 font-bold' : 'text-slate-400 hover:text-white'
-            }`}
-          >
-            Motorcycles
-          </button>
-          <button 
-            onClick={() => setActiveClassFilter('VIOLATIONS')}
-            className={`px-2.5 py-1 rounded-lg transition ${
-              activeClassFilter === 'VIOLATIONS' ? 'bg-red-500 text-white font-bold glow-red' : 'text-slate-400 hover:text-white'
-            }`}
-          >
-            Violations
-          </button>
+      {error && <div className="m-4 alert alert--error"><TriangleAlert size={16} /> {error}</div>}
+      <div className="grid lg:grid-cols-[1fr_220px]">
+        <div className="relative min-h-[390px] bg-[#0a111d] overflow-hidden" role="img" aria-label={`${vehicles.length} active simulation vehicles`}>
+          <div className="absolute inset-x-0 top-1/2 h-28 -translate-y-1/2 bg-slate-700/65 border-y border-slate-500/30" />
+          <div className="absolute inset-y-0 left-1/2 w-32 -translate-x-1/2 bg-slate-700/65 border-x border-slate-500/30" />
+          <div className="absolute inset-0 traffic-grid" aria-hidden="true" />
+          {vehicles.map((vehicle) => {
+            const left = `${Math.min(98, Math.max(2, vehicle.x / 10))}%`;
+            const bottom = `${Math.min(98, Math.max(2, vehicle.y / 10))}%`;
+            return <div key={vehicle.id} className="sim-vehicle" style={{ left, bottom, '--vehicle-color': vehicleColor(vehicle.type), transform: `translate(-50%, 50%) rotate(${vehicle.heading}deg)` }} title={`${vehicle.id} · ${vehicle.type} · ${vehicle.speedKmh} km/h`}>
+              <span className="sim-vehicle__body" /><span className="sim-vehicle__label">{vehicle.id} · {vehicle.speedKmh} km/h</span>
+            </div>;
+          })}
+          {state.status !== 'running' && <div className="absolute inset-0 grid place-items-center p-6 text-center"><div><Radio className="mx-auto mb-3 text-cyan-300" /><p className="font-semibold text-slate-100">Start a scenario to view live positions</p><p className="text-sm text-slate-300 mt-1">No stock footage or computer-vision detections are used.</p></div></div>}
         </div>
+        <aside className="p-4 border-l border-slate-700/70 space-y-4 bg-slate-950/30">
+          <div><p className="eyebrow">Run state</p><p className="font-mono text-sm text-emerald-300 capitalize">{state.status || 'idle'}</p></div>
+          <Metric icon={Camera} label="Vehicles" value={metrics.vehicleCount ?? 'N/A'} /><Metric icon={Gauge} label="Queue" value={metrics.queueLength ?? 'N/A'} />
+          <Metric icon={RefreshCw} label="Wait" value={metrics.waitingTimeSeconds != null ? `${metrics.waitingTimeSeconds}s` : 'N/A'} />
+          <Metric icon={Database} label="CO₂ rate" value={metrics.co2MgPerSecond != null ? `${metrics.co2MgPerSecond} mg/s` : 'N/A'} />
+          <div className="pt-2 border-t border-slate-700/70"><p className="eyebrow mb-2">Capture instance</p><input value={captureName} onChange={(event) => setCaptureName(event.target.value)} placeholder="e.g., pre-control" className="control-input" /><button disabled={state.status !== 'running'} onClick={capture} className="control-button control-button--secondary mt-2 w-full"><Save size={15} /> Capture current tick</button>{captureNotice && <p className="mt-2 text-xs text-emerald-300">{captureNotice}</p>}</div>
+        </aside>
       </div>
-
-      {/* Video / Canvas Container */}
-      <div className="flex-1 w-full h-full min-h-[350px] relative bg-black flex items-center justify-center overflow-hidden">
-        {!videoError && (
-          <video 
-            ref={videoRef}
-            src="https://assets.mixkit.co/videos/1755/1755-720.mp4"
-            autoPlay
-            loop
-            muted
-            playsInline
-            onError={() => setVideoError(true)}
-            className="w-full h-full object-cover opacity-85"
-          />
-        )}
-
-        {/* Dynamic Canvas Bounding Box Overlay */}
-        <canvas 
-          ref={canvasRef} 
-          width={720} 
-          height={400} 
-          className="absolute inset-0 w-full h-full pointer-events-none z-10"
-        />
-
-        {/* Live HUD Metadata Overlay */}
-        <div className="absolute top-4 left-4 z-20 space-y-2 pointer-events-none font-mono text-xs">
-          <div className="bg-slate-950/80 backdrop-blur-md px-3 py-1.5 rounded-xl border border-slate-800 flex items-center space-x-2 text-cyan-400">
-            <span className="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
-            <span className="font-bold">thirdeyelabs/indian-road-dataset</span>
-          </div>
-
-          <div className="bg-slate-950/80 backdrop-blur-md p-3 rounded-xl border border-slate-800 space-y-1 text-[11px] text-slate-300">
-            <div>Annotated Detections: <strong className="text-emerald-400">6,800,000 Objects</strong></div>
-            <div>Format Standard: <strong className="text-amber-400">BDD100K JSON / WebDataset</strong></div>
-            <div>Mixed Traffic Density: <strong className="text-cyan-400">HIGH (Mumbai/Navi Mumbai)</strong></div>
-          </div>
-        </div>
-
-      </div>
-
-      {/* Control Bar Footer */}
-      <div className="p-3 bg-slate-900/90 border-t border-slate-800 flex items-center justify-between text-xs font-mono">
-        <div className="flex items-center space-x-3">
-          <button onClick={togglePlay} className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-white">
-            {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
-          </button>
-          <span className="text-slate-400 text-[11px]">HuggingFace Hub Model Pipeline • YOLOv8 Multi-Class Indian Perception</span>
-        </div>
-
-        <div className="flex items-center space-x-2">
-          <span className="px-2 py-0.5 text-[10px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-full">
-            Inference: 14.2ms / frame
-          </span>
-        </div>
-      </div>
-
-    </div>
+      <footer className="px-4 py-3 border-t border-slate-700/70 flex justify-between text-xs text-slate-300"><span>Scenario: {state.scenario || scenario}</span><span>Simulation time: {state.simTime ?? 'N/A'} s</span></footer>
+    </section>
   );
 };
+
+const Metric = ({ icon: Icon, label, value }) => <div className="flex gap-2 items-start"><Icon size={15} className="mt-0.5 text-cyan-300" aria-hidden="true" /><div><p className="text-xs text-slate-300">{label}</p><p className="font-mono text-sm text-slate-100">{value}</p></div></div>;

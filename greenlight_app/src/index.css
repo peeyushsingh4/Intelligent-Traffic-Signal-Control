@@ -21,7 +21,30 @@
   code, pre, .font-mono {
     font-family: var(--font-mono);
   }
+
+  button, select, input { font: inherit; }
+  button:focus-visible, select:focus-visible, input:focus-visible { outline: 2px solid #67e8f9; outline-offset: 2px; }
 }
+
+.control-button { min-height: 36px; display: inline-flex; align-items: center; justify-content: center; gap: .45rem; border-radius: .65rem; padding: .5rem .75rem; font-size: .75rem; font-weight: 700; transition: background-color .15s ease, border-color .15s ease, color .15s ease; }
+.control-button:disabled { cursor: not-allowed; opacity: .45; }
+.control-button--primary { background: #34d399; color: #06251c; }
+.control-button--primary:hover { background: #6ee7b7; }
+.control-button--secondary { border: 1px solid rgba(103,232,249,.45); color: #a5f3fc; background: rgba(8,47,73,.35); }
+.control-button--secondary:not(:disabled):hover { background: rgba(14,116,144,.35); }
+.control-select, .control-input { min-height: 36px; border-radius: .65rem; border: 1px solid rgba(100,116,139,.7); background: rgba(15,23,42,.92); color: #e2e8f0; padding: .45rem .65rem; font-size: .75rem; }
+.control-input { width: 100%; }
+.status-dot { width: .6rem; height: .6rem; border-radius: 999px; background: #64748b; flex: none; }
+.status-dot--live { background: #34d399; box-shadow: 0 0 0 4px rgba(52,211,153,.14); }
+.eyebrow { font: 700 .68rem/1.2 var(--font-mono); letter-spacing: .06em; text-transform: uppercase; color: #94a3b8; }
+.alert { display: flex; gap: .5rem; align-items: center; border-radius: .7rem; padding: .7rem .8rem; font-size: .8rem; }
+.alert--error { color: #fecaca; background: rgba(127,29,29,.28); border: 1px solid rgba(248,113,113,.5); }
+.traffic-grid { background-image: linear-gradient(rgba(148,163,184,.08) 1px, transparent 1px), linear-gradient(90deg, rgba(148,163,184,.08) 1px, transparent 1px); background-size: 32px 32px; pointer-events: none; }
+.sim-vehicle { position: absolute; width: 18px; height: 32px; transform-origin: center; z-index: 2; }
+.sim-vehicle__body { display: block; width: 100%; height: 100%; border: 2px solid var(--vehicle-color); border-radius: 5px; background: color-mix(in srgb, var(--vehicle-color) 35%, #0f172a); box-shadow: 0 0 10px color-mix(in srgb, var(--vehicle-color) 55%, transparent); }
+.sim-vehicle__label { position: absolute; bottom: calc(100% + 5px); left: 50%; transform: translateX(-50%) rotate(var(--counter-rotation, 0deg)); white-space: nowrap; border-radius: 4px; padding: 2px 4px; background: rgba(2,6,23,.9); color: #e2e8f0; font: 600 9px/1.2 var(--font-mono); pointer-events: none; }
+
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; } }
 
 /* Glassmorphism & Cyberpunk UI Utilities */
 .glass-panel {

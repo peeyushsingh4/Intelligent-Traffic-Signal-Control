@@ -1,15 +1,4 @@
-// greenlight.exe — Master Production Mock Data Engine
-// Integrated with Kaggle Indian Vehicle License Plate Dataset (saisirishan/indian-vehicle-dataset)
-// & Real Intersection Video Feeds from Mixkit (Royalty-Free, No Watermark)
-
-// Verified real traffic intersection videos from Mixkit (all return HTTP 200 video/mp4)
-const VIDEO_FEEDS = {
-  bkc:    'https://assets.mixkit.co/videos/1755/1755-720.mp4',   // City busy traffic intersection time-lapse
-  vashi:  'https://assets.mixkit.co/videos/4272/4272-720.mp4',   // Traffic light directing traffic at intersection
-  palm:   'https://assets.mixkit.co/videos/36261/36261-720.mp4', // Many cars speeding through an intersection
-  dadar:  'https://assets.mixkit.co/videos/11/11-720.mp4',       // Aerial view of city traffic at night
-  weh:    'https://assets.mixkit.co/videos/60/60-720.mp4',       // Busy intersection aerial view
-};
+// Demo-only records. They are not sourced from cameras, datasets, or real people.
 
 export const CAMERAS = [
   { 
@@ -22,10 +11,7 @@ export const CAMERAS = [
     ip: '192.168.1.101', 
     lat: 19.0657, 
     lng: 72.8686,
-    videoUrl: VIDEO_FEEDS.bkc,
-    livePlate: 'MH 02 CZ 4921',
-    speedObserved: 64,
-    violationTag: 'RED LIGHT RUNNING'
+    simulationScenario: 'bkc'
   },
   { 
     id: 'cam-vashi-02', 
@@ -37,10 +23,7 @@ export const CAMERAS = [
     ip: '192.168.1.102', 
     lat: 19.0770, 
     lng: 72.9986,
-    videoUrl: VIDEO_FEEDS.vashi,
-    livePlate: 'MH 04 ER 8812',
-    speedObserved: 94,
-    violationTag: 'OVERSPEEDING (94 in 80)'
+    simulationScenario: 'vashi'
   },
   { 
     id: 'cam-palm-03', 
@@ -52,10 +35,7 @@ export const CAMERAS = [
     ip: '192.168.1.103', 
     lat: 19.0330, 
     lng: 73.0160,
-    videoUrl: VIDEO_FEEDS.palm,
-    livePlate: 'KA 03 MN 9210',
-    speedObserved: 72,
-    violationTag: 'RED LIGHT RUNNING (2X REPEAT)'
+    simulationScenario: 'palm_beach'
   },
   { 
     id: 'cam-dadar-04', 
@@ -67,10 +47,7 @@ export const CAMERAS = [
     ip: '192.168.1.104', 
     lat: 19.0178, 
     lng: 72.8478,
-    videoUrl: VIDEO_FEEDS.dadar,
-    livePlate: 'DL 01 AB 3490',
-    speedObserved: 48,
-    violationTag: 'NO HELMET / PASSENGER SAFETY'
+    simulationScenario: null
   },
   { 
     id: 'cam-weh-05', 
@@ -82,10 +59,7 @@ export const CAMERAS = [
     ip: '192.168.1.105', 
     lat: 19.1197, 
     lng: 72.8464,
-    videoUrl: VIDEO_FEEDS.weh,
-    livePlate: 'GJ 01 KL 5543',
-    speedObserved: 88,
-    violationTag: 'WRONG LANE OVERTAKE'
+    simulationScenario: null
   }
 ];
 
@@ -101,10 +75,9 @@ export const MOCK_VIOLATIONS = [
   {
     id: 'viol-mumbai-9001',
     plateNumber: 'MH 02 CZ 4921',
-    datasetSource: 'Kaggle saisirishan/indian-vehicle-dataset',
-    vehicleMakeModel: 'Maruti Suzuki Swift (White Hatchback)',
-    ownerName: 'Arun Patel',
-    ownerMobile: '+91 98201 44921',
+    datasetSource: 'Synthetic demo record — not a real vehicle or person',
+    vehicleMakeModel: 'N/A (synthetic demo)',
+    ownerName: 'Demo registrant (synthetic)',
     violationType: 'RED_LIGHT',
     confidence: 0.94,
     status: 'AUTO_FINED',
@@ -122,10 +95,9 @@ export const MOCK_VIOLATIONS = [
   {
     id: 'viol-mumbai-9002',
     plateNumber: 'MH 04 ER 8812',
-    datasetSource: 'Kaggle saisirishan/indian-vehicle-dataset',
-    vehicleMakeModel: 'Tata Nexon EV (Teal Blue SUV)',
-    ownerName: 'Vikram Shinde',
-    ownerMobile: '+91 98190 88812',
+    datasetSource: 'Synthetic demo record — not a real vehicle or person',
+    vehicleMakeModel: 'N/A (synthetic demo)',
+    ownerName: 'Demo registrant (synthetic)',
     violationType: 'OVERSPEEDING',
     confidence: 0.78,
     status: 'OPERATOR_REVIEW',
@@ -143,10 +115,9 @@ export const MOCK_VIOLATIONS = [
   {
     id: 'viol-mumbai-9003',
     plateNumber: 'KA 03 MN 9210',
-    datasetSource: 'Kaggle saisirishan/indian-vehicle-dataset',
-    vehicleMakeModel: 'Mahindra Thar (Napoli Black 4x4)',
-    ownerName: 'Rajesh Kumar',
-    ownerMobile: '+91 97400 99210',
+    datasetSource: 'Synthetic demo record — not a real vehicle or person',
+    vehicleMakeModel: 'N/A (synthetic demo)',
+    ownerName: 'Demo registrant (synthetic)',
     violationType: 'RED_LIGHT',
     confidence: 0.96,
     status: 'AUTO_FINED',
@@ -164,10 +135,9 @@ export const MOCK_VIOLATIONS = [
   {
     id: 'viol-mumbai-9004',
     plateNumber: 'DL 01 AB 3490',
-    datasetSource: 'Kaggle saisirishan/indian-vehicle-dataset',
-    vehicleMakeModel: 'Bajaj RE 4S Auto-Rickshaw (Yellow/Black)',
-    ownerName: 'Sanjay Sharma',
-    ownerMobile: '+91 98111 33490',
+    datasetSource: 'Synthetic demo record — not a real vehicle or person',
+    vehicleMakeModel: 'N/A (synthetic demo)',
+    ownerName: 'Demo registrant (synthetic)',
     violationType: 'NO_HELMET',
     confidence: 0.89,
     status: 'AUTO_FINED',
@@ -189,9 +159,9 @@ export const FINES_DATABASE = [
     id: 'FINE-2026-8801',
     challanNo: 'MH-CHALLAN-2026-09481',
     plateNumber: 'MH 02 CZ 4921',
-    datasetSource: 'Kaggle saisirishan/indian-vehicle-dataset',
-    ownerName: 'Arun Patel',
-    vehicleModel: 'Maruti Suzuki Swift',
+    datasetSource: 'Synthetic demo record — not a real vehicle or person',
+    ownerName: 'Demo registrant (synthetic)',
+    vehicleModel: 'N/A (synthetic demo)',
     offense: 'Red Light Running at BKC Junction',
     amount: 1000,
     dueDate: '2026-09-15',
@@ -203,9 +173,9 @@ export const FINES_DATABASE = [
     id: 'FINE-2026-8802',
     challanNo: 'MH-CHALLAN-2026-09482',
     plateNumber: 'MH 04 ER 8812',
-    datasetSource: 'Kaggle saisirishan/indian-vehicle-dataset',
-    ownerName: 'Vikram Shinde',
-    vehicleModel: 'Tata Nexon EV',
+    datasetSource: 'Synthetic demo record — not a real vehicle or person',
+    ownerName: 'Demo registrant (synthetic)',
+    vehicleModel: 'N/A (synthetic demo)',
     offense: 'Over-Speeding (94 km/h in 80 km/h zone)',
     amount: 2000,
     dueDate: '2026-09-18',
@@ -217,9 +187,9 @@ export const FINES_DATABASE = [
     id: 'FINE-2026-8803',
     challanNo: 'MH-CHALLAN-2026-09483',
     plateNumber: 'KA 03 MN 9210',
-    datasetSource: 'Kaggle saisirishan/indian-vehicle-dataset',
-    ownerName: 'Rajesh Kumar',
-    vehicleModel: 'Mahindra Thar',
+    datasetSource: 'Synthetic demo record — not a real vehicle or person',
+    ownerName: 'Demo registrant (synthetic)',
+    vehicleModel: 'N/A (synthetic demo)',
     offense: 'Red Light Running (Repeat Offender Multiplier 2x)',
     amount: 2000,
     dueDate: '2026-09-10',
@@ -230,9 +200,9 @@ export const FINES_DATABASE = [
     id: 'FINE-2026-8804',
     challanNo: 'DL-CHALLAN-2026-09484',
     plateNumber: 'DL 01 AB 3490',
-    datasetSource: 'Kaggle saisirishan/indian-vehicle-dataset',
-    ownerName: 'Sanjay Sharma',
-    vehicleModel: 'Bajaj RE Auto-Rickshaw',
+    datasetSource: 'Synthetic demo record — not a real vehicle or person',
+    ownerName: 'Demo registrant (synthetic)',
+    vehicleModel: 'N/A (synthetic demo)',
     offense: 'No Helmet / Passenger Safety Belt',
     amount: 1000,
     dueDate: '2026-09-20',
