@@ -89,7 +89,7 @@ export const IndianRoadDatasetFeed = () => {
         ctx.strokeStyle = '#ffffff';
         ctx.lineWidth = 3;
         ctx.beginPath(); ctx.moveTo(bx, by + len); ctx.lineTo(bx, by); ctx.lineTo(bx + len, by); ctx.stroke();
-        ctx.beginPath(); ctx.moveTo(bx + bw - len, by + bh); ctx.lineTo(bx + bw); ctx.lineTo(bx + bw, by + bh - len); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(bx + bw - len, by + bh); ctx.lineTo(bx + bw, by + bh); ctx.lineTo(bx + bw, by + bh - len); ctx.stroke();
 
         const tagText = `${d.label.toUpperCase()} ${d.conf}`;
         ctx.font = 'bold 10px "JetBrains Mono", monospace';
