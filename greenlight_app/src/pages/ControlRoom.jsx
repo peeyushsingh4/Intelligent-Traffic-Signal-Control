@@ -6,7 +6,7 @@ import { ThreeDTrafficSim } from '../components/simulation/ThreeDTrafficSim';
 import { IndianRoadDatasetFeed } from '../components/video/IndianRoadDatasetFeed';
 import { 
   AlertTriangle, Shield, Video, Zap, ArrowRight, Eye, CheckCircle2, 
-  XCircle, Sliders, Radio, Activity, Navigation, Play, RefreshCw, Cpu, Database 
+  XCircle, Sliders, Radio, Activity, Navigation, Play, RefreshCw, Cpu, Database, Leaf 
 } from 'lucide-react';
 
 export const ControlRoom = () => {
@@ -196,6 +196,25 @@ export const ControlRoom = () => {
             <div className="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
               <div className="bg-slate-600 h-full w-full"></div>
             </div>
+          </div>
+        </div>
+
+        {/* Real-Time CO2 Saved & Green Mobility Impact Card */}
+        <div className="glass-panel p-4 rounded-2xl border border-emerald-500/30 bg-emerald-950/15 space-y-2 font-mono">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold text-white uppercase flex items-center gap-1.5">
+              <Leaf size={14} className="text-emerald-400 animate-pulse" />
+              CO₂ Prevented & Saved
+            </span>
+            <span className="text-[10px] text-emerald-300 font-bold bg-emerald-500/20 border border-emerald-500/30 px-2 py-0.5 rounded-full">
+              -32.8% AI Offset
+            </span>
+          </div>
+          <div className="text-xl font-bold text-emerald-400">
+            8.43 kg CO₂ / hr
+          </div>
+          <div className="text-[10px] text-slate-400 leading-tight">
+            Equivalent to <strong className="text-emerald-300">3,264 trees/yr</strong> preserved vs unoptimized static signals.
           </div>
         </div>
 

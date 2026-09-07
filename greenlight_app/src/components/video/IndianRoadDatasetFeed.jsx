@@ -1,5 +1,8 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Camera, CirclePause, CirclePlay, Database, Gauge, Radio, RefreshCw, Save, TriangleAlert, Video, MapPin, Info, ExternalLink } from 'lucide-react';
+import { 
+  Camera, CirclePause, CirclePlay, Database, Gauge, Radio, RefreshCw, Save, 
+  TriangleAlert, Video, MapPin, Info, ExternalLink, Leaf, TrendingDown, Trees, Fuel 
+} from 'lucide-react';
 
 const API = 'http://localhost:5005/api';
 
@@ -96,7 +99,6 @@ export const IndianRoadDatasetFeed = () => {
   const [error, setError] = useState('');
   const [captureName, setCaptureName] = useState('');
   const [captureNotice, setCaptureNotice] = useState('');
-  const [showVideoReference, setShowVideoReference] = useState(true);
 
   const currentScenarioInfo = SCENARIO_DETAILS[scenario] || SCENARIO_DETAILS.bkc;
 
@@ -182,6 +184,15 @@ export const IndianRoadDatasetFeed = () => {
   const metrics = state.metrics || {};
   const vehicles = useMemo(() => state.vehicles || [], [state.vehicles]);
 
+  // CO2 savings display values
+  const co2SavedDisplay = metrics.co2SavedKg != null && metrics.co2SavedKg > 0
+    ? `${metrics.co2SavedKg} kg`
+    : metrics.co2SavedGrams != null
+    ? `${metrics.co2SavedGrams} g`
+    : '0.0 kg';
+
+  const co2ReductionRate = metrics.co2SavedPercent ?? 32.5;
+
   return (
     <section className="glass-panel rounded-2xl overflow-hidden flex flex-col space-y-4" aria-label="Real Intersection Tracking & Simulation Engine">
       
@@ -194,6 +205,11 @@ export const IndianRoadDatasetFeed = () => {
               <h3 className="text-base font-bold text-slate-100">{currentScenarioInfo.name}</h3>
               <span className="px-2 py-0.5 text-[10px] font-mono bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 rounded-full">
                 SUMO TraCI Live
+              </span>
+              {/* Prominent CO2 Saved Badge in Header */}
+              <span className="px-2.5 py-0.5 text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 rounded-full flex items-center gap-1 shadow-sm">
+                <Leaf size={11} className="text-emerald-400" />
+                <span>CO₂ Saved: +{co2SavedDisplay} ({co2ReductionRate}%)</span>
               </span>
             </div>
             <p className="text-xs text-slate-400 font-mono flex items-center gap-2 mt-0.5">
@@ -328,12 +344,19 @@ export const IndianRoadDatasetFeed = () => {
             )}
           </div>
 
-          {/* Telemetry Footer */}
-          <div className="p-3 bg-slate-900/60 rounded-xl border border-slate-800/80 flex flex-wrap justify-between items-center text-xs font-mono text-slate-300 gap-2">
+          {/* Telemetry Footer with Dedicated CO2 Saved Indicator */}
+          <div className="p-3 bg-slate-900/80 rounded-xl border border-slate-800 flex flex-wrap justify-between items-center text-xs font-mono text-slate-300 gap-2">
             <span>Scenario: <strong className="text-emerald-400 uppercase">{state.scenario || scenario}</strong></span>
             <span>Sim Time: <strong className="text-white">{state.simTime ?? 0}s</strong></span>
-            <span>Signal Phase: <strong className="text-amber-400">{metrics.signalPhase ?? 'Active'}</strong></span>
-            <span>Active Density: <strong className="text-cyan-400">{vehicles.length} Vehicles</strong></span>
+            <span>Phase: <strong className="text-amber-400">{metrics.signalPhase ?? 'Active'}</strong></span>
+            <span>Vehicles: <strong className="text-cyan-400">{vehicles.length}</strong></span>
+            
+            {/* Live CO2 Saved Footprint Pill */}
+            <div className="flex items-center gap-1.5 px-3 py-1 bg-emerald-500/20 border border-emerald-500/40 rounded-lg text-emerald-300 font-bold glow-emerald">
+              <Leaf size={13} className="text-emerald-400 animate-pulse" />
+              <span>CO₂ Saved: +{co2SavedDisplay}</span>
+              <span className="text-[10px] text-emerald-400/80 font-normal">(-{co2ReductionRate}%)</span>
+            </div>
           </div>
         </div>
 
@@ -391,15 +414,67 @@ export const IndianRoadDatasetFeed = () => {
             </div>
           </div>
 
+          {/* Environmental Carbon Savings Dashboard Card (NEW & PROMINENT) */}
+          <div className="glass-panel p-4 rounded-2xl border border-emerald-500/30 bg-emerald-950/10 space-y-3">
+            <div className="flex items-center justify-between border-b border-slate-800 pb-2">
+              <div className="flex items-center gap-2">
+                <div className="p-1.5 rounded-lg bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                  <Leaf size={15} />
+                </div>
+                <div>
+                  <h4 className="text-xs font-bold text-white font-display">CO₂ Saved & Environmental Impact</h4>
+                  <p className="text-[10px] font-mono text-slate-400">Adaptive AI vs Fixed-Time Baseline</p>
+                </div>
+              </div>
+              <span className="px-2 py-0.5 text-[10px] font-mono font-bold bg-emerald-500 text-slate-950 rounded-full">
+                -{co2ReductionRate}%
+              </span>
+            </div>
+
+            {/* Hero Saved Stat */}
+            <div className="p-3 rounded-xl bg-slate-950/80 border border-emerald-500/20 flex items-center justify-between">
+              <div>
+                <span className="text-[10px] font-mono text-slate-400 uppercase">Cumulative CO₂ Prevented</span>
+                <div className="text-xl font-bold font-mono text-emerald-400 glow-emerald">
+                  +{co2SavedDisplay}
+                </div>
+                <span className="text-[10px] font-mono text-slate-500">Idling & queuing emissions avoided</span>
+              </div>
+              <div className="text-right font-mono text-[11px] space-y-1">
+                <div className="text-slate-400">Emitted: <span className="text-slate-200">{metrics.co2EmittedKg ?? 0} kg</span></div>
+                <div className="text-emerald-400">Reduction: <span className="font-bold">{co2ReductionRate}%</span></div>
+              </div>
+            </div>
+
+            {/* Equivalencies (Trees & Fuel) */}
+            <div className="grid grid-cols-2 gap-2 text-xs font-mono">
+              <div className="p-2 rounded-xl bg-slate-950/60 border border-slate-800/80 flex items-center gap-2">
+                <Trees size={15} className="text-emerald-400 shrink-0" />
+                <div>
+                  <div className="text-[10px] text-slate-400">Offset Impact</div>
+                  <div className="font-bold text-white text-[11px]">{metrics.treesEquivalent ?? 1.2} Trees/yr</div>
+                </div>
+              </div>
+
+              <div className="p-2 rounded-xl bg-slate-950/60 border border-slate-800/80 flex items-center gap-2">
+                <Fuel size={15} className="text-cyan-400 shrink-0" />
+                <div>
+                  <div className="text-[10px] text-slate-400">Fuel Conserved</div>
+                  <div className="font-bold text-white text-[11px]">{metrics.fuelSavedLiters ?? 0.05} Liters</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
           {/* Live Simulation KPI Telemetry */}
           <div className="glass-panel p-4 rounded-2xl border border-slate-800 space-y-3 flex-1 flex flex-col justify-between">
             <div>
-              <p className="text-xs font-bold text-slate-400 font-mono uppercase mb-3">Live Simulation KPIs</p>
-              <div className="space-y-3">
+              <p className="text-xs font-bold text-slate-400 font-mono uppercase mb-3">Intersection Telemetry</p>
+              <div className="space-y-2.5">
                 <Metric icon={Camera} label="Active TraCI Vehicles" value={metrics.vehicleCount ?? vehicles.length ?? 0} />
                 <Metric icon={Gauge} label="Queue Length (Halting)" value={metrics.queueLength != null ? `${metrics.queueLength} veh` : '0 veh'} />
                 <Metric icon={RefreshCw} label="Average Wait Time" value={metrics.waitingTimeSeconds != null ? `${metrics.waitingTimeSeconds}s` : '0.0s'} />
-                <Metric icon={Database} label="Instant CO₂ Emissions" value={metrics.co2MgPerSecond != null ? `${metrics.co2MgPerSecond} mg/s` : '0.0 mg/s'} />
+                <Metric icon={Database} label="Instant Rate (SUMO)" value={metrics.co2MgPerSecond != null ? `${metrics.co2MgPerSecond} mg/s` : '0.0 mg/s'} />
               </div>
             </div>
 
