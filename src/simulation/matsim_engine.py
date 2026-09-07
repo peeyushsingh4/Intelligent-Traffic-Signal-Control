@@ -440,25 +440,63 @@ class MatsimSimulationEngine:
                 continue
                 
             progress = min(1.0, agent.distance_on_link / max(1.0, link.length_m))
+            is_queued = agent in link.queue_vehicles
+            agent_hash = sum(ord(c) for c in agent.id)
+            lane_idx = agent_hash % max(1, link.num_lanes)
             
-            # Map link progress to canvas coordinate grid (0 to 1000)
+            # Scenario-specific exact coordinate mapping
             if "south" in link.id or "main" in link.id:
-                x = 500.0 + (random.uniform(-4.0, 4.0))
-                y = 100.0 + progress * 800.0
-                heading = 0.0
+                # Primary Corridor (Southbound down to junction center)
+                lane_x = 425.0 + (lane_idx * 22.0)
+                if is_queued:
+                    q_idx = link.queue_vehicles.index(agent)
+                    row = q_idx // link.num_lanes
+                    col = q_idx % link.num_lanes
+                    x = 425.0 + (col * 22.0)
+                    y = 430.0 - (row * 30.0)
+                    heading = 180.0
+                else:
+                    x = lane_x
+                    y = 60.0 + (progress * 380.0)
+                    heading = 180.0
             elif "east" in link.id or "corridor" in link.id:
-                x = 100.0 + progress * 800.0
-                y = 500.0 + (random.uniform(-4.0, 4.0))
-                heading = 90.0
+                # Eastbound exit corridor towards Diamond Bourse
+                lane_y = 520.0 + (lane_idx * 20.0)
+                if is_queued:
+                    q_idx = link.queue_vehicles.index(agent)
+                    x = 570.0 + (q_idx * 28.0)
+                    y = lane_y
+                    heading = 90.0
+                else:
+                    x = 540.0 + (progress * 420.0)
+                    y = lane_y
+                    heading = 90.0
             elif "alternate" in link.id or "lbs" in link.id or "bypass" in link.id or "detour" in link.id:
-                # Diagonal detour route
-                x = 150.0 + progress * 700.0
-                y = 800.0 - progress * 600.0
-                heading = 45.0
+                # Alternate Arterial Detour Corridor (LBS Marg / Turbhe / Seawoods)
+                # Diverges from WEH and heads diagonally Southwest
+                detour_x = 380.0 - (progress * 280.0) + (lane_idx * 18.0)
+                detour_y = 200.0 + (progress * 620.0)
+                x = detour_x
+                y = detour_y
+                heading = 205.0
+            elif "sion" in link.id or "sec17" in link.id or "sec20" in link.id:
+                # North approach (Sion Link / Sector Road)
+                lane_x = 535.0 + (lane_idx * 22.0)
+                if is_queued:
+                    q_idx = link.queue_vehicles.index(agent)
+                    x = lane_x
+                    y = 580.0 + (q_idx * 28.0)
+                    heading = 0.0
+                else:
+                    x = lane_x
+                    y = 920.0 - (progress * 340.0)
+                    heading = 0.0
             else:
-                x = 500.0 + (random.uniform(-4.0, 4.0))
-                y = 900.0 - progress * 800.0
-                heading = 180.0
+                # West exit (Bandra Station connector)
+                lane_y = 460.0 + (lane_idx * 20.0)
+                x = 440.0 - (progress * 380.0)
+                y = lane_y
+                heading = 270.0
                 
             vehicles_payload.append({
                 "id": agent.id,
