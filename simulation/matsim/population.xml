@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE population SYSTEM "http://www.matsim.org/files/dtd/population_v6.dtd">
+<population>
+  <!-- Commuter Agent -->
+  <person id="agent-commuter-01">
+    <plan selected="yes">
+      <act type="home" x="500.0" y="900.0" end_time="08:30:00"/>
+      <leg mode="car">
+        <route type="links">link-weh-south link-bkc-east</route>
+      </leg>
+      <act type="work" x="900.0" y="500.0" dur="08:00:00"/>
+    </plan>
+  </person>
+  <!-- Emergency Vehicle (Ambulance AMB-108) with Preemption Priority -->
+  <person id="agent-emergency-amb108">
+    <attributes>
+      <attribute name="vehicleType" class="java.lang.String">emergency</attribute>
+      <attribute name="priorityLevel" class="java.lang.Integer">1</attribute>
+    </attributes>
+    <plan selected="yes">
+      <act type="emergency_origin" x="500.0" y="900.0" end_time="08:35:00"/>
+      <leg mode="car">
+        <route type="links">link-weh-south link-bkc-east</route>
+      </leg>
+      <act type="hospital" x="900.0" y="500.0" dur="01:00:00"/>
+    </plan>
+  </person>
+</population>

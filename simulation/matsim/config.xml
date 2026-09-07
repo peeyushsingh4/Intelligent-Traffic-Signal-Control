@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE config SYSTEM "http://www.matsim.org/files/dtd/config_v2.dtd">
+<config>
+  <module name="network">
+    <param name="inputNetworkFile" value="bkc_network.xml"/>
+  </module>
+  <module name="plans">
+    <param name="inputPlansFile" value="population.xml"/>
+  </module>
+  <module name="qsim">
+    <param name="startTime" value="08:00:00"/>
+    <param name="endTime" value="10:00:00"/>
+    <param name="flowCapFactor" value="1.0"/>
+    <param name="storageCapFactor" value="1.0"/>
+    <param name="trafficDynamics" value="queue"/>
+  </module>
+  <module name="signalsystems">
+    <param name="useSignalSystems" value="true"/>
+    <param name="adaptiveControl" value="dynamicReallocation"/>
+    <param name="emergencyPreemption" value="true"/>
+  </module>
+</config>

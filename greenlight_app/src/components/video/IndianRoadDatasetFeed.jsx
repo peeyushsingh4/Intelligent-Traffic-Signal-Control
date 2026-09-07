@@ -1,8 +1,9 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { 
   Camera, CirclePause, CirclePlay, Database, Gauge, Radio, RefreshCw, Save, 
-  TriangleAlert, Video, MapPin, Info, ExternalLink, Leaf, TrendingDown, Trees, Fuel 
+  TriangleAlert, Video, MapPin, Info, ExternalLink, Leaf, TrendingDown, Trees, Fuel, ShieldAlert 
 } from 'lucide-react';
+import { MachineThoughtConsole } from '../simulation/MachineThoughtConsole';
 
 const API = 'http://localhost:5005/api';
 
@@ -204,7 +205,7 @@ export const IndianRoadDatasetFeed = () => {
             <div className="flex items-center gap-2">
               <h3 className="text-base font-bold text-slate-100">{currentScenarioInfo.name}</h3>
               <span className="px-2 py-0.5 text-[10px] font-mono bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 rounded-full">
-                SUMO TraCI Live
+                MATSim Engine (matsim.org)
               </span>
               {/* Prominent CO2 Saved Badge in Header */}
               <span className="px-2.5 py-0.5 text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 rounded-full flex items-center gap-1 shadow-sm">
@@ -236,7 +237,7 @@ export const IndianRoadDatasetFeed = () => {
 
           <button onClick={isPolling ? stop : start} className="control-button control-button--primary text-xs font-bold font-mono flex items-center gap-1.5">
             {isPolling ? <CirclePause size={16} /> : <CirclePlay size={16} />} 
-            {isPolling ? 'Stop SUMO' : 'Start Simulation'}
+            {isPolling ? 'Stop Simulation' : 'Start Simulation'}
           </button>
         </div>
       </header>
@@ -307,25 +308,32 @@ export const IndianRoadDatasetFeed = () => {
               ► {currentScenarioInfo.corridors.east}
             </div>
 
-            {/* Live TraCI Vehicles Rendered from Real Simulation State */}
+            {/* Live Multi-Agent Vehicles Rendered from MATSim State */}
             {vehicles.map((vehicle) => {
               const left = `${Math.min(96, Math.max(4, vehicle.x / 10))}%`;
               const bottom = `${Math.min(96, Math.max(4, vehicle.y / 10))}%`;
+              const isEmergency = vehicle.is_emergency || vehicle.type === 'emergency';
+              const isRerouted = vehicle.has_rerouted;
+              
               return (
                 <div 
                   key={vehicle.id} 
-                  className="sim-vehicle transition-all duration-300" 
+                  className={`sim-vehicle transition-all duration-300 ${isEmergency ? 'z-30 scale-125' : ''}`} 
                   style={{ 
                     left, 
                     bottom, 
-                    '--vehicle-color': vehicleColor(vehicle.type), 
+                    '--vehicle-color': isEmergency ? '#ef4444' : (isRerouted ? '#10b981' : vehicleColor(vehicle.type)), 
                     transform: `translate(-50%, 50%) rotate(${vehicle.heading}deg)` 
                   }} 
                   title={`${vehicle.id} · ${vehicle.type} · ${vehicle.speedKmh} km/h · ${vehicle.lane}`}
                 >
-                  <span className="sim-vehicle__body shadow-lg" />
-                  <span className="sim-vehicle__label font-mono text-[9px] bg-slate-950/95 px-1 rounded border border-slate-700">
-                    {vehicle.id} · {vehicle.speedKmh} km/h
+                  <span className={`sim-vehicle__body shadow-lg ${isEmergency ? 'glow-red animate-pulse' : ''}`} />
+                  <span className={`sim-vehicle__label font-mono text-[9px] px-1 rounded border ${
+                    isEmergency 
+                      ? 'bg-red-950/95 text-red-300 border-red-500 font-bold' 
+                      : (isRerouted ? 'bg-emerald-950/95 text-emerald-300 border-emerald-500' : 'bg-slate-950/95 text-slate-200 border-slate-700')
+                  }`}>
+                    {isEmergency ? `🚨 ${vehicle.id} (EVP)` : (isRerouted ? `🔀 ${vehicle.id}` : `${vehicle.id} · ${vehicle.speedKmh} km/h`)}
                   </span>
                 </div>
               );
@@ -335,9 +343,9 @@ export const IndianRoadDatasetFeed = () => {
               <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-sm grid place-items-center p-6 text-center z-20">
                 <div className="max-w-md space-y-3">
                   <Radio className="mx-auto w-8 h-8 text-emerald-400 animate-pulse" />
-                  <p className="font-bold text-white text-sm">Start SUMO Scenario to Stream Live Ground Truth</p>
+                  <p className="font-bold text-white text-sm">Start MATSim Simulation to Stream Live Multi-Agent Telemetry</p>
                   <p className="text-xs text-slate-300 font-mono">
-                    Intersection geometry is calibrated against real Google Maps satellite road networks. Click 'Start Simulation' to initiate TraCI state polling.
+                    MATSim agent-based link queue model with dynamic green timing reallocation, emergency priority preemption, and AI cognitive explainability.
                   </p>
                 </div>
               </div>
@@ -503,6 +511,14 @@ export const IndianRoadDatasetFeed = () => {
 
         </div>
 
+      </div>
+
+      {/* Machine Thought AI Explainability Console */}
+      <div className="p-4 pt-0">
+        <MachineThoughtConsole 
+          thoughts={state.machineThoughts || []} 
+          links={state.links || []} 
+        />
       </div>
 
     </section>

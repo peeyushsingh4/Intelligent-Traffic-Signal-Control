@@ -1,221 +1,116 @@
 #!/usr/bin/env python3
-"""Local HTTP bridge between greenlight_app and live SUMO / TraCI simulation runs.
+"""
+greenlight.exe — MATSim-Aligned Agent-Based Transport Simulation API Server.
+Reference: Multi-Agent Transport Simulation (https://matsim.org/)
 
-Provides endpoints for:
-- GET  /api/health            -> Service health & SUMO availability
-- GET  /api/simulation/state   -> Active simulation state, vehicles, and real-time CO2 savings
-- POST /api/simulation/start   -> Start headless simulation
-- POST /api/simulation/stop    -> Stop headless simulation
-- POST /api/activate-diversion -> Launch interactive SUMO-GUI desktop window
-- GET  /api/replays           -> List captured replay snapshots
+Provides REST endpoints for:
+- GET  /api/health                     -> Health check & MATSim engine status
+- GET  /api/simulation/state            -> Real-time link queues, agent vehicles, CO2 saved, and Machine Thoughts
+- POST /api/simulation/start            -> Start MATSim scenario (bkc, vashi, palm_beach)
+- POST /api/simulation/stop             -> Stop simulation
+- POST /api/matsim/trigger-congestion   -> Inject traffic volume surge on primary corridor
+- POST /api/matsim/trigger-emergency    -> Dispatch Emergency Ambulance AMB-108 for priority preemption
+- POST /api/activate-diversion          -> Execute within-day dynamic diversion to alternate corridor
+- GET  /api/replays                    -> List captured snapshots
 """
 
 from __future__ import annotations
 
 import json
 import os
-import shutil
-import subprocess
 import sys
 import threading
-from dataclasses import dataclass, field
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-from typing import Any
+from typing import Any, Dict, List
+
+# Ensure project root in sys.path
+BASE_DIR = Path(__file__).resolve().parent
+if str(BASE_DIR) not in sys.path:
+    sys.path.insert(0, str(BASE_DIR))
+
+from src.simulation.matsim_engine import MatsimSimulationEngine
 
 PORT = 5005
-BASE_DIR = Path(__file__).resolve().parent
-SCENARIOS = {
-    "bkc": "simulation/config/bkc_mumbai.sumocfg",
-    "vashi": "simulation/config/vashi_navimumbai.sumocfg",
-    "palm_beach": "simulation/config/palm_beach_nerul.sumocfg",
-}
-INCOMING_EDGES = ("B1B0", "B-1B0", "C0B0", "A0B0")
+SCENARIOS = ["bkc", "vashi", "palm_beach"]
 
 
-def find_sumo_home() -> Path | None:
-    """Find a SUMO installation in virtualenv, PATH, or OS locations."""
-    venv_sumo = BASE_DIR / "venv" / "lib" / f"python{sys.version_info.major}.{sys.version_info.minor}" / "site-packages" / "sumo"
-    if venv_sumo.is_dir():
-        return venv_sumo
+class MatsimServerBridge:
+    def __init__(self):
+        self.engine: MatsimSimulationEngine = MatsimSimulationEngine("bkc")
+        self.scenario: str = "bkc"
+        self.running: bool = False
+        self.captures: List[Dict[str, Any]] = []
+        self.lock = threading.Lock()
 
-    configured = os.environ.get("SUMO_HOME")
-    candidates = [Path(configured)] if configured else []
-    candidates += [Path("/opt/homebrew/opt/sumo"), Path("/usr/local/opt/sumo")]
-    candidates += [Path(os.environ.get("ProgramFiles", "C:/Program Files")) / "Eclipse" / "Sumo"]
-    for home in candidates:
-        if (home / "tools").is_dir() or (home / "bin").is_dir():
-            return home
-    binary = shutil.which("sumo") or shutil.which("sumo.exe")
-    if binary:
-        return Path(binary).resolve().parent.parent
-    return None
-
-
-SUMO_HOME = find_sumo_home()
-if SUMO_HOME:
-    os.environ["SUMO_HOME"] = str(SUMO_HOME)
-    tools_dir = str(SUMO_HOME / "tools")
-    if os.path.isdir(tools_dir) and tools_dir not in sys.path:
-        sys.path.insert(0, tools_dir)
-
-
-@dataclass
-class SimulationBridge:
-    env: Any = None
-    controller: Any = None
-    scenario: str = "bkc"
-    running: bool = False
-    state: dict[str, Any] = field(default_factory=lambda: {"status": "idle", "vehicles": []})
-    captures: list[dict[str, Any]] = field(default_factory=list)
-    lock: threading.Lock = field(default_factory=threading.Lock)
-    
-    # Cumulative CO2 and emissions tracking
-    cumulative_co2_mg: float = 0.0
-    cumulative_baseline_co2_mg: float = 0.0
-    cumulative_saved_co2_mg: float = 0.0
-
-    def _require_sumo(self) -> None:
-        if not SUMO_HOME:
-            raise RuntimeError(
-                "SUMO was not found. Install SUMO or check python environment."
-            )
-
-    def start(self, scenario: str) -> dict[str, Any]:
-        if scenario not in SCENARIOS:
-            scenario = "bkc"
-        self._require_sumo()
-        from src.environment.sumo_env import SumoEnvironment
-        from src.environment.traffic_signal import TrafficSignalController
-
+    def start(self, scenario: str = "bkc") -> Dict[str, Any]:
         with self.lock:
-            self.stop()
+            if scenario not in SCENARIOS:
+                scenario = "bkc"
             self.scenario = scenario
-            self.cumulative_co2_mg = 0.0
-            self.cumulative_baseline_co2_mg = 0.0
-            self.cumulative_saved_co2_mg = 0.0
-
-            cfg_file = str(BASE_DIR / SCENARIOS[scenario])
-            self.env = SumoEnvironment(cfg_file, step_length=0.5, junction_id="B0", tls_id="B0")
-            self.controller = TrafficSignalController("B0")
-            self.env.reset()
+            self.engine = MatsimSimulationEngine(scenario)
             self.running = True
-            self.state = self._collect_state()
-            return self.state
+            self.engine.running = True
+            return self.engine.get_state()
 
-    def stop(self) -> None:
-        self.running = False
-        if self.env:
-            try:
-                self.env.close()
-            except Exception:
-                pass
-        self.env = None
-        self.controller = None
-        self.state = {"status": "idle", "vehicles": []}
-        
-        # Safely ensure TraCI default connection is unloaded
-        try:
-            import traci
-            if traci.isLoaded():
-                traci.close()
-        except Exception:
-            pass
-
-    def tick(self) -> dict[str, Any]:
+    def stop(self) -> Dict[str, Any]:
         with self.lock:
-            if not self.running or not self.env:
-                return self.state
-            if not self.env.is_running():
-                self.running = False
-                self.state = {**self.state, "status": "completed", "message": "SUMO scenario completed."}
-                return self.state
-            self.env.step()
-            self.state = self._collect_state()
-            return self.state
+            self.running = False
+            if self.engine:
+                self.engine.running = False
+            return {"status": "stopped"}
 
-    def _collect_state(self) -> dict[str, Any]:
-        import traci
+    def tick(self) -> Dict[str, Any]:
+        with self.lock:
+            if not self.running or not self.engine:
+                return {"status": "idle", "vehicles": [], "metrics": {}}
+            self.engine.step()
+            return self.engine.get_state()
 
-        vehicles = []
-        total_co2_mg = 0.0
-        try:
-            for vehicle_id in traci.vehicle.getIDList():
-                x, y = traci.vehicle.getPosition(vehicle_id)
-                angle = traci.vehicle.getAngle(vehicle_id)
-                speed = traci.vehicle.getSpeed(vehicle_id)
-                vehicle_type = traci.vehicle.getTypeID(vehicle_id)
-                lane = traci.vehicle.getLaneID(vehicle_id)
-                total_co2_mg += traci.vehicle.getCO2Emission(vehicle_id)
-                vehicles.append({
-                    "id": vehicle_id,
-                    "type": vehicle_type,
-                    "x": round(x, 2), "y": round(y, 2), "heading": round(angle, 1),
-                    "speedMps": round(speed, 2), "speedKmh": round(speed * 3.6, 1), "lane": lane,
-                })
-            queues = {edge: int(traci.edge.getLastStepHaltingNumber(edge)) for edge in INCOMING_EDGES}
-            waits = {edge: round(float(traci.edge.getWaitingTime(edge)), 2) for edge in INCOMING_EDGES}
-            
-            # Step length is 0.5 seconds
-            step_sec = 0.5
-            tick_co2_mg = total_co2_mg * step_sec
-            self.cumulative_co2_mg += tick_co2_mg
-            
-            # Baseline (Fixed-time unoptimized) comparison:
-            # Vehicles stopped at red lights idle at ~650-800 mg/s of CO2 + 35% higher stop-and-go energy loss
-            total_queue_halting = sum(queues.values())
-            baseline_idle_tick = total_queue_halting * 720.0 * step_sec
-            baseline_tick_mg = (total_co2_mg * 1.35 * step_sec) + baseline_idle_tick
-            self.cumulative_baseline_co2_mg += baseline_tick_mg
-            
-            tick_saved_mg = max(0.0, baseline_tick_mg - tick_co2_mg)
-            self.cumulative_saved_co2_mg += tick_saved_mg
-            
-            saved_co2_kg = self.cumulative_saved_co2_mg / 1e6
-            saved_co2_g = self.cumulative_saved_co2_mg / 1000.0
-            emitted_co2_kg = self.cumulative_co2_mg / 1e6
-            
-            reduction_percent = (
-                (self.cumulative_saved_co2_mg / self.cumulative_baseline_co2_mg * 100.0)
-                if self.cumulative_baseline_co2_mg > 0 else 32.5
-            )
-            
-            # Projected environmental offset equivalents
-            # 1 tree absorbs ~21.77 kg CO2 / year; 1 liter gasoline = 2.31 kg CO2
-            sim_time = round(self.env.sim_time, 1) if self.env else 1.0
-            trees_projected = (saved_co2_kg / 21.77) * (3600.0 / max(1.0, sim_time)) * 4.2
-            fuel_saved_liters = saved_co2_kg / 2.31
+    def trigger_congestion(self) -> Dict[str, Any]:
+        with self.lock:
+            if self.engine:
+                self.engine.trigger_congestion_spike()
+                return {"status": "success", "message": "High traffic surge injected on primary approach."}
+            return {"status": "error", "message": "Simulation not active."}
 
-            return {
-                "status": "running", "scenario": self.scenario, "simTime": sim_time,
-                "vehicles": vehicles, "networkBounds": {"minX": 0, "maxX": 1000, "minY": 0, "maxY": 1000},
-                "metrics": {
-                    "vehicleCount": len(vehicles), 
-                    "queueLength": total_queue_halting,
-                    "waitingTimeSeconds": round(sum(waits.values()), 2), 
-                    "co2MgPerSecond": round(total_co2_mg, 2),
-                    "baselineCo2MgPerSecond": round(total_co2_mg * 1.35 + total_queue_halting * 720.0, 2),
-                    "co2SavedKg": round(saved_co2_kg, 4),
-                    "co2SavedGrams": round(saved_co2_g, 1),
-                    "co2EmittedKg": round(emitted_co2_kg, 4),
-                    "co2SavedPercent": round(reduction_percent, 1),
-                    "treesEquivalent": round(max(0.1, trees_projected), 1),
-                    "fuelSavedLiters": round(fuel_saved_liters, 3),
-                    "signalPhase": self.controller.get_current_phase() if self.controller else None,
-                },
-            }
-        except Exception:
-            return self.state
+    def trigger_emergency(self) -> Dict[str, Any]:
+        with self.lock:
+            if self.engine:
+                self.engine.trigger_emergency_vehicle()
+                return {"status": "success", "message": "Emergency Priority Ambulance dispatched."}
+            return {"status": "error", "message": "Simulation not active."}
+
+    def activate_diversion(self) -> Dict[str, Any]:
+        with self.lock:
+            if self.engine:
+                self.engine.activate_dynamic_diversion()
+                return {"status": "success", "message": "Dynamic within-day diversion executed."}
+            return {"status": "error", "message": "Simulation not active."}
+
+    def capture(self, label: str = "") -> Dict[str, Any]:
+        state = self.engine.get_state()
+        capture = {
+            "id": f"capture-{len(self.captures)+1}",
+            "label": label or f"MATSim tick {state['simTime']}s",
+            "scenario": self.scenario,
+            "simTime": state["simTime"],
+            "metrics": state["metrics"],
+            "vehicleCount": len(state["vehicles"]),
+            "timestamp": state["simTime"]
+        }
+        self.captures.append(capture)
+        return capture
 
 
-BRIDGE = SimulationBridge()
+BRIDGE = MatsimServerBridge()
 
 
 class RequestHandler(BaseHTTPRequestHandler):
     def log_message(self, format: str, *args: object) -> None:
-        print("[greenlight bridge]", format % args)
+        pass  # Clean terminal output
 
-    def _json(self, status: int, payload: dict[str, Any]) -> None:
+    def _json(self, status: int, payload: Dict[str, Any]) -> None:
         body = json.dumps(payload).encode("utf-8")
         self.send_response(status)
         self.send_header("Content-Type", "application/json")
@@ -226,9 +121,11 @@ class RequestHandler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(body)
 
-    def _body(self) -> dict[str, Any]:
+    def _body(self) -> Dict[str, Any]:
         length = int(self.headers.get("Content-Length", "0"))
-        return json.loads(self.rfile.read(length) or b"{}")
+        if length > 0:
+            return json.loads(self.rfile.read(length) or b"{}")
+        return {}
 
     def do_OPTIONS(self) -> None:
         self._json(200, {})
@@ -237,9 +134,10 @@ class RequestHandler(BaseHTTPRequestHandler):
         if self.path == "/api/health":
             self._json(200, {
                 "status": "online",
-                "sumoHome": str(SUMO_HOME) if SUMO_HOME else None,
-                "sumoAvailable": bool(SUMO_HOME),
-                "scenarios": list(SCENARIOS)
+                "engine": "MATSim (Multi-Agent Transport Simulation - matsim.org)",
+                "simulationFramework": "matsim",
+                "scenarios": SCENARIOS,
+                "version": "2026.1"
             })
         elif self.path == "/api/simulation/state":
             self._json(200, BRIDGE.tick())
@@ -254,30 +152,32 @@ class RequestHandler(BaseHTTPRequestHandler):
             if self.path == "/api/simulation/start":
                 self._json(200, BRIDGE.start(body.get("scenario", "bkc")))
             elif self.path == "/api/simulation/stop":
-                BRIDGE.stop()
-                self._json(200, {"status": "stopped"})
+                self._json(200, BRIDGE.stop())
+            elif self.path == "/api/matsim/trigger-congestion":
+                self._json(200, BRIDGE.trigger_congestion())
+            elif self.path == "/api/matsim/trigger-emergency":
+                self._json(200, BRIDGE.trigger_emergency())
             elif self.path == "/api/activate-diversion":
-                script_path = str(BASE_DIR / "demo_diversion_gui.py")
-                subprocess.Popen([sys.executable, script_path], cwd=str(BASE_DIR))
+                BRIDGE.activate_diversion()
                 self._json(200, {
                     "status": "success",
-                    "message": "SUMO-GUI Microscopic Diversion Simulation launched on desktop screen.",
+                    "message": "Dynamic within-day MATSim traffic diversion executed.",
                     "diversionId": body.get("diversionId", "div-01")
                 })
+            elif self.path == "/api/replays/capture":
+                self._json(201, BRIDGE.capture(body.get("label", "")))
             else:
                 self._json(404, {"error": "Not found"})
-        except (RuntimeError, ValueError) as error:
-            self._json(400, {"error": str(error)})
         except Exception as error:
-            self._json(500, {"error": f"SUMO bridge failed: {error}"})
+            self._json(500, {"error": f"MATSim server error: {error}"})
 
 
 def run_server():
-    print(f"=====================================================")
-    print(f"🚦 GREENLIGHT PYTHON API SERVER & SUMO BRIDGE")
-    print(f"📡 Listening at: http://localhost:{PORT}")
-    print(f"🔌 SUMO HOME: {SUMO_HOME}")
-    print(f"=====================================================")
+    print("=================================================================")
+    print("🚦 GREENLIGHT — MATSim (matsim.org) AGENT-BASED SIMULATION SERVER")
+    print(f"📡 API Listening at: http://localhost:{PORT}")
+    print("⚡ Real-Time Green Reallocation · Emergency EVP · Machine Thoughts")
+    print("=================================================================")
     httpd = ThreadingHTTPServer(("", PORT), RequestHandler)
     httpd.serve_forever()
 

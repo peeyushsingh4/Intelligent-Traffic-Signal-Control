@@ -130,7 +130,7 @@ export const ControlRoom = () => {
               }`}
             >
               <Database className="w-3.5 h-3.5" />
-              <span>Live SUMO ground truth</span>
+              <span>MATSim Multi-Agent View</span>
             </button>
             <button 
               onClick={() => setActiveViewMode('3D_WEBGL')}
@@ -165,7 +165,7 @@ export const ControlRoom = () => {
                 <TrafficMap />
               </div>
               <div className="h-1/2 glass-panel p-5 rounded-2xl flex items-center justify-center text-center text-sm text-slate-300">
-                CCTV playback is not connected. Use Live SUMO ground truth for the real simulation feed.
+                CCTV playback is not connected. Use MATSim Multi-Agent View for the real simulation feed.
               </div>
             </div>
           )}
