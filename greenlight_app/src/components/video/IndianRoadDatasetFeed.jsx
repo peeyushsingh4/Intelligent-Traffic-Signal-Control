@@ -1,12 +1,11 @@
-import React, { useEffect, useMemo, useState, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
-  Camera, CirclePause, CirclePlay, Database, Gauge, Radio, RefreshCw, Save, 
-  TriangleAlert, Video, MapPin, Info, ExternalLink, Leaf, TrendingDown, Trees, 
-  Fuel, ShieldAlert, Zap, Navigation, Clock, Eye, Sliders, Activity, AlertTriangle
+  Play, Pause, RotateCcw, AlertTriangle, CheckCircle2, Shield, Eye, ShieldAlert,
+  Zap, ArrowRight, Video, Navigation, Activity, Clock, Sliders, Leaf, Cpu
 } from 'lucide-react';
 import { MachineThoughtConsole } from '../simulation/MachineThoughtConsole';
 
-const API = 'http://localhost:5005/api';
+const API = '/api';
 
 const CCTV_CAMERAS = {
   bkc: {
@@ -15,19 +14,13 @@ const CCTV_CAMERAS = {
     name: 'BKC Junction (Bandra East, Mumbai)',
     location: 'Western Express Hwy × BKC Main Gateway',
     coordinates: '19.0657° N, 72.8686° E',
-    cctvUrl: '/videos/istockphoto-2193558699-640_adpp_is.mp4',
+    rawUrl: '/videos/istockphoto-2193558699-640_adpp_is.mp4',
+    trackedUrl: '/videos/istockphoto-2193558699-640_adpp_is_tracked.mp4',
+    tracksJson: '/videos/istockphoto-2193558699-640_adpp_is_compact.json',
     detourCorridor: 'LBS Marg Alternate Detour',
     speedLimit: 60,
     fps: 25.0,
-    bitrate: '5.2 Mbps',
-    detections: [
-      { id: 'det-1', type: 'SUV / CAR', conf: 0.98, speed: 18, plate: 'MH 02 CZ 4921', bbox: { top: '65%', left: '58%', width: '18%', height: '26%' } },
-      { id: 'det-2', type: 'AUTO-RICKSHAW', conf: 0.97, speed: 15, plate: 'MH 03 BT 9012', bbox: { top: '64%', left: '49%', width: '12%', height: '22%' } },
-      { id: 'det-3', type: 'VAN / LCV', conf: 0.96, speed: 22, plate: 'MH 01 CV 2841', bbox: { top: '56%', left: '27%', width: '16%', height: '20%' } },
-      { id: 'det-4', type: 'AUTO-RICKSHAW', conf: 0.95, speed: 16, plate: 'MH 04 ER 5510', bbox: { top: '46%', left: '71%', width: '11%', height: '18%' } },
-      { id: 'det-5', type: 'SEDAN', conf: 0.97, speed: 24, plate: 'MH 12 QX 1144', bbox: { top: '48%', left: '22%', width: '14%', height: '18%' } },
-      { id: 'det-6', type: 'AUTO-RICKSHAW', conf: 0.96, speed: 14, plate: 'MH 43 AZ 1205', bbox: { top: '74%', left: '72%', width: '14%', height: '22%' } },
-    ]
+    bitrate: '5.2 Mbps'
   },
   vashi: {
     id: 'CAM-02',
@@ -35,18 +28,13 @@ const CCTV_CAMERAS = {
     name: 'Vashi Highway Interchange (Navi Mumbai)',
     location: 'Sion-Panvel Expressway Mainline',
     coordinates: '19.0770° N, 72.9986° E',
-    cctvUrl: '/videos/istockphoto-1328725609-640_adpp_is.mp4',
+    rawUrl: '/videos/istockphoto-1328725609-640_adpp_is.mp4',
+    trackedUrl: '/videos/istockphoto-1328725609-640_adpp_is_tracked.mp4',
+    tracksJson: '/videos/istockphoto-1328725609-640_adpp_is_compact.json',
     detourCorridor: 'Turbhe MIDC Bypass Corridor',
     speedLimit: 80,
     fps: 24.0,
-    bitrate: '5.8 Mbps',
-    detections: [
-      { id: 'det-v1', type: 'SUV', conf: 0.98, speed: 48, plate: 'MH 43 BE 8812', bbox: { top: '67%', left: '66%', width: '10%', height: '16%' } },
-      { id: 'det-v2', type: 'CAR', conf: 0.97, speed: 52, plate: 'MH 01 BT 3842', bbox: { top: '76%', left: '20%', width: '9%', height: '14%' } },
-      { id: 'det-v3', type: 'CAR', conf: 0.96, speed: 55, plate: 'MH 02 AB 1100', bbox: { top: '66%', left: '34%', width: '8%', height: '13%' } },
-      { id: 'det-v4', type: 'CAR', conf: 0.95, speed: 50, plate: 'MH 46 BB 3321', bbox: { top: '79%', left: '30%', width: '9%', height: '15%' } },
-      { id: 'det-v5', type: 'AUTO-RICKSHAW', conf: 0.94, speed: 38, plate: 'MH 43 CC 9090', bbox: { top: '63%', left: '93%', width: '7%', height: '12%' } },
-    ]
+    bitrate: '5.8 Mbps'
   },
   palm_beach: {
     id: 'CAM-03',
@@ -54,62 +42,28 @@ const CCTV_CAMERAS = {
     name: 'Palm Beach Road (Nerul, Navi Mumbai)',
     location: 'Divided Coastal Express Boulevard',
     coordinates: '19.0330° N, 73.0160° E',
-    cctvUrl: '/videos/istockphoto-1173077963-640_adpp_is.mp4',
+    rawUrl: '/videos/istockphoto-1173077963-640_adpp_is.mp4',
+    trackedUrl: '/videos/istockphoto-1173077963-640_adpp_is_tracked.mp4',
+    tracksJson: '/videos/istockphoto-1173077963-640_adpp_is_compact.json',
     detourCorridor: 'Seawoods Coastal Bypass',
     speedLimit: 70,
     fps: 24.0,
-    bitrate: '4.5 Mbps',
-    detections: [
-      { id: 'det-p1', type: 'CAR', conf: 0.99, speed: 12, plate: 'MH 01 XX 1010', bbox: { top: '60%', left: '0%', width: '50%', height: '38%' } },
-      { id: 'det-p2', type: 'SUV / MPV', conf: 0.97, speed: 14, plate: 'MH 02 YY 2020', bbox: { top: '52%', left: '52%', width: '48%', height: '46%' } },
-      { id: 'det-p3', type: 'AUTO-RICKSHAW', conf: 0.96, speed: 16, plate: 'MH 43 AZ 9901', bbox: { top: '50%', left: '10%', width: '18%', height: '20%' } },
-      { id: 'det-p4', type: 'VAN', conf: 0.95, speed: 18, plate: 'MH 14 ZZ 7788', bbox: { top: '45%', left: '44%', width: '20%', height: '22%' } },
-    ]
+    bitrate: '4.5 Mbps'
   }
 };
 
 export const IndianRoadDatasetFeed = () => {
   const [scenarioKey, setScenarioKey] = useState('bkc');
-  const [isPlaying, setIsPlaying] = useState(true);
-  const [isServerActive, setIsServerActive] = useState(false);
-  const [state, setState] = useState({
-    status: 'running',
-    simTime: 12.0,
-    metrics: {
-      vehicleCount: 38,
-      queueLength: 6,
-      waitingTimeSeconds: 4.2,
-      co2MgPerSecond: 28400.0,
-      co2SavedKg: 1.842,
-      co2SavedGrams: 1842.0,
-      co2SavedPercent: 33.4,
-      treesEquivalent: 12.6,
-      fuelSavedLiters: 0.797,
-      signalPhase: 'Phase 1: Southbound Green Wave',
-      diversionActive: false,
-      emergencyActive: false
-    },
-    links: [
-      { id: 'link-1', name: 'Western Express Hwy (Southbound)', density: 68.0, queueLength: 5, greenSeconds: 44.0, isGreen: true, isAlternate: false },
-      { id: 'link-2', name: 'BKC Main Corridor (Eastbound)', density: 42.0, queueLength: 1, greenSeconds: 30.0, isGreen: false, isAlternate: false },
-      { id: 'link-3', name: 'LBS Marg Alternate Corridor', density: 18.0, queueLength: 0, greenSeconds: 16.0, isGreen: false, isAlternate: true },
-    ],
-    machineThoughts: [
-      {
-        timestamp: 12.0,
-        phase: 'SIGNAL_REALLOCATION',
-        title: '⏱️ Adaptive Timing: 14s Transferred from Free Lane to South Corridor',
-        reasoning: 'LBS Marg approach operating at low load (18% capacity). Subtracted 14 seconds from LBS Marg (reduced to 16s) and transferred directly to congested Western Express Highway (increased to 44s) to clear queuing vehicles.',
-        confidence: 0.94,
-        telemetry: { donorLink: 'LBS Marg', timeSubtracted: '14s', beneficiaryLink: 'WEH South', greenDuration: '44s' }
-      }
-    ]
-  });
-
-  const [emergencyBlink, setEmergencyBlink] = useState(false);
-  const [showAiBoxes, setShowAiBoxes] = useState(true);
+  const [viewMode, setViewMode] = useState('OVERLAY'); // 'OVERLAY' (Dynamic HUD), 'TRACKED_VIDEO' (YOLO Render), 'RAW'
+  const [tracksData, setTracksData] = useState(null);
+  const [liveDetections, setLiveDetections] = useState([]);
   const [currentTime, setCurrentTime] = useState('');
+  const [emergencyBlink, setEmergencyBlink] = useState(false);
+  const [liveCarbonRate, setLiveCarbonRate] = useState(284.0);
+  const [liveCumulativeCarbon, setLiveCumulativeCarbon] = useState(1.842);
+  
   const videoRef = useRef(null);
+  const animRef = useRef(null);
 
   const activeCam = CCTV_CAMERAS[scenarioKey] || CCTV_CAMERAS.bkc;
 
@@ -124,320 +78,364 @@ export const IndianRoadDatasetFeed = () => {
     return () => clearInterval(interval);
   }, []);
 
-  // Poll backend state if server is online
+  // Fetch real frame-by-frame tracks generated by YOLOv8
   useEffect(() => {
-    let timer = null;
-    const fetchState = async () => {
-      try {
-        const res = await fetch(`${API}/simulation/state`);
-        if (res.ok) {
-          const data = await res.json();
-          setState(prev => ({
-            ...prev,
-            ...data,
-            metrics: { ...prev.metrics, ...data.metrics },
-            links: data.links?.length ? data.links : prev.links,
-            machineThoughts: data.machineThoughts?.length ? data.machineThoughts : prev.machineThoughts
-          }));
-          setIsServerActive(true);
-        }
-      } catch (err) {
-        // Backend offline: Keep resilient local interactive state
-      }
-    };
-
-    fetchState();
-    timer = setInterval(fetchState, 1000);
-    return () => clearInterval(timer);
+    setTracksData(null);
+    setLiveDetections([]);
+    fetch(activeCam.tracksJson)
+      .then(res => res.json())
+      .then(data => {
+        setTracksData(data);
+      })
+      .catch(err => console.error('Failed to load tracking data:', err));
   }, [scenarioKey]);
 
-  // Handle Congestion Surge Trigger
-  const handleTriggerSurge = async () => {
-    try {
-      await fetch(`${API}/matsim/trigger-congestion`, { method: 'POST' });
-    } catch (e) {
-      // Local fallback
-    }
+  // Synchronize bounding boxes & live carbon footprint with video playback time
+  useEffect(() => {
+    const syncLoop = () => {
+      const video = videoRef.current;
+      if (video && tracksData && !video.paused) {
+        const timeKey = (Math.round(video.currentTime * 10) / 10).toFixed(1);
+        const dets = tracksData[timeKey];
+        if (dets && dets.length > 0) {
+          setLiveDetections(dets);
+          // Calculate live carbon metrics from tracked vehicles in this frame
+          const totalRate = dets.reduce((acc, d) => acc + (d.emission_rate || 28.4), 0);
+          setLiveCarbonRate(round(totalRate, 1));
+          setLiveCumulativeCarbon(prev => round(prev + (totalRate / 1000.0) * 0.00003, 3));
+        }
+      }
+      animRef.current = requestAnimationFrame(syncLoop);
+    };
 
-    setState(prev => {
-      const newLinks = prev.links.map(l => {
-        if (l.isAlternate) return { ...l, greenSeconds: Math.max(12, l.greenSeconds - 14) };
-        if (l.isGreen || l.density > 50) return { ...l, density: 84.0, queueLength: 18, greenSeconds: l.greenSeconds + 14 };
-        return l;
-      });
+    animRef.current = requestAnimationFrame(syncLoop);
+    return () => {
+      if (animRef.current) cancelAnimationFrame(animRef.current);
+    };
+  }, [tracksData]);
 
-      const newThought = {
-        timestamp: Math.round((prev.simTime + 2.0) * 10) / 10,
+  const round = (num, dec) => Math.round(num * Math.pow(10, dec)) / Math.pow(10, dec);
+
+  // Simulation state for telemetry
+  const [state, setState] = useState({
+    status: 'running',
+    metrics: {
+      vehicleCount: 28,
+      queueLength: 6,
+      waitingTimeSeconds: 4.2,
+      co2SavedKg: 1.842,
+      co2SavedPercent: 33.4,
+      diversionActive: false,
+      emergencyActive: false
+    },
+    links: [
+      { id: 'link-1', name: 'Western Express Hwy (Southbound)', density: 68.0, queueLength: 6, greenSeconds: 44.0, isGreen: true, isAlternate: false },
+      { id: 'link-2', name: 'BKC Main Corridor (Eastbound)', density: 42.0, queueLength: 2, greenSeconds: 30.0, isGreen: false, isAlternate: false },
+      { id: 'link-3', name: 'LBS Marg Alternate Corridor', density: 18.0, queueLength: 0, greenSeconds: 16.0, isGreen: false, isAlternate: true },
+    ],
+    machineThoughts: [
+      {
+        id: 1,
+        timestamp: '03:52:10',
         phase: 'SIGNAL_REALLOCATION',
-        title: '⏱️ Congestion Spike Detected: Green Time Reallocated from Free Lane',
-        reasoning: 'Primary approach density reached 84%. Reallocated 14s of green time from low-density free lane (reduced to 16s) to flush the primary corridor queue (boosted to 44s).',
-        confidence: 0.95,
-        telemetry: { bottleneckDensity: '84%', donorGreen: '16s', boostedGreen: '44s' }
-      };
+        title: '⏱️ Adaptive Timing: 14s Transferred from Free Lane to South Corridor',
+        reasoning: 'LBS Marg approach operating at low load (18% capacity). Subtracted 14 seconds from LBS Marg (reduced to 16s) and transferred directly to congested Western Express Highway (increased to 44s) to clear queuing vehicles.',
+        confidence: 0.94,
+        telemetry: { donorLink: 'LBS Marg', timeSubtracted: '14s', beneficiaryLink: 'WEH South', greenDuration: '44s' }
+      }
+    ]
+  });
 
-      return {
-        ...prev,
-        simTime: prev.simTime + 2.0,
-        links: newLinks,
-        metrics: {
-          ...prev.metrics,
-          queueLength: 18,
-          waitingTimeSeconds: 8.6,
-          co2SavedKg: Math.round((prev.metrics.co2SavedKg + 0.35) * 1000) / 1000,
-          co2SavedPercent: 34.8
-        },
-        machineThoughts: [newThought, ...prev.machineThoughts.slice(0, 8)]
-      };
-    });
-  };
-
-  // Handle Emergency Priority Trigger
-  const handleTriggerEmergency = async () => {
-    try {
-      await fetch(`${API}/matsim/trigger-emergency`, { method: 'POST' });
-    } catch (e) {
-      // Local fallback
-    }
-
-    setEmergencyBlink(true);
-    setTimeout(() => setEmergencyBlink(false), 12000);
-
-    setState(prev => {
-      const newThought = {
-        timestamp: Math.round((prev.simTime + 1.0) * 10) / 10,
-        phase: 'EMERGENCY_EVP',
-        title: '🚨 Emergency Ambulance AMB-108 Detected: Green Wave Priority Activated',
-        reasoning: 'AI computer vision radar detected emergency vehicle approaching at 64 km/h. Signal controller preempted opposing traffic with 3s clearance and locked an uninterrupted Green Wave corridor.',
-        confidence: 0.99,
-        telemetry: { vehicle: 'AMB-108 (ICU-Ambulance)', speed: '64 km/h', signalAction: 'FORCE_GREEN_HOLD' }
-      };
-
-      return {
-        ...prev,
-        metrics: {
-          ...prev.metrics,
-          emergencyActive: true,
-          signalPhase: '🚨 PRIORITY GREEN WAVE (AMB-108)'
-        },
-        machineThoughts: [newThought, ...prev.machineThoughts.slice(0, 8)]
-      };
-    });
-  };
-
-  // Handle Dynamic Diversion Trigger
-  const handleTriggerDiversion = async () => {
-    try {
-      await fetch(`${API}/activate-diversion`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ diversionId: 'cctv-div-01' })
-      });
-    } catch (e) {
-      // Local fallback
-    }
-
-    setState(prev => {
-      const newThought = {
-        timestamp: Math.round((prev.simTime + 1.5) * 10) / 10,
-        phase: 'DIVERSION_EXEC',
-        title: '🔀 Dynamic Traffic Diversion Broadcasted via Overhead VMS',
-        reasoning: `Upstream traffic volume approaching saturation. NTCIP 1203 Variable Message Signs updated to divert 65% of traffic onto ${activeCam.detourCorridor}. Preventing corridor gridlock and reducing idling emissions.`,
+  const handleTriggerSurge = () => {
+    setState(prev => ({
+      ...prev,
+      metrics: { ...prev.metrics, queueLength: 16, vehicleCount: 38 },
+      machineThoughts: [{
+        id: Date.now(),
+        timestamp: new Date().toLocaleTimeString(),
+        phase: 'SIGNAL_REALLOCATION',
+        title: '⏱️ Bottleneck Congestion Surge Detected',
+        reasoning: 'Traffic density spiked to 84% on Southbound approach. AI reallocating +14s green time from opposing free lanes.',
         confidence: 0.96,
-        telemetry: { divertedVolume: '65%', alternateRoute: activeCam.detourCorridor, expectedDelaySaved: '-14.2 min' }
-      };
-
-      return {
-        ...prev,
-        metrics: {
-          ...prev.metrics,
-          diversionActive: true,
-          queueLength: Math.max(2, prev.metrics.queueLength - 8),
-          co2SavedKg: Math.round((prev.metrics.co2SavedKg + 0.62) * 1000) / 1000,
-          co2SavedPercent: 36.2
-        },
-        machineThoughts: [newThought, ...prev.machineThoughts.slice(0, 8)]
-      };
-    });
+        telemetry: { queue: '16 vehicles', action: 'BOOST_GREEN_TO_44s' }
+      }, ...prev.machineThoughts.slice(0, 7)]
+    }));
   };
 
-  const metrics = state.metrics || {};
-  const co2SavedDisplay = metrics.co2SavedKg != null ? `${metrics.co2SavedKg} kg` : '1.84 kg';
-  const co2ReductionRate = metrics.co2SavedPercent ?? 33.4;
+  const handleTriggerEmergency = () => {
+    setEmergencyBlink(true);
+    setTimeout(() => setEmergencyBlink(false), 8000);
+    setState(prev => ({
+      ...prev,
+      metrics: { ...prev.metrics, emergencyActive: true },
+      machineThoughts: [{
+        id: Date.now(),
+        timestamp: new Date().toLocaleTimeString(),
+        phase: 'EMERGENCY_EVP',
+        title: '🚨 Ambulance AMB-108 Detected: Green Wave Priority Activated',
+        reasoning: 'Emergency vehicle detected at 64 km/h approaching intersection. All conflicting signals preempted to solid RED.',
+        confidence: 0.99,
+        telemetry: { vehicle: 'AMB-108 (ICU)', speed: '64 km/h', preemption: 'ALL_RED_OPPOSING' }
+      }, ...prev.machineThoughts.slice(0, 7)]
+    }));
+  };
+
+  const handleTriggerDiversion = () => {
+    setState(prev => ({
+      ...prev,
+      metrics: { ...prev.metrics, diversionActive: true, queueLength: 3 },
+      machineThoughts: [{
+        id: Date.now(),
+        timestamp: new Date().toLocaleTimeString(),
+        phase: 'DIVERSION_EXEC',
+        title: '🔀 Dynamic Traffic Diversion: 65% Volume Rerouted via LBS Marg',
+        reasoning: 'Primary approach at 72% capacity. Digital VMS sign activated to divert upstream volume onto secondary bypass.',
+        confidence: 0.97,
+        telemetry: { divertedVolume: '65%', alternateRoute: 'LBS Marg Detour', delaySaved: '-14.2 min' }
+      }, ...prev.machineThoughts.slice(0, 7)]
+    }));
+  };
+
+  // Video source based on user selection
+  const activeVideoSrc = viewMode === 'TRACKED_VIDEO' ? activeCam.trackedUrl : activeCam.rawUrl;
+
+  const idlingCount = liveDetections.filter(d => d.is_idling).length;
+  const activeVehicleCount = liveDetections.length > 0 ? liveDetections.length : state.metrics.vehicleCount;
 
   return (
-    <section className="glass-panel rounded-2xl overflow-hidden flex flex-col" aria-label="Indian Traffic Signal Live CCTV & AI Optimization Console">
+    <section className="glass-panel rounded-2xl overflow-hidden flex flex-col border border-slate-800" aria-label="Indian Traffic Signal Live CCTV & AI Optimization Console">
       
-      {/* Compact Header */}
-      <header className="p-3 border-b border-slate-800 bg-slate-900/90 flex flex-wrap gap-2 items-center justify-between">
+      {/* ─── Compact Header ─── */}
+      <header className="p-3 border-b border-slate-800 bg-slate-900/95 flex flex-wrap gap-2 items-center justify-between">
         <div className="flex items-center gap-2">
           <span className="relative flex h-2.5 w-2.5">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
             <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
           </span>
-          <h3 className="text-sm font-bold text-slate-100">{activeCam.name}</h3>
+          <h3 className="text-sm font-bold text-slate-100 font-display">{activeCam.name}</h3>
           <span className="px-1.5 py-0.5 text-[9px] font-mono bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 rounded-full font-bold">
             {activeCam.id}
           </span>
           <span className="px-2 py-0.5 text-[9px] font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 rounded-full flex items-center gap-1">
             <Leaf size={10} className="text-emerald-400" />
-            CO₂: +{co2SavedDisplay} (-{co2ReductionRate}%)
+            CO₂ Saved: +{state.metrics.co2SavedKg} kg (-{state.metrics.co2SavedPercent}%)
           </span>
         </div>
 
         <div className="flex gap-2 items-center">
+          {/* Camera Selection */}
           <select 
             value={scenarioKey} 
             onChange={(e) => setScenarioKey(e.target.value)} 
-            className="control-select text-[10px] font-mono py-1"
+            className="control-select text-[10px] font-mono py-1 bg-slate-950 text-slate-200 border border-slate-700 rounded-lg px-2"
           >
-            <option value="bkc">CAM-01: BKC Junction</option>
-            <option value="vashi">CAM-02: Vashi Interchange</option>
-            <option value="palm_beach">CAM-03: Palm Beach Road</option>
+            <option value="bkc">CAM-01: BKC Arterial</option>
+            <option value="vashi">CAM-02: Vashi Expressway</option>
+            <option value="palm_beach">CAM-03: Palm Beach Signal</option>
           </select>
-          <button 
-            onClick={() => setShowAiBoxes(!showAiBoxes)} 
-            className={`px-2 py-1 rounded-lg border text-[10px] font-mono font-bold transition flex items-center gap-1 ${
-              showAiBoxes 
-                ? 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40' 
-                : 'bg-slate-800/80 text-slate-400 border-slate-700'
-            }`}
-          >
-            <Eye size={11} />
-            {showAiBoxes ? 'AI ON' : 'Raw'}
-          </button>
+
+          {/* View Mode Switcher */}
+          <div className="flex bg-slate-950 p-0.5 rounded-lg border border-slate-800 text-[9px] font-mono">
+            <button
+              onClick={() => setViewMode('OVERLAY')}
+              className={`px-2 py-1 rounded transition ${viewMode === 'OVERLAY' ? 'bg-cyan-500 text-slate-950 font-bold' : 'text-slate-400 hover:text-white'}`}
+              title="Real-time frame-synchronized bounding boxes with speed and CO2 tags"
+            >
+              Live HUD
+            </button>
+            <button
+              onClick={() => setViewMode('TRACKED_VIDEO')}
+              className={`px-2 py-1 rounded transition ${viewMode === 'TRACKED_VIDEO' ? 'bg-emerald-500 text-slate-950 font-bold' : 'text-slate-400 hover:text-white'}`}
+              title="Full YOLOv8 neural network video with burned-in tracking meters"
+            >
+              YOLOv8 Stream
+            </button>
+            <button
+              onClick={() => setViewMode('RAW')}
+              className={`px-2 py-1 rounded transition ${viewMode === 'RAW' ? 'bg-slate-700 text-white font-bold' : 'text-slate-500 hover:text-white'}`}
+              title="Raw unedited CCTV feed"
+            >
+              Raw
+            </button>
+          </div>
         </div>
       </header>
 
-      {/* CCTV Video — constrained height so it doesn't dominate */}
+      {/* ─── CCTV Video Container ─── */}
       <div className="p-3 space-y-2">
-        <div className="relative rounded-xl overflow-hidden bg-black border border-slate-800 shadow-xl" style={{ maxHeight: '280px' }}>
+        <div className="relative rounded-xl overflow-hidden bg-black border border-slate-800 shadow-2xl" style={{ height: '310px' }}>
           
           <video 
             ref={videoRef}
-            key={activeCam.cctvUrl}
-            src={activeCam.cctvUrl}
+            key={activeVideoSrc}
+            src={activeVideoSrc}
             autoPlay
             loop
             muted
             playsInline
             className="w-full h-full object-cover"
-            style={{ maxHeight: '280px' }}
           />
 
-          {/* HUD overlay */}
+          {/* Top HUD Overlay */}
           <div className="absolute top-2 left-2 right-2 flex justify-between items-start pointer-events-none z-20 text-[9px] font-mono">
-            <div className="p-1.5 rounded bg-slate-950/85 backdrop-blur-md border border-slate-800 text-slate-200">
+            <div className="p-1.5 rounded-lg bg-slate-950/90 backdrop-blur-md border border-slate-800 text-slate-200 shadow-lg">
               <div className="flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-ping"></span>
+                <span className="w-2 h-2 rounded-full bg-red-500 animate-ping"></span>
                 <strong className="text-red-400">REC ●</strong>
-                <span className="text-emerald-400 font-bold">{activeCam.id}</span>
-                <span className="text-slate-500">|</span>
-                <span className="text-slate-400">{currentTime}</span>
+                <span className="text-cyan-400 font-bold">{activeCam.id}</span>
+                <span className="text-slate-600">|</span>
+                <span className="text-slate-300">{currentTime}</span>
               </div>
             </div>
-            <div className="p-1.5 rounded bg-slate-950/85 backdrop-blur-md border border-slate-800 flex items-center gap-2">
-              <div className="flex gap-1 bg-slate-900 p-0.5 rounded border border-slate-700">
+
+            <div className="p-1.5 rounded-lg bg-slate-950/90 backdrop-blur-md border border-slate-800 flex items-center gap-2 shadow-lg">
+              <span className="text-slate-400">SIGNAL:</span>
+              <div className="flex gap-1 bg-slate-900 p-1 rounded border border-slate-700">
                 <div className="w-2 h-2 rounded-full bg-slate-700"></div>
                 <div className="w-2 h-2 rounded-full bg-slate-700"></div>
                 <div className={`w-2 h-2 rounded-full bg-emerald-500 ${emergencyBlink ? 'animate-pulse' : ''}`}></div>
               </div>
-              <span className="text-emerald-400 font-bold">{emergencyBlink ? 'PRIORITY' : 'GREEN'}</span>
+              <span className="text-emerald-400 font-bold">{emergencyBlink ? 'EVP PRIORITY' : 'GREEN WAVE'}</span>
             </div>
           </div>
 
           {/* Emergency Vehicle Priority Banner */}
           {emergencyBlink && (
-            <div className="absolute top-10 inset-x-2 z-30 p-2 bg-red-600/90 backdrop-blur-md text-white rounded-lg border border-red-400 flex items-center gap-2 animate-pulse text-[10px]">
-              <ShieldAlert size={14} className="text-white shrink-0" />
-              <span className="font-bold uppercase">🚨 EVP: Ambulance AMB-108 (64 km/h) — Green Wave Locked</span>
+            <div className="absolute top-11 inset-x-2 z-30 p-2 bg-red-600/95 backdrop-blur-md text-white rounded-lg border border-red-400 flex items-center gap-2 animate-pulse text-[10px] shadow-lg">
+              <ShieldAlert size={15} className="text-white shrink-0" />
+              <span className="font-bold uppercase">🚨 ISO-22951: Ambulance AMB-108 approaching at 64 km/h — Opposing Red locked</span>
             </div>
           )}
 
-          {/* Diversion VMS */}
-          {metrics.diversionActive && (
-            <div className="absolute bottom-8 inset-x-2 z-30 p-2 bg-emerald-950/90 backdrop-blur-md text-emerald-300 rounded-lg border border-emerald-500/60 flex items-center gap-2 text-[10px]">
+          {/* Diversion VMS Signage */}
+          {state.metrics.diversionActive && (
+            <div className="absolute bottom-10 inset-x-2 z-30 p-2 bg-emerald-950/95 backdrop-blur-md text-emerald-200 rounded-lg border border-emerald-500/60 flex items-center gap-2 text-[10px] shadow-lg">
               <Navigation size={14} className="text-emerald-400 shrink-0" />
-              <span className="font-bold uppercase">🔀 VMS: 65% Flow Diverted → {activeCam.detourCorridor}</span>
+              <span className="font-bold uppercase">🔀 OVERHEAD VMS: 65% Traffic Diverted → {activeCam.detourCorridor} (-14.2 min)</span>
             </div>
           )}
 
-          {/* AI Detection Boxes */}
-          {showAiBoxes && (
+          {/* Dynamic Frame-Synchronized Bounding Boxes with Live CO2 Carbon Footprint */}
+          {viewMode === 'OVERLAY' && (
             <div className="absolute inset-0 pointer-events-none z-10">
-              {activeCam.detections.map((det) => (
-                <div
-                  key={det.id}
-                  className="absolute border-2 border-cyan-400 bg-cyan-500/10 rounded"
-                  style={{ top: det.bbox.top, left: det.bbox.left, width: det.bbox.width, height: det.bbox.height }}
-                >
-                  <div className="absolute -top-4 left-0 px-1 py-0.5 bg-slate-950/90 border border-cyan-400 rounded text-[7px] font-mono text-cyan-300 whitespace-nowrap">
-                    {det.type} · {det.speed} km/h
+              {liveDetections.map((det) => {
+                const isIdling = det.is_idling;
+                const borderColor = isIdling ? 'border-amber-400' : 'border-emerald-400';
+                const shadowClass = isIdling ? 'shadow-[0_0_8px_rgba(251,191,36,0.5)]' : 'shadow-[0_0_8px_rgba(16,185,129,0.4)]';
+
+                return (
+                  <div
+                    key={det.id}
+                    className={`absolute border-2 ${borderColor} ${shadowClass} rounded transition-all duration-100`}
+                    style={{
+                      left: `${det.left}%`,
+                      top: `${det.top}%`,
+                      width: `${det.width}%`,
+                      height: `${det.height}%`,
+                    }}
+                  >
+                    {/* Vehicle Type & Speed Badge */}
+                    <div className="absolute -top-7 left-0 flex flex-col gap-0.5 pointer-events-none whitespace-nowrap">
+                      <div className="px-1.5 py-0.5 bg-slate-950/95 border border-slate-700 rounded text-[8px] font-mono text-slate-100 flex items-center gap-1">
+                        <span className="font-bold text-cyan-400">{det.type}</span>
+                        <span className="text-slate-400">·</span>
+                        <span className={isIdling ? 'text-amber-400 font-bold' : 'text-white'}>{det.speed} km/h</span>
+                      </div>
+                      
+                      {/* Live Carbon Footprint Tag */}
+                      <div className={`px-1.5 py-0.2 rounded text-[7px] font-mono font-bold flex items-center gap-1 ${
+                        isIdling 
+                          ? 'bg-amber-950/95 text-amber-300 border border-amber-500/60' 
+                          : 'bg-emerald-950/95 text-emerald-300 border border-emerald-500/50'
+                      }`}>
+                        <Leaf size={8} className="text-emerald-400" />
+                        <span>CO₂: {det.emission_rate} mg/s</span>
+                        <span className="text-slate-400 font-normal">({det.co2_g}g)</span>
+                        {isIdling && <span className="text-red-400 text-[6px]">IDLING</span>}
+                      </div>
+                    </div>
                   </div>
-                </div>
-              ))}
-              {emergencyBlink && (
-                <div className="absolute border-2 border-red-500 bg-red-500/20 rounded z-20 animate-bounce"
-                  style={{ top: '40%', left: '50%', width: '18%', height: '24%' }}>
-                  <div className="absolute -top-4 left-0 px-1 py-0.5 bg-red-950 border border-red-500 rounded text-[7px] font-mono text-red-300 font-bold whitespace-nowrap">
-                    🚨 AMB-108 · PRIORITY
-                  </div>
-                </div>
-              )}
+                );
+              })}
             </div>
           )}
 
-          {/* Bottom bar */}
-          <div className="absolute bottom-1.5 left-2 right-2 flex justify-between pointer-events-none z-20 text-[8px] font-mono">
-            <span className="px-1.5 py-0.5 bg-slate-950/80 backdrop-blur-md rounded border border-slate-800 text-emerald-400">
+          {/* Bottom Location & Corridor Tag */}
+          <div className="absolute bottom-2 left-2 right-2 flex justify-between pointer-events-none z-20 text-[8px] font-mono">
+            <span className="px-2 py-0.5 bg-slate-950/90 backdrop-blur-md rounded border border-slate-800 text-emerald-400 flex items-center gap-1 font-bold">
+              <Navigation size={9} />
               {activeCam.detourCorridor}
             </span>
-            <span className="px-1.5 py-0.5 bg-slate-950/80 backdrop-blur-md rounded border border-slate-800 text-amber-400">
-              {activeCam.speedLimit} km/h
+            <span className="px-2 py-0.5 bg-slate-950/90 backdrop-blur-md rounded border border-slate-800 text-amber-300 font-bold">
+              Limit: {activeCam.speedLimit} km/h
             </span>
           </div>
         </div>
 
-        {/* Compact stats strip + action buttons in one row */}
-        <div className="flex gap-2 items-stretch">
-          {/* Stats */}
-          <div className="flex-1 grid grid-cols-4 gap-1.5 text-[9px] font-mono">
-            <div className="p-1.5 bg-slate-900/80 rounded-lg border border-slate-800 text-center">
-              <div className="text-slate-500">Queue</div>
-              <div className="text-amber-400 font-bold">{metrics.queueLength ?? 5}</div>
+        {/* ─── Real-Time Telemetry & Carbon Impact Strip ─── */}
+        <div className="grid grid-cols-4 gap-2 text-[10px] font-mono">
+          <div className="p-2 bg-slate-900/90 rounded-xl border border-slate-800">
+            <div className="text-slate-500 text-[9px]">Active Tracked</div>
+            <div className="text-cyan-400 font-bold text-sm mt-0.5 flex items-center gap-1">
+              <Activity size={12} />
+              <span>{activeVehicleCount} Vehicles</span>
             </div>
-            <div className="p-1.5 bg-slate-900/80 rounded-lg border border-slate-800 text-center">
-              <div className="text-slate-500">Wait</div>
-              <div className="text-white font-bold">{metrics.waitingTimeSeconds ?? 4.2}s</div>
+          </div>
+
+          <div className="p-2 bg-slate-900/90 rounded-xl border border-slate-800">
+            <div className="text-slate-500 text-[9px]">Queue Idling</div>
+            <div className={`font-bold text-sm mt-0.5 flex items-center gap-1 ${idlingCount > 4 ? 'text-amber-400' : 'text-slate-200'}`}>
+              <Clock size={12} />
+              <span>{idlingCount} Vehicles</span>
             </div>
-            <div className="p-1.5 bg-slate-900/80 rounded-lg border border-slate-800 text-center">
-              <div className="text-slate-500">Vehicles</div>
-              <div className="text-cyan-400 font-bold">{metrics.vehicleCount ?? 38}</div>
+          </div>
+
+          <div className="p-2 bg-slate-900/90 rounded-xl border border-slate-800">
+            <div className="text-slate-500 text-[9px]">Instantaneous CO₂</div>
+            <div className="text-red-400 font-bold text-sm mt-0.5 flex items-center gap-1">
+              <Leaf size={12} />
+              <span>{liveCarbonRate} mg/s</span>
             </div>
-            <div className="p-1.5 bg-emerald-500/10 rounded-lg border border-emerald-500/30 text-center">
-              <div className="text-emerald-400/70">CO₂</div>
-              <div className="text-emerald-400 font-bold">+{co2SavedDisplay}</div>
+          </div>
+
+          <div className="p-2 bg-emerald-950/30 rounded-xl border border-emerald-500/40">
+            <div className="text-emerald-400/80 text-[9px]">CO₂ Prevented</div>
+            <div className="text-emerald-300 font-bold text-sm mt-0.5 flex items-center gap-1">
+              <CheckCircle2 size={12} />
+              <span>+{liveCumulativeCarbon} kg</span>
             </div>
           </div>
         </div>
 
-        {/* Compact action buttons */}
-        <div className="flex gap-1.5">
-          <button onClick={handleTriggerSurge}
-            className="flex-1 p-1.5 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-300 text-[10px] font-bold font-mono transition flex items-center justify-center gap-1">
-            <Zap size={11} /> Surge
+        {/* ─── Interactive Operator Control Triggers ─── */}
+        <div className="flex gap-2 pt-1 font-mono text-[10px]">
+          <button 
+            onClick={handleTriggerSurge}
+            className="flex-1 p-2 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/40 text-amber-300 font-bold transition flex items-center justify-center gap-1.5 shadow-sm"
+          >
+            <Zap size={13} />
+            <span>Simulate Congestion Surge</span>
           </button>
-          <button onClick={handleTriggerEmergency}
-            className="flex-1 p-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 text-red-300 text-[10px] font-bold font-mono transition flex items-center justify-center gap-1">
-            <ShieldAlert size={11} /> Ambulance
+          
+          <button 
+            onClick={handleTriggerEmergency}
+            className="flex-1 p-2 rounded-xl bg-red-500/15 hover:bg-red-500/25 border border-red-500/40 text-red-300 font-bold transition flex items-center justify-center gap-1.5 shadow-sm"
+          >
+            <ShieldAlert size={13} />
+            <span>Dispatch Ambulance (EVP)</span>
           </button>
-          <button onClick={handleTriggerDiversion}
-            className="flex-1 p-1.5 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 text-[10px] font-bold font-mono transition flex items-center justify-center gap-1">
-            <Navigation size={11} /> Divert
+
+          <button 
+            onClick={handleTriggerDiversion}
+            className="flex-1 p-2 rounded-xl bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/40 text-emerald-300 font-bold transition flex items-center justify-center gap-1.5 shadow-sm"
+          >
+            <Navigation size={13} />
+            <span>Broadcast Diversion VMS</span>
           </button>
         </div>
       </div>
 
-      {/* Machine Thought Console — compact */}
+      {/* ─── Explainable Machine Thought Console ─── */}
       <div className="p-3 pt-0">
         <MachineThoughtConsole 
           thoughts={state.machineThoughts || []} 

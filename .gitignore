@@ -39,3 +39,5 @@ matsim_dist/matsim-2026.0/
 *.jar
 .agent/
 greenlight_app/videos/
+*.pt
+*_tracks.json
