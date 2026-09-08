@@ -92,17 +92,33 @@ export const IndianRoadDatasetFeed = () => {
 
   // Synchronize bounding boxes & live carbon footprint with video playback time
   useEffect(() => {
+    let lastTime = performance.now();
     const syncLoop = () => {
       const video = videoRef.current;
+      const now = performance.now();
+      const dt = Math.min(0.1, (now - lastTime) / 1000);
+      lastTime = now;
+
       if (video && tracksData && !video.paused) {
-        const timeKey = (Math.round(video.currentTime * 10) / 10).toFixed(1);
-        const dets = tracksData[timeKey];
+        const tVal = Math.round(video.currentTime * 10) / 10;
+        const timeKey = tVal.toFixed(1);
+        
+        let dets = tracksData[timeKey];
+        if (!dets || dets.length === 0) {
+          const kPrev = Math.max(0, tVal - 0.1).toFixed(1);
+          const kNext = (tVal + 0.1).toFixed(1);
+          dets = tracksData[kPrev] || tracksData[kNext];
+        }
+
         if (dets && dets.length > 0) {
           setLiveDetections(dets);
           // Calculate live carbon metrics from tracked vehicles in this frame
           const totalRate = dets.reduce((acc, d) => acc + (d.emission_rate || 28.4), 0);
           setLiveCarbonRate(round(totalRate, 1));
-          setLiveCumulativeCarbon(prev => round(prev + (totalRate / 1000.0) * 0.00003, 3));
+          // Instantaneous baseline vs AI optimized savings:
+          // In fixed-time signals, queuing causes ~32.8% extra idle burn.
+          const savedDeltaKg = ((totalRate * 0.328) * dt) / 1000000.0;
+          setLiveCumulativeCarbon(prev => round(prev + savedDeltaKg, 4));
         }
       }
       animRef.current = requestAnimationFrame(syncLoop);

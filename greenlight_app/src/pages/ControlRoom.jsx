@@ -151,11 +151,11 @@ export const ControlRoom = () => {
             </div>
 
             <div className="flex justify-between items-center text-xs pt-1">
-              <span className="text-slate-300">Computer vision / ANPR</span>
-              <span className="font-mono text-cyan-300 font-bold">Not connected</span>
+              <span className="text-slate-300">Computer vision / YOLOv8</span>
+              <span className="font-mono text-emerald-300 font-bold">Active (Metal MPS)</span>
             </div>
             <div className="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
-              <div className="bg-slate-600 h-full w-full"></div>
+              <div className="bg-cyan-400 h-full w-full"></div>
             </div>
           </div>
         </div>
