@@ -11,6 +11,7 @@ import { VehicleOwnerPortal } from './pages/VehicleOwnerPortal';
 import { FieldOfficerApp } from './pages/FieldOfficerApp';
 import { CameraManagement } from './pages/CameraManagement';
 import { ExecutiveAnalytics } from './pages/ExecutiveAnalytics';
+import { SimulationDisplay } from './pages/SimulationDisplay';
 
 // Error Boundary to catch and display runtime errors
 class ErrorBoundary extends React.Component {
@@ -70,6 +71,8 @@ const AppContent = () => {
         return <CameraManagement />;
       case 'analytics':
         return <ExecutiveAnalytics />;
+      case 'simulation_display':
+        return <SimulationDisplay />;
       default:
         return <ControlRoom />;
     }

@@ -1,12 +1,13 @@
 import React from 'react';
 import { useApp } from '../../context/AppContext';
-import { LayoutDashboard, FileText, Navigation, DollarSign, Smartphone, ShieldAlert, Camera, BarChart3, Cpu } from 'lucide-react';
+import { LayoutDashboard, FileText, Navigation, DollarSign, Smartphone, ShieldAlert, Camera, BarChart3, Cpu, MonitorPlay } from 'lucide-react';
 
 export const Sidebar = () => {
   const { activeTab, setActiveTab } = useApp();
 
   const navItems = [
     { id: 'control_room', label: 'Control Room', icon: LayoutDashboard, badge: 'UI-001' },
+    { id: 'simulation_display', label: 'Simulation Display', icon: MonitorPlay, badge: 'MATSim' },
     { id: 'evidence_viewer', label: 'Violation & ANPR', icon: FileText, badge: 'UI-002' },
     { id: 'diversions', label: 'Traffic Diversions', icon: Navigation, badge: 'UI-003' },
     { id: 'fines', label: 'Fines & Disputes', icon: DollarSign, badge: 'UI-004' },

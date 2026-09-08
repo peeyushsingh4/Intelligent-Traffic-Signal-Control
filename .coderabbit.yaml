@@ -1,0 +1,25 @@
+# CodeRabbit Configuration
+# Reference: https://docs.coderabbit.ai/guides/configure-coderabbit
+
+language: "en-US"
+reviews:
+  profile: "chill"
+  request_changes_workflow: false
+  high_level_summary: true
+  auto_review:
+    enabled: true
+    drafts: false
+  path_filters:
+    - "!**/.agent/**"
+    - "!**/.agents/**"
+    - "!**/.roo/**"
+    - "!**/matsim_dist/**"
+    - "!**/output/**"
+    - "!**/dist/**"
+    - "!**/venv/**"
+    - "!**/.venv*/**"
+    - "!**/node_modules/**"
+    - "!**/*.zst"
+    - "!**/*.lock"
+    - "!**/*.min.js"
+    - "!**/*.min.css"

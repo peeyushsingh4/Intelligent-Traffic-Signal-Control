@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE network SYSTEM "http://www.matsim.org/files/dtd/network_v1.dtd">
+<network name="BKC Mumbai Junction Network">
+  <nodes>
+    <node id="1" x="500" y="900"/>
+    <node id="2" x="500" y="500"/>
+    <node id="3" x="900" y="500"/>
+    <node id="4" x="500" y="100"/>
+    <node id="5" x="100" y="500"/>
+  </nodes>
+  <links capperiod="01:00:00">
+    <link id="1" from="1" to="2" length="850.0" capacity="1800" freespeed="16.67" permlanes="4" />
+    <link id="1r" from="2" to="1" length="850.0" capacity="1800" freespeed="16.67" permlanes="4" />
+    <link id="2" from="2" to="3" length="750.0" capacity="1600" freespeed="13.89" permlanes="4" />
+    <link id="2r" from="3" to="2" length="750.0" capacity="1600" freespeed="13.89" permlanes="4" />
+    <link id="3" from="1" to="3" length="1100.0" capacity="1400" freespeed="13.89" permlanes="3" />
+    <link id="3r" from="3" to="1" length="1100.0" capacity="1400" freespeed="13.89" permlanes="3" />
+    <link id="4" from="4" to="2" length="600.0" capacity="1000" freespeed="11.11" permlanes="2" />
+    <link id="4r" from="2" to="4" length="600.0" capacity="1000" freespeed="11.11" permlanes="2" />
+    <link id="5" from="2" to="5" length="700.0" capacity="1200" freespeed="13.89" permlanes="3" />
+    <link id="5r" from="5" to="2" length="700.0" capacity="1200" freespeed="13.89" permlanes="3" />
+  </links>
+</network>

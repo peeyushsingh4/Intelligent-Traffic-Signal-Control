@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE plans SYSTEM "http://www.matsim.org/files/dtd/plans_v4.dtd">
+<plans>
+  <person id="commuter-01">
+    <plan>
+      <act type="h" x="500" y="900" link="1" end_time="08:00" />
+      <leg mode="car">
+        <route>1 2</route>
+      </leg>
+      <act type="w" x="900" y="500" link="2" dur="08:00" />
+    </plan>
+  </person>
+  <person id="commuter-02">
+    <plan>
+      <act type="h" x="500" y="900" link="1" end_time="08:02" />
+      <leg mode="car">
+        <route>1 2</route>
+      </leg>
+      <act type="w" x="900" y="500" link="2" dur="08:00" />
+    </plan>
+  </person>
+  <person id="commuter-03">
+    <plan>
+      <act type="h" x="500" y="900" link="1" end_time="08:04" />
+      <leg mode="car">
+        <route>3</route>
+      </leg>
+      <act type="w" x="900" y="500" link="2" dur="08:00" />
+    </plan>
+  </person>
+  <person id="emergency-amb108">
+    <plan>
+      <act type="h" x="500" y="900" link="1" end_time="08:05" />
+      <leg mode="car">
+        <route>1 2</route>
+      </leg>
+      <act type="w" x="900" y="500" link="2" dur="01:00" />
+    </plan>
+  </person>
+</plans>

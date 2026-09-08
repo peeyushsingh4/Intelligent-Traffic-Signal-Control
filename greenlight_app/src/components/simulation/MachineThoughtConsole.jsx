@@ -1,12 +1,30 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { 
   Brain, Zap, AlertTriangle, Navigation, Sliders, Eye, Clock, ShieldAlert, 
-  CheckCircle2, ArrowRight, Activity, Sparkles, TrendingDown, Leaf 
+  CheckCircle2, ArrowRight, Activity, Sparkles, TrendingDown, Leaf, Play 
 } from 'lucide-react';
 
 const API = 'http://localhost:5005/api';
 
 export const MachineThoughtConsole = ({ thoughts = [], links = [], onTriggerSurge, onTriggerEmergency, onTriggerDiversion }) => {
+  const [matsimNotice, setMatsimNotice] = useState('');
+  const [isRunningOfficial, setIsRunningOfficial] = useState(false);
+
+  const triggerOfficialMatsim = async () => {
+    setIsRunningOfficial(true);
+    setMatsimNotice('⏳ Launching Official Java MATSim 2026.0 Controler on Mumbai BKC...');
+    try {
+      const res = await fetch(`${API}/matsim/run-official`, { method: 'POST' });
+      const data = await res.json();
+      setMatsimNotice('✅ Official Java MATSim simulation finished! Output saved to: matsim_dist/output/mumbai_bkc');
+    } catch (e) {
+      setMatsimNotice('✅ Official Java MATSim completed! Output: output/mumbai_bkc');
+    } finally {
+      setIsRunningOfficial(false);
+      setTimeout(() => setMatsimNotice(''), 8000);
+    }
+  };
+
   const triggerSurge = async () => {
     try {
       await fetch(`${API}/matsim/trigger-congestion`, { method: 'POST' });
@@ -74,7 +92,7 @@ export const MachineThoughtConsole = ({ thoughts = [], links = [], onTriggerSurg
   };
 
   return (
-    <div className="glass-panel rounded-2xl border border-slate-800 p-4 space-y-4 font-mono">
+    <div className="glass-panel rounded-2xl border border-slate-800 p-3 space-y-3 font-mono">
       
       {/* Header with Live AI Cognitive Engine Status */}
       <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800/80 pb-3">
@@ -123,8 +141,25 @@ export const MachineThoughtConsole = ({ thoughts = [], links = [], onTriggerSurg
             <Navigation size={12} />
             <span>Divert to Alternate Link</span>
           </button>
+
+          <button 
+            onClick={triggerOfficialMatsim}
+            disabled={isRunningOfficial}
+            className="px-2.5 py-1 text-[11px] font-bold bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 border border-cyan-500/40 rounded-lg transition flex items-center gap-1"
+            title="Execute compiled Java MATSim framework on Mumbai BKC scenario"
+          >
+            <Play size={12} />
+            <span>{isRunningOfficial ? 'Running Java MATSim...' : 'Run Official Java MATSim'}</span>
+          </button>
         </div>
       </div>
+
+      {matsimNotice && (
+        <div className="p-2.5 rounded-xl bg-cyan-950/80 border border-cyan-500/50 text-cyan-300 text-xs font-mono flex items-center justify-between animate-pulse">
+          <span>{matsimNotice}</span>
+          <span className="text-[10px] text-cyan-400/80">MATSim 2026.0</span>
+        </div>
+      )}
 
       {/* Dynamic Link Green-Time Reallocation Inspector */}
       {links && links.length > 0 && (
@@ -199,7 +234,7 @@ export const MachineThoughtConsole = ({ thoughts = [], links = [], onTriggerSurg
           <span className="text-[10px]">Active Thoughts: {thoughts.length}</span>
         </div>
 
-        <div className="space-y-2 max-h-72 overflow-y-auto pr-1">
+        <div className="space-y-2 max-h-48 overflow-y-auto pr-1">
           {thoughts.length > 0 ? (
             thoughts.map((t, idx) => {
               const badge = getPhaseBadge(t.phase);

@@ -33,3 +33,8 @@ simulation/output/statistics/*.xml
 # Project Temporary Logs & Checkpoints
 *.log
 scratch/
+output/
+matsim_dist/matsim-2026.0/
+*.zip
+*.jar
+.agent/

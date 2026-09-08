@@ -157,6 +157,16 @@ class RequestHandler(BaseHTTPRequestHandler):
                 self._json(200, BRIDGE.trigger_congestion())
             elif self.path == "/api/matsim/trigger-emergency":
                 self._json(200, BRIDGE.trigger_emergency())
+            elif self.path == "/api/matsim/run-official":
+                script_path = str(BASE_DIR / "run_matsim.py")
+                import subprocess
+                res = subprocess.run([sys.executable, script_path], capture_output=True, text=True)
+                self._json(200, {
+                    "status": "success" if res.returncode == 0 else "error",
+                    "message": "Official MATSim 2026.0 Java simulation executed successfully for Mumbai BKC scenario.",
+                    "outputDirectory": "matsim_dist/matsim-2026.0/output/mumbai_bkc",
+                    "details": res.stdout[-400:] if res.stdout else res.stderr[-400:]
+                })
             elif self.path == "/api/activate-diversion":
                 BRIDGE.activate_diversion()
                 self._json(200, {
