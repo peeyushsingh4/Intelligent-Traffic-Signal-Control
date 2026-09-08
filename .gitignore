@@ -38,3 +38,4 @@ matsim_dist/matsim-2026.0/
 *.zip
 *.jar
 .agent/
+greenlight_app/videos/
