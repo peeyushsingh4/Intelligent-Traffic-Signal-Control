@@ -26,9 +26,9 @@ export const Sidebar = () => {
 
   // Citizen / Vehicle Owner Modules (Restricted IAM scope)
   const citizenNavItems = [
-    { id: 'vehicle_owner_portal', label: 'My Vehicles & Fines', icon: Car, badge: 'Challans' },
-    { id: 'vehicle_owner_portal', label: 'Evidence & Photos', icon: FileText, badge: 'CCTV Proof' },
-    { id: 'vehicle_owner_portal', label: 'Dispute & Grievance', icon: AlertCircle, badge: 'Appeal' }
+    { id: 'citizen_vehicles', label: 'My Vehicles & Fines', icon: Car, badge: 'Challans' },
+    { id: 'citizen_evidence', label: 'Evidence & Photos', icon: FileText, badge: 'CCTV Proof' },
+    { id: 'citizen_disputes', label: 'Dispute & Grievance', icon: AlertCircle, badge: 'Appeal' }
   ];
 
   const currentNavItems = isPolice ? policeNavItems : citizenNavItems;
@@ -72,7 +72,7 @@ export const Sidebar = () => {
         <div className="space-y-1">
           {currentNavItems.map((item, idx) => {
             const Icon = item.icon;
-            const isActive = activeTab === item.id;
+            const isActive = activeTab === item.id || (item.id === 'citizen_vehicles' && activeTab === 'vehicle_owner_portal');
             return (
               <button
                 key={`${item.id}-${idx}`}

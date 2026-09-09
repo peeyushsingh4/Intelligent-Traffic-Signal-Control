@@ -121,7 +121,10 @@ const AppContent = () => {
       case 'testing':
         return <TestingConsole />;
       case 'vehicle_owner_portal':
-        return <VehicleOwnerPortal />;
+      case 'citizen_vehicles':
+      case 'citizen_evidence':
+      case 'citizen_disputes':
+        return <VehicleOwnerPortal activeSection={activeTab} />;
       case 'field_officer':
         return <FieldOfficerApp />;
       case 'camera_management':

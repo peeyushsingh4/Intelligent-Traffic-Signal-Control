@@ -470,9 +470,12 @@ export const IAM_ROLES = {
       'DOWNLOAD_RECEIPT'
     ],
     allowedTabs: [
-      'vehicle_owner_portal'
+      'vehicle_owner_portal',
+      'citizen_vehicles',
+      'citizen_evidence',
+      'citizen_disputes'
     ],
-    landingTab: 'vehicle_owner_portal'
+    landingTab: 'citizen_vehicles'
   }
 };
 

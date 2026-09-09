@@ -1,14 +1,37 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useApp } from '../context/AppContext';
 import { 
   Car, Shield, CheckCircle2, CreditCard, Lock, FileText, 
   AlertCircle, QrCode, Search, Download, ExternalLink, Calendar, 
-  MapPin, AlertTriangle, Check, Smartphone, Laptop, RefreshCw, Eye, X, ArrowRight
+  MapPin, AlertTriangle, Check, Smartphone, Laptop, RefreshCw, Eye, X, ArrowRight,
+  Camera, Scale, ShieldAlert, History
 } from 'lucide-react';
 import { REGISTERED_VEHICLES } from '../data/mockData';
 
-export const VehicleOwnerPortal = () => {
-  const { fines, handlePayFine, handleDisputeFine, violations } = useApp();
+export const VehicleOwnerPortal = ({ activeSection = 'citizen_vehicles' }) => {
+  const { fines, handlePayFine, handleDisputeFine, violations, setActiveTab } = useApp();
+
+  // Selected portal sub-view: 'VEHICLES', 'EVIDENCE', 'DISPUTES'
+  const getSectionFromTab = (tab) => {
+    if (tab === 'citizen_evidence') return 'EVIDENCE';
+    if (tab === 'citizen_disputes') return 'DISPUTES';
+    return 'VEHICLES';
+  };
+
+  const [currentSection, setCurrentSection] = useState(getSectionFromTab(activeSection));
+
+  useEffect(() => {
+    if (activeSection) {
+      setCurrentSection(getSectionFromTab(activeSection));
+    }
+  }, [activeSection]);
+
+  const handleSwitchSection = (sec) => {
+    setCurrentSection(sec);
+    if (sec === 'EVIDENCE') setActiveTab('citizen_evidence');
+    else if (sec === 'DISPUTES') setActiveTab('citizen_disputes');
+    else setActiveTab('citizen_vehicles');
+  };
 
   // Active searched / selected vehicle
   const [selectedPlate, setSelectedPlate] = useState('MH 02 CZ 4921');
@@ -71,6 +94,9 @@ export const VehicleOwnerPortal = () => {
   const totalPaid = vehicleFines
     .filter(f => f.status === 'PAID')
     .reduce((acc, f) => acc + (f.amount || 1000), 0);
+
+  const totalDisputed = vehicleFines
+    .filter(f => f.status === 'DISPUTED').length;
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -188,8 +214,56 @@ export const VehicleOwnerPortal = () => {
         </div>
       </div>
 
-      {/* ─── DESKTOP PORTAL VIEW ─── */}
-      {viewLayout === 'DESKTOP' && (
+      {/* ─── Top Navigation Tabs for Citizen Modules ─── */}
+      <div className="flex items-center space-x-2 bg-slate-900/80 p-1.5 rounded-2xl border border-slate-800 text-xs font-mono">
+        <button
+          onClick={() => handleSwitchSection('VEHICLES')}
+          className={`px-4 py-2 rounded-xl font-bold transition flex items-center gap-2 ${
+            currentSection === 'VEHICLES' 
+              ? 'bg-amber-500 text-slate-950 shadow-md font-black' 
+              : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
+          }`}
+        >
+          <Car size={15} />
+          <span>My Vehicles & Fines</span>
+          <span className={`px-1.5 py-0.2 rounded-full text-[10px] ${currentSection === 'VEHICLES' ? 'bg-slate-950/20 text-slate-950' : 'bg-slate-800 text-amber-400'}`}>
+            {vehicleFines.length}
+          </span>
+        </button>
+
+        <button
+          onClick={() => handleSwitchSection('EVIDENCE')}
+          className={`px-4 py-2 rounded-xl font-bold transition flex items-center gap-2 ${
+            currentSection === 'EVIDENCE' 
+              ? 'bg-amber-500 text-slate-950 shadow-md font-black' 
+              : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
+          }`}
+        >
+          <FileText size={15} />
+          <span>Evidence & Photos</span>
+          <span className={`px-1.5 py-0.2 rounded-full text-[10px] ${currentSection === 'EVIDENCE' ? 'bg-slate-950/20 text-slate-950' : 'bg-slate-800 text-cyan-400'}`}>
+            CCTV Proof
+          </span>
+        </button>
+
+        <button
+          onClick={() => handleSwitchSection('DISPUTES')}
+          className={`px-4 py-2 rounded-xl font-bold transition flex items-center gap-2 ${
+            currentSection === 'DISPUTES' 
+              ? 'bg-amber-500 text-slate-950 shadow-md font-black' 
+              : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
+          }`}
+        >
+          <AlertCircle size={15} />
+          <span>Dispute & Grievance Center</span>
+          <span className={`px-1.5 py-0.2 rounded-full text-[10px] ${currentSection === 'DISPUTES' ? 'bg-slate-950/20 text-slate-950' : 'bg-slate-800 text-amber-300'}`}>
+            {totalDisputed > 0 ? `${totalDisputed} Active` : 'Appeal'}
+          </span>
+        </button>
+      </div>
+
+      {/* ─── DESKTOP VIEW: SECTION 1 (MY VEHICLES & FINES) ─── */}
+      {viewLayout === 'DESKTOP' && currentSection === 'VEHICLES' && (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 flex-1">
           
           {/* LEFT: Registered Vehicle Dossier & Status (4 cols) */}
@@ -245,11 +319,6 @@ export const VehicleOwnerPortal = () => {
                 </div>
 
                 <div className="flex justify-between border-b border-slate-800/80 pb-1.5">
-                  <span className="text-slate-400">Chassis No.</span>
-                  <span className="text-slate-400">{vehicle.chassisNo}</span>
-                </div>
-
-                <div className="flex justify-between border-b border-slate-800/80 pb-1.5">
                   <span className="text-slate-400">Insurance Policy</span>
                   <span className="text-emerald-400 font-bold">{vehicle.insuranceExpiry}</span>
                 </div>
@@ -286,7 +355,7 @@ export const VehicleOwnerPortal = () => {
               </div>
 
               <div className="text-[10px] text-slate-400 leading-tight">
-                * As per Sec. 133A of Motor Vehicles Act, unpaid challans after 60 days are referred to the National Virtual Court for warrant generation.
+                * As per Sec. 133A of Motor Vehicles Act, unpaid challans after 60 days are referred to the National Virtual Court.
               </div>
             </div>
 
@@ -421,7 +490,7 @@ export const VehicleOwnerPortal = () => {
                           {isPaid && (
                             <button
                               onClick={() => {
-                                alert(`e-Receipt downloaded for Challan ${f.challanNo}. Transaction: ${f.transactionId}`);
+                                alert(`Official e-Receipt downloaded for Challan ${f.challanNo}. Transaction: ${f.transactionId}`);
                               }}
                               className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-emerald-400 font-mono text-xs font-bold transition flex items-center gap-1.5"
                             >
@@ -444,6 +513,227 @@ export const VehicleOwnerPortal = () => {
               )}
             </div>
 
+          </div>
+
+        </div>
+      )}
+
+      {/* ─── DESKTOP VIEW: SECTION 2 (EVIDENCE & PHOTOS CENTER) ─── */}
+      {viewLayout === 'DESKTOP' && currentSection === 'EVIDENCE' && (
+        <div className="space-y-4 flex-1">
+          <div className="bg-slate-900/80 p-4 rounded-3xl border border-slate-800 flex justify-between items-center">
+            <div>
+              <h3 className="text-base font-bold text-white font-display flex items-center gap-2">
+                <Camera className="w-5 h-5 text-cyan-400" />
+                <span>Photographic CCTV Violation Evidence & Proof Gallery</span>
+              </h3>
+              <p className="text-xs text-slate-400 mt-0.5">
+                Automated optical captures certified under Section 65B of the Indian Evidence Act for vehicle <strong className="text-white font-mono">{selectedPlate}</strong>
+              </p>
+            </div>
+            <span className="px-3 py-1 text-xs font-mono font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 rounded-xl">
+              ANPR Confidence: 96.4%
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {vehicleFines.map((f, i) => (
+              <div key={f.id} className="glass-panel p-5 rounded-3xl border border-slate-800 space-y-4">
+                <div className="flex justify-between items-center border-b border-slate-800 pb-2.5">
+                  <div>
+                    <span className="text-xs font-bold text-white font-mono">{f.challanNo}</span>
+                    <div className="text-[11px] text-amber-400 font-semibold">{f.offense || f.violationType}</div>
+                  </div>
+                  <span className={`px-2 py-0.5 text-[10px] font-mono font-bold rounded-full ${
+                    f.status === 'PAID' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-red-500/20 text-red-400 border border-red-500/30'
+                  }`}>
+                    {f.status}
+                  </span>
+                </div>
+
+                {/* Photo Frame with Overlaid Telemetry */}
+                <div className="relative rounded-2xl overflow-hidden border border-slate-700 bg-black aspect-video flex items-center justify-center">
+                  <img 
+                    src={getChallanSnapshot(f)} 
+                    alt="CCTV Evidence" 
+                    className="w-full h-full object-cover"
+                  />
+                  
+                  {/* Bounding box reticle simulation */}
+                  <div className="absolute inset-x-12 inset-y-8 border-2 border-emerald-400 rounded-lg pointer-events-none shadow-[0_0_15px_rgba(16,185,129,0.5)]">
+                    <div className="absolute -top-6 left-0 bg-slate-950/95 border border-emerald-500/50 px-2 py-0.5 rounded text-[8px] font-mono text-emerald-300 font-bold">
+                      PLATE: {f.plateNumber} | SPEED: 64 km/h | CO2: 28.4 mg/s
+                    </div>
+                  </div>
+
+                  <div className="absolute bottom-2 left-2 right-2 flex justify-between items-center text-[9px] font-mono text-white bg-slate-950/90 backdrop-blur-md px-2 py-1 rounded-lg border border-slate-800">
+                    <span>CAM-01: BKC Gateway</span>
+                    <span>2026-08-27 09:12:30 IST</span>
+                    <span className="text-emerald-400 font-bold">SHA-256 Validated</span>
+                  </div>
+                </div>
+
+                {/* Evidence Metadata */}
+                <div className="grid grid-cols-3 gap-2 text-[10px] font-mono text-slate-400 bg-slate-950 p-2.5 rounded-xl border border-slate-800">
+                  <div>
+                    <div className="text-slate-500">Fine Amount</div>
+                    <div className="text-white font-bold">₹{f.amount}</div>
+                  </div>
+                  <div>
+                    <div className="text-slate-500">Camera Source</div>
+                    <div className="text-cyan-400 font-bold">YOLOv8 ByteTrack</div>
+                  </div>
+                  <div>
+                    <div className="text-slate-500">Speed Over Limit</div>
+                    <div className="text-red-400 font-bold">+4 km/h</div>
+                  </div>
+                </div>
+
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => setActiveEvidenceChallan(f)}
+                    className="flex-1 py-2 bg-slate-800 hover:bg-slate-700 text-white font-bold rounded-xl text-xs font-mono transition flex items-center justify-center gap-1.5"
+                  >
+                    <Eye size={14} className="text-cyan-400" />
+                    <span>Expand High-Res Proof</span>
+                  </button>
+                  {f.status === 'PENDING' && (
+                    <button
+                      onClick={() => handleStartPayment(f)}
+                      className="flex-1 py-2 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold rounded-xl text-xs font-mono transition flex items-center justify-center gap-1.5"
+                    >
+                      <CreditCard size={14} />
+                      <span>Pay ₹{f.amount}</span>
+                    </button>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* ─── DESKTOP VIEW: SECTION 3 (DISPUTE & GRIEVANCE CENTER) ─── */}
+      {viewLayout === 'DESKTOP' && currentSection === 'DISPUTES' && (
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 flex-1">
+          
+          {/* LEFT: Filed Grievances & Status (6 cols) */}
+          <div className="lg:col-span-6 space-y-4">
+            <div className="bg-slate-900/80 p-4 rounded-3xl border border-slate-800">
+              <h3 className="text-sm font-bold text-white font-mono flex items-center gap-2">
+                <Scale className="w-4 h-4 text-amber-400" />
+                <span>Active Grievances & Legal Contestations</span>
+              </h3>
+              <p className="text-xs text-slate-400 mt-0.5">
+                Appeals filed under Motor Vehicles Act 2019 / Rule 167A
+              </p>
+            </div>
+
+            <div className="space-y-3">
+              {vehicleFines.filter(f => f.status === 'DISPUTED').length === 0 ? (
+                <div className="p-8 text-center glass-panel rounded-3xl border border-slate-800 space-y-2">
+                  <CheckCircle2 size={32} className="text-emerald-400 mx-auto" />
+                  <h4 className="text-white font-bold text-sm">No Active Disputes Pending</h4>
+                  <p className="text-xs text-slate-400">All registered fines are either uncontested or settled.</p>
+                </div>
+              ) : (
+                vehicleFines.filter(f => f.status === 'DISPUTED').map((f) => (
+                  <div key={f.id} className="glass-panel p-5 rounded-3xl border border-amber-500/40 space-y-3">
+                    <div className="flex justify-between items-start border-b border-slate-800 pb-2">
+                      <div>
+                        <span className="font-mono font-bold text-white text-sm">{f.challanNo}</span>
+                        <div className="text-xs text-amber-300 mt-0.5">{f.offense || f.violationType}</div>
+                      </div>
+                      <span className="px-2.5 py-0.5 text-[10px] font-mono font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40 rounded-full">
+                        UNDER REVIEW
+                      </span>
+                    </div>
+
+                    <div className="p-3 bg-slate-950 rounded-2xl border border-slate-800 text-xs font-mono space-y-1 text-slate-300">
+                      <div>Ground: <strong className="text-white">{f.disputeReason || 'Emergency Vehicle Yield'}</strong></div>
+                      <div>Dispute Ticket: <strong className="text-cyan-400">DISPUTE-2026-0941</strong></div>
+                      <div>Adjudication Authority: <strong className="text-slate-200">Mumbai Virtual Traffic Court</strong></div>
+                      <div>Expected Resolution: <strong className="text-emerald-400">Within 7 Working Days</strong></div>
+                    </div>
+
+                    <div className="text-[11px] text-slate-400">
+                      * Enforcement fine payment is frozen while your dispute is under review. You will receive an SMS update on the registered mobile number.
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+
+          {/* RIGHT: Lodge New Dispute Form (6 cols) */}
+          <div className="lg:col-span-6 space-y-4">
+            <div className="glass-panel p-6 rounded-3xl border border-slate-800 space-y-4">
+              <div className="flex items-center space-x-2 border-b border-slate-800 pb-3">
+                <AlertCircle className="w-5 h-5 text-amber-400" />
+                <div>
+                  <h3 className="text-sm font-bold text-white font-mono">Lodge a New Challan Contest / Grievance</h3>
+                  <p className="text-xs text-slate-400">Submit formal appeal against an automated fine</p>
+                </div>
+              </div>
+
+              {vehicleFines.filter(f => f.status === 'PENDING').length === 0 ? (
+                <div className="p-6 text-center text-xs text-slate-400 font-mono">
+                  There are no pending fines eligible for contestation on vehicle <strong className="text-white">{selectedPlate}</strong>.
+                </div>
+              ) : (
+                <form onSubmit={handleSubmitDispute} className="space-y-4 font-mono text-xs">
+                  <div>
+                    <label className="text-[10px] text-slate-400 uppercase">Select Challan to Contest</label>
+                    <select 
+                      onChange={(e) => {
+                        const target = vehicleFines.find(f => f.id === e.target.value);
+                        if (target) setActiveDisputeChallan(target);
+                      }}
+                      className="w-full mt-1 p-2.5 bg-slate-950 border border-slate-800 rounded-xl text-white focus:outline-none focus:border-amber-500"
+                    >
+                      {vehicleFines.filter(f => f.status === 'PENDING').map(f => (
+                        <option key={f.id} value={f.id}>
+                          {f.challanNo} — {f.offense || f.violationType} (₹{f.amount})
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="text-[10px] text-slate-400 uppercase">Legal Grounds for Exemption</label>
+                    <select
+                      value={disputeReason}
+                      onChange={(e) => setDisputeReason(e.target.value)}
+                      className="w-full mt-1 p-2.5 bg-slate-950 border border-slate-800 rounded-xl text-white focus:outline-none focus:border-amber-500"
+                    >
+                      <option value="EMERGENCY_YIELD">Yielded Right-of-Way to Emergency Vehicle (Ambulance AMB-108)</option>
+                      <option value="WRONG_PLATE_OCR">Cloned Plate / Optical Recognition Error</option>
+                      <option value="SIGNAL_OBSTRUCTION">Signal Obstructed by Heavy Vehicle / Tree</option>
+                      <option value="ALREADY_PAID">Challan Already Cleared via Netbanking</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="text-[10px] text-slate-400 uppercase">Detailed Citizen Statement</label>
+                    <textarea
+                      rows={4}
+                      placeholder="State the circumstances (e.g., An ambulance approached with active siren and flashing lights; I crossed the stop line at 09:12 AM to allow it through)..."
+                      value={disputeNote}
+                      onChange={(e) => setDisputeNote(e.target.value)}
+                      className="w-full mt-1 p-2.5 bg-slate-950 border border-slate-800 rounded-xl text-white focus:outline-none focus:border-amber-500"
+                      required
+                    />
+                  </div>
+
+                  <button
+                    type="submit"
+                    className="w-full py-3 bg-amber-500 hover:bg-amber-400 text-slate-950 font-black rounded-xl text-xs transition glow-amber shadow-lg"
+                  >
+                    Submit Legal Dispute to Traffic Cell
+                  </button>
+                </form>
+              )}
+            </div>
           </div>
 
         </div>
