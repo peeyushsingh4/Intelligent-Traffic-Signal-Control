@@ -44,7 +44,7 @@ ALLOWED_ORIGINS = {origin.strip() for origin in RAW_ORIGINS.split(",") if origin
 # Optional server-side API auth token for sensitive control commands
 API_AUTH_TOKEN = os.environ.get("API_AUTH_TOKEN", "")
 
-SCENARIOS = ["bkc", "vashi", "palm_beach", "dadar", "weh", "lbs_metro"]
+SCENARIOS = ["bkc", "vashi", "palm_beach", "dadar", "weh", "lbs_metro", "red_signal"]
 
 
 class MatsimServerBridge:

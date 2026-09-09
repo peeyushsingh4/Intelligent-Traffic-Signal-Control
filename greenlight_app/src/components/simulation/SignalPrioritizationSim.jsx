@@ -94,10 +94,24 @@ export const SignalPrioritizationSim = () => {
               setCurrentPhase('EAST_WEST_GREEN');
             }}
             className={`px-2.5 py-1 rounded-lg transition ${
-              trafficDistribution === 'AMBULANCE_PRIORITY' ? 'bg-red-500 text-white font-bold glow-red' : 'text-slate-400 hover:text-white'
+              trafficDistribution === 'AMBULANCE_PRIORITY' ? 'bg-amber-500 text-slate-950 font-bold glow-amber' : 'text-slate-400 hover:text-white'
             }`}
           >
-            Ambulance Emergency Override
+            Ambulance Priority
+          </button>
+
+          <button 
+            onClick={() => {
+              setTrafficDistribution('RED_SIGNAL_HOLD');
+              setNorthQueue(42);
+              setEastQueue(30);
+              setCurrentPhase('NORTH_SOUTH_GREEN');
+            }}
+            className={`px-2.5 py-1 rounded-lg transition ${
+              trafficDistribution === 'RED_SIGNAL_HOLD' ? 'bg-red-600 text-white font-bold glow-red' : 'text-slate-400 hover:text-white'
+            }`}
+          >
+            🔴 Red Signal Lane Hold (CCTV)
           </button>
         </div>
       </div>
@@ -222,6 +236,74 @@ export const SignalPrioritizationSim = () => {
 
         </div>
 
+      </div>
+
+      {/* Real CCTV Feed: Stopped Approach Lane at Red Signal */}
+      <div className="bg-slate-950 p-4 rounded-2xl border border-red-500/30 space-y-3">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <div className="flex items-center space-x-2">
+            <span className="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping"></span>
+            <span className="text-xs font-bold text-white font-mono uppercase flex items-center gap-2">
+              <span>CCTV Ground Truth: Stationary Approach Lane at Red Signal</span>
+              <span className="px-2 py-0.5 text-[9px] bg-red-500/20 text-red-400 border border-red-500/40 rounded-full font-bold animate-pulse">
+                🔴 SOLID RED · LANE STOPPED
+              </span>
+            </span>
+          </div>
+          <div className="text-[10px] font-mono text-slate-400">
+            Feed: <strong className="text-cyan-400">CAM-07 (East Approach Stop Line)</strong>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
+          {/* Live Video Player */}
+          <div className="md:col-span-7 relative rounded-xl overflow-hidden bg-black border border-slate-800 shadow-xl" style={{ height: '220px' }}>
+            <video 
+              src="/videos/istockphoto-1095606488-640_adpp_is_tracked.mp4"
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="w-full h-full object-cover"
+            />
+            <div className="absolute top-2 left-2 px-2 py-1 bg-slate-950/90 backdrop-blur-md rounded border border-red-500/60 flex items-center gap-2 text-[9px] font-mono shadow-md">
+              <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse shadow-[0_0_8px_#ef4444]"></span>
+              <span className="text-red-400 font-bold">STOP LINE CAM · SOLID RED</span>
+            </div>
+            <div className="absolute bottom-2 left-2 right-2 px-2 py-1 bg-slate-950/90 backdrop-blur-md rounded border border-slate-800 flex justify-between text-[9px] font-mono shadow-md">
+              <span className="text-slate-300">Stationary Lane: Eastbound Corridor</span>
+              <span className="text-amber-400 font-bold">Idling CO₂: ~28.4 mg/s</span>
+            </div>
+          </div>
+
+          {/* Red Signal Telemetry & Deep RL Explanation */}
+          <div className="md:col-span-5 space-y-2.5 font-mono text-xs">
+            <div className="p-3 bg-slate-900/90 rounded-xl border border-slate-800 space-y-2">
+              <div className="flex justify-between items-center text-[10px] text-slate-400">
+                <span>SIGNAL ASPECT</span>
+                <span className="text-red-400 font-bold">SOLID RED (45s)</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <div className="w-4 h-4 rounded-full bg-red-500 animate-pulse shadow-[0_0_10px_#ef4444]"></div>
+                <div className="w-4 h-4 rounded-full bg-slate-700"></div>
+                <div className="w-4 h-4 rounded-full bg-slate-700"></div>
+                <span className="text-white font-bold text-xs">Phase 2: All-Red Hold</span>
+              </div>
+              <div className="text-[10px] text-slate-400">
+                Stop line detectors confirm 1 lane completely halted with zero movement.
+              </div>
+            </div>
+
+            <div className="p-3 bg-red-950/20 rounded-xl border border-red-500/30 space-y-1.5 text-[11px]">
+              <div className="text-red-300 font-bold flex items-center gap-1">
+                <span>RL Reallocation Opportunity</span>
+              </div>
+              <div className="text-slate-400 text-[10px] leading-relaxed">
+                While this lane is held at RED to discharge the heavy North-South corridor, AI monitors idling queue length and automatically shifts green time to clear waiting vehicles as soon as the opposing wave passes.
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
     </div>

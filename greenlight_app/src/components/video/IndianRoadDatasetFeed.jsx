@@ -91,6 +91,22 @@ const CCTV_CAMERAS = {
     speedLimit: 60,
     fps: 30.0,
     bitrate: '5.9 Mbps'
+  },
+  red_signal: {
+    id: 'CAM-07',
+    scenarioId: 'red_signal',
+    name: 'BKC East Approach — Red Signal Stop Line (Lane Stopped)',
+    location: 'BKC East Crossing Stop Line · Red Phase Hold',
+    coordinates: '19.0657° N, 72.8686° E',
+    signalState: 'RED',
+    signalPhase: 'PHASE 3: RED HOLD (OPPOSING CLEARANCE)',
+    rawUrl: '/videos/istockphoto-1095606488-640_adpp_is.mp4',
+    trackedUrl: '/videos/istockphoto-1095606488-640_adpp_is_tracked.mp4',
+    tracksJson: '/videos/istockphoto-1095606488-640_adpp_is_compact.json',
+    detourCorridor: 'Red Signal Hold · Stop Line Enforcement Active',
+    speedLimit: 50,
+    fps: 30.0,
+    bitrate: '5.6 Mbps'
   }
 };
 
@@ -304,6 +320,7 @@ export const IndianRoadDatasetFeed = ({ initialScenario = 'bkc', currentScenario
             <option value="dadar">CAM-04: Dadar TT 4-Way</option>
             <option value="weh">CAM-05: WEH Airport Metro</option>
             <option value="lbs_metro">CAM-06: Kurla-LBS Metro</option>
+            <option value="red_signal">🔴 CAM-07: Red Signal Stop Line (Lane Stopped)</option>
           </select>
 
           {/* View Mode Switcher */}
@@ -360,16 +377,38 @@ export const IndianRoadDatasetFeed = ({ initialScenario = 'bkc', currentScenario
               </div>
             </div>
 
-            <div className="p-1.5 rounded-lg bg-slate-950/90 backdrop-blur-md border border-slate-800 flex items-center gap-2 shadow-lg">
-              <span className="text-slate-400">SIGNAL:</span>
-              <div className="flex gap-1 bg-slate-900 p-1 rounded border border-slate-700">
-                <div className="w-2 h-2 rounded-full bg-slate-700"></div>
-                <div className="w-2 h-2 rounded-full bg-slate-700"></div>
-                <div className={`w-2 h-2 rounded-full bg-emerald-500 ${emergencyBlink ? 'animate-pulse' : ''}`}></div>
-              </div>
-              <span className="text-emerald-400 font-bold">{emergencyBlink ? 'EVP PRIORITY' : 'GREEN WAVE'}</span>
-            </div>
+            {(() => {
+              const isRed = activeCam.signalState === 'RED' || emergencyBlink;
+              return (
+                <div className={`p-1.5 rounded-lg bg-slate-950/90 backdrop-blur-md border flex items-center gap-2 shadow-lg ${
+                  isRed ? 'border-red-500/60 shadow-[0_0_12px_rgba(239,68,68,0.3)]' : 'border-slate-800'
+                }`}>
+                  <span className="text-slate-400">SIGNAL:</span>
+                  <div className="flex gap-1 bg-slate-900 p-1 rounded border border-slate-700">
+                    <div className={`w-2 h-2 rounded-full ${isRed ? 'bg-red-500 animate-pulse shadow-[0_0_8px_#ef4444]' : 'bg-slate-700'}`}></div>
+                    <div className="w-2 h-2 rounded-full bg-slate-700"></div>
+                    <div className={`w-2 h-2 rounded-full ${!isRed ? 'bg-emerald-500 shadow-[0_0_8px_#10b981]' : 'bg-slate-700'}`}></div>
+                  </div>
+                  <span className={`font-bold ${isRed ? 'text-red-400' : 'text-emerald-400'}`}>
+                    {emergencyBlink ? 'EVP PRIORITY' : (isRed ? '🔴 RED SIGNAL (LANE STOPPED)' : '🟢 GREEN WAVE')}
+                  </span>
+                </div>
+              );
+            })()}
           </div>
+
+          {/* Red Signal Stop Line Banner */}
+          {activeCam.signalState === 'RED' && (
+            <div className="absolute top-11 inset-x-2 z-30 p-2 bg-red-950/95 backdrop-blur-md text-red-200 rounded-lg border border-red-500/80 flex items-center justify-between text-[10px] shadow-lg animate-pulse">
+              <div className="flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-red-500 animate-ping"></span>
+                <span className="font-bold uppercase tracking-wide">🔴 RED LIGHT ACTIVE: Eastbound Approach Stopped at Stop Line (Queue Idling)</span>
+              </div>
+              <span className="font-mono font-bold bg-red-500/30 px-2 py-0.5 rounded text-red-100 border border-red-400/40">
+                SOLID RED · 45s HOLD
+              </span>
+            </div>
+          )}
 
           {/* Emergency Vehicle Priority Banner */}
           {emergencyBlink && (
@@ -391,9 +430,12 @@ export const IndianRoadDatasetFeed = ({ initialScenario = 'bkc', currentScenario
           {viewMode === 'OVERLAY' && (
             <div className="absolute inset-0 pointer-events-none z-10">
               {liveDetections.map((det) => {
-                const isIdling = det.is_idling;
-                const borderColor = isIdling ? 'border-amber-400' : 'border-emerald-400';
-                const shadowClass = isIdling ? 'shadow-[0_0_8px_rgba(251,191,36,0.5)]' : 'shadow-[0_0_8px_rgba(16,185,129,0.4)]';
+                const isStopped = det.is_stopped || det.speed <= 4;
+                const isIdling = det.is_idling || isStopped;
+                const borderColor = isStopped ? 'border-red-500' : (isIdling ? 'border-amber-400' : 'border-emerald-400');
+                const shadowClass = isStopped 
+                  ? 'shadow-[0_0_10px_rgba(239,68,68,0.7)]' 
+                  : (isIdling ? 'shadow-[0_0_8px_rgba(251,191,36,0.5)]' : 'shadow-[0_0_8px_rgba(16,185,129,0.4)]');
 
                 return (
                   <div
@@ -411,19 +453,27 @@ export const IndianRoadDatasetFeed = ({ initialScenario = 'bkc', currentScenario
                       <div className="px-1.5 py-0.5 bg-slate-950/95 border border-slate-700 rounded text-[8px] font-mono text-slate-100 flex items-center gap-1">
                         <span className="font-bold text-cyan-400">{det.type}</span>
                         <span className="text-slate-400">·</span>
-                        <span className={isIdling ? 'text-amber-400 font-bold' : 'text-white'}>{det.speed} km/h</span>
+                        <span className={isStopped ? 'text-red-400 font-bold' : (isIdling ? 'text-amber-400 font-bold' : 'text-white')}>
+                          {isStopped ? '🔴 0 km/h (STOPPED)' : `${det.speed} km/h`}
+                        </span>
                       </div>
                       
                       {/* Live Carbon Footprint Tag */}
                       <div className={`px-1.5 py-0.2 rounded text-[7px] font-mono font-bold flex items-center gap-1 ${
-                        isIdling 
-                          ? 'bg-amber-950/95 text-amber-300 border border-amber-500/60' 
-                          : 'bg-emerald-950/95 text-emerald-300 border border-emerald-500/50'
+                        isStopped
+                          ? 'bg-red-950/95 text-red-300 border border-red-500/70'
+                          : (isIdling 
+                              ? 'bg-amber-950/95 text-amber-300 border border-amber-500/60' 
+                              : 'bg-emerald-950/95 text-emerald-300 border border-emerald-500/50')
                       }`}>
                         <Leaf size={8} className="text-emerald-400" />
                         <span>CO₂: {det.emission_rate} mg/s</span>
                         <span className="text-slate-400 font-normal">({det.co2_g}g)</span>
-                        {isIdling && <span className="text-red-400 text-[6px]">IDLING</span>}
+                        {isStopped ? (
+                          <span className="text-red-300 font-bold text-[6px]">WAITING AT RED</span>
+                        ) : isIdling ? (
+                          <span className="text-amber-400 text-[6px]">IDLING</span>
+                        ) : null}
                       </div>
                     </div>
                   </div>

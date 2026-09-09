@@ -102,6 +102,25 @@ export const CAMERAS = [
     livePlate: 'MH 03 DZ 9140',
     speedObserved: 54,
     violationTag: 'ILLEGAL COMMERCIAL QUEUE'
+  },
+  { 
+    id: 'cam-red-07', 
+    name: 'BKC East Approach — Red Signal Stop Line (Lane Stopped)', 
+    zone: 'BKC East Stop Line', 
+    speedLimitKmh: 50, 
+    status: 'ONLINE', 
+    fps: 30, 
+    ip: '192.168.1.107', 
+    lat: 19.0660, 
+    lng: 72.8710,
+    simulationScenario: 'red_signal',
+    signalState: 'RED',
+    videoUrl: '/videos/istockphoto-1095606488-640_adpp_is_tracked.mp4',
+    rawVideoUrl: '/videos/istockphoto-1095606488-640_adpp_is.mp4',
+    tracksJson: '/videos/istockphoto-1095606488-640_adpp_is_compact.json',
+    livePlate: 'MH 02 BG 3319',
+    speedObserved: 0,
+    violationTag: 'RED SIGNAL STOPPED LANE HOLD'
   }
 ];
 
