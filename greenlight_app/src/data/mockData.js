@@ -335,6 +335,147 @@ export const DIVERSION_TEMPLATES = [
   }
 ];
 
+export const REGISTERED_VEHICLES = {
+  'MH 02 CZ 4921': {
+    plateNumber: 'MH 02 CZ 4921',
+    ownerName: 'Arun Patel',
+    phone: '+91 98201 44921',
+    email: 'arun.patel@gmail.com',
+    model: 'Maruti Suzuki Swift VXi',
+    vehicleClass: 'Motor Car (LMV)',
+    fuelType: 'Petrol / BS-VI',
+    color: 'Pearl Arctic White',
+    rto: 'MH-02 Mumbai West (Andheri)',
+    registrationDate: '14-Mar-2022',
+    chassisNo: 'MA3EWB31S0091823',
+    engineNo: 'K12MN8712093',
+    insuranceCompany: 'HDFC ERGO General Insurance',
+    insurancePolicyNo: 'HDFC-MOT-2026-99182',
+    insuranceExpiry: '12-Mar-2027',
+    pucCertNo: 'MH02PUC20268819',
+    pucExpiry: '28-Nov-2026',
+    status: 'ACTIVE_REGISTERED'
+  },
+  'MH 04 ER 8812': {
+    plateNumber: 'MH 04 ER 8812',
+    ownerName: 'Vikram Shinde',
+    phone: '+91 98190 88812',
+    email: 'vikram.shinde@outlook.com',
+    model: 'Tata Nexon EV Max',
+    vehicleClass: 'Electric Passenger Car (LMV)',
+    fuelType: 'Battery Electric Vehicle (Zero Emission)',
+    color: 'Intensi-Teal Dual Tone',
+    rto: 'MH-04 Thane RTO',
+    registrationDate: '02-Jan-2024',
+    chassisNo: 'MAT62341P0019284',
+    engineNo: 'EM9082341829',
+    insuranceCompany: 'ICICI Lombard General Insurance',
+    insurancePolicyNo: 'IL-EV-2026-44019',
+    insuranceExpiry: '01-Jan-2027',
+    pucCertNo: 'EXEMPT_ELECTRIC',
+    pucExpiry: 'PERMANENT_EXEMPT',
+    status: 'ACTIVE_REGISTERED'
+  },
+  'KA 03 MN 9210': {
+    plateNumber: 'KA 03 MN 9210',
+    ownerName: 'Rajesh Kumar',
+    phone: '+91 97400 99210',
+    email: 'rajesh.k@gmail.com',
+    model: 'Hyundai Creta SX (O)',
+    vehicleClass: 'Motor Car (SUV)',
+    fuelType: 'Diesel / BS-VI',
+    color: 'Titan Grey Metallic',
+    rto: 'KA-03 Bangalore East (Indiranagar)',
+    registrationDate: '19-Aug-2021',
+    chassisNo: 'MALC341BS0081294',
+    engineNo: 'D4FA9948192',
+    insuranceCompany: 'Bajaj Allianz General Insurance',
+    insurancePolicyNo: 'BAJAJ-MOT-2026-11928',
+    insuranceExpiry: '18-Aug-2027',
+    pucCertNo: 'KA03PUC20264102',
+    pucExpiry: '15-Dec-2026',
+    status: 'ACTIVE_REGISTERED'
+  },
+  'DL 01 AB 3490': {
+    plateNumber: 'DL 01 AB 3490',
+    ownerName: 'Sanjay Sharma',
+    phone: '+91 98111 33490',
+    email: 'sanjay.auto@gmail.com',
+    model: 'Bajaj RE Compact 4S Auto-Rickshaw',
+    vehicleClass: 'Three-Wheeler Passenger (3WT)',
+    fuelType: 'CNG / BS-VI',
+    color: 'Yellow & Green',
+    rto: 'DL-01 North Delhi (Mall Road)',
+    registrationDate: '10-Feb-2020',
+    chassisNo: 'MD2AA24FZ0091823',
+    engineNo: 'AFZ20209182',
+    insuranceCompany: 'New India Assurance',
+    insurancePolicyNo: 'NIA-CV-2026-77192',
+    insuranceExpiry: '09-Feb-2027',
+    pucCertNo: 'DL01PUC20261928',
+    pucExpiry: '08-Oct-2026',
+    status: 'ACTIVE_COMMERCIAL'
+  }
+};
+
+export const IAM_ROLES = {
+  TRAFFIC_POLICE: {
+    id: 'TRAFFIC_POLICE',
+    title: 'Traffic Police Officer / Operator',
+    badgeText: 'Traffic Police Officer',
+    badgeId: 'MH-TP-4091',
+    userName: 'Insp. Rajesh Shinde',
+    department: 'Mumbai Traffic Police (Headquarters)',
+    jurisdiction: 'Greater Mumbai & Navi Mumbai Corridors',
+    description: 'Authorized to monitor live CCTV feeds, control signal reallocations, dispatch emergency priority, review ANPR violations, and adjudicate disputes.',
+    permissions: [
+      'VIEW_DASHBOARD',
+      'VIEW_ALL_CAMERAS',
+      'MANAGE_SIGNALS',
+      'TRIGGER_EVP_EMERGENCY',
+      'TRIGGER_DIVERSION',
+      'REVIEW_VIOLATIONS',
+      'APPROVE_CHALLANS',
+      'DISMISS_VIOLATIONS',
+      'ADJUDICATE_DISPUTES',
+      'VIEW_ANALYTICS'
+    ],
+    allowedTabs: [
+      'control_room',
+      'simulation_display',
+      'evidence_viewer',
+      'diversions',
+      'fines',
+      'camera_management',
+      'field_officer',
+      'analytics',
+      'testing'
+    ],
+    landingTab: 'control_room'
+  },
+  CITIZEN: {
+    id: 'CITIZEN',
+    title: 'Citizen / Vehicle Owner',
+    badgeText: 'Citizen User',
+    badgeId: 'CITIZEN-USER',
+    userName: 'Arun Patel',
+    registeredVehicle: 'MH 02 CZ 4921',
+    phone: '+91 98201 44921',
+    description: 'Public access to look up registered vehicle details, review issued e-challans with photographic evidence, make instant fine payments, and file disputes.',
+    permissions: [
+      'VIEW_OWN_VEHICLES',
+      'SEARCH_CHALLAN',
+      'PAY_FINES',
+      'CONTEST_DISPUTE',
+      'DOWNLOAD_RECEIPT'
+    ],
+    allowedTabs: [
+      'vehicle_owner_portal'
+    ],
+    landingTab: 'vehicle_owner_portal'
+  }
+};
+
 export const EXECUTIVE_METRICS = {
   violationDetectionRate: '+342%',
   avgCommuteSavings: '28.5%',

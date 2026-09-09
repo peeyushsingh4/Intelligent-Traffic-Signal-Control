@@ -1,5 +1,8 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { CAMERAS, MOCK_VIOLATIONS, FINES_DATABASE, DIVERSION_TEMPLATES } from '../data/mockData';
+import { 
+  CAMERAS, MOCK_VIOLATIONS, FINES_DATABASE, DIVERSION_TEMPLATES, 
+  REGISTERED_VEHICLES, IAM_ROLES 
+} from '../data/mockData';
 
 export const DEFAULT_HEATMAP_NODES = [
   { id: 'node-bkc', name: 'BKC Junction (Bandra East)', lat: 19.0657, lng: 72.8686, score: 85, color: '#ef4444', status: 'Severe Congestion', queue: 42, avgSpeed: 14 },
@@ -12,7 +15,9 @@ export const DEFAULT_HEATMAP_NODES = [
 const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
-  const [activePersona, setActivePersona] = useState('OPERATOR');
+  // IAM Role state: 'TRAFFIC_POLICE' (Traffic Police Officer Dashboard) or 'CITIZEN' (Vehicle Owner Portal)
+  const [currentRole, setCurrentRole] = useState('TRAFFIC_POLICE');
+  const [activePersona, setActivePersona] = useState('TRAFFIC_POLICE');
   const [activeTab, setActiveTab] = useState('control_room');
   const [selectedViolation, setSelectedViolation] = useState(null);
   
@@ -21,6 +26,7 @@ export const AppProvider = ({ children }) => {
   const [cameras, setCameras] = useState(CAMERAS);
   const [diversions, setDiversions] = useState(DIVERSION_TEMPLATES);
   const [heatmapNodes, setHeatmapNodes] = useState(DEFAULT_HEATMAP_NODES);
+  const [vehicles, setVehicles] = useState(REGISTERED_VEHICLES);
 
   const [activeCamera, setActiveCamera] = useState(CAMERAS[0]);
 
@@ -37,6 +43,55 @@ export const AppProvider = ({ children }) => {
 
   const liveAlertCount = violations.filter(v => v.status === 'OPERATOR_REVIEW').length;
 
+  // IAM Role Switcher with automatic landing page redirection
+  const switchRole = (roleId) => {
+    const targetRole = IAM_ROLES[roleId] ? roleId : 'TRAFFIC_POLICE';
+    setCurrentRole(targetRole);
+    setActivePersona(targetRole);
+    const landing = IAM_ROLES[targetRole].landingTab;
+    setActiveTab(landing);
+  };
+
+  const isTabAllowed = (tabId) => {
+    const roleConfig = IAM_ROLES[currentRole] || IAM_ROLES.TRAFFIC_POLICE;
+    return roleConfig.allowedTabs.includes(tabId);
+  };
+
+  // Citizen Pay Fine Handler
+  const handlePayFine = (fineId, paymentMethod = 'UPI (Instant)') => {
+    const txnId = `UPI/${Date.now().toString().slice(-8)}/SUCCESS`;
+    setFines(prev => prev.map(f => {
+      if (f.id === fineId || f.fineId === fineId || f.challanNo === fineId) {
+        return {
+          ...f,
+          status: 'PAID',
+          paymentMethod,
+          transactionId: txnId,
+          paidAt: new Date().toISOString()
+        };
+      }
+      return f;
+    }));
+    return txnId;
+  };
+
+  // Citizen Contest / Dispute Fine Handler
+  const handleDisputeFine = (fineId, reason, note = '') => {
+    setFines(prev => prev.map(f => {
+      if (f.id === fineId || f.fineId === fineId || f.challanNo === fineId) {
+        return {
+          ...f,
+          status: 'DISPUTED',
+          disputeReason: reason,
+          disputeNote: note,
+          disputeStatus: 'UNDER_REVIEW',
+          disputedAt: new Date().toISOString()
+        };
+      }
+      return f;
+    }));
+  };
+
   // Handle 1-Click Diversion Activation -> Triggers Python API Bridge Server on Port 5005
   const handleActivateDiversion = async (diversionId) => {
     setDiversions(prev => prev.map(d => 
@@ -50,7 +105,7 @@ export const AppProvider = ({ children }) => {
         body: JSON.stringify({ diversionId })
       });
       const data = await res.json();
-      console.log("SUMO-GUI Launch Response:", data);
+      console.log("Backend diversion trigger response:", data);
     } catch (err) {
       console.warn("Backend API bridge note (server running on port 5005):", err);
     }
@@ -76,16 +131,19 @@ export const AppProvider = ({ children }) => {
 
   return (
     <AppContext.Provider value={{
+      currentRole, setCurrentRole, switchRole, isTabAllowed,
       activePersona, setActivePersona,
       activeTab, setActiveTab,
       selectedViolation, openEvidenceModal, closeEvidenceModal,
       violations, fines, setFines,
+      vehicles, setVehicles,
       cameras, setCameras,
       activeCamera, setActiveCamera,
       diversions, handleActivateDiversion,
       handleApproveFine, handleDismissFine,
       handleApproveViolation: handleApproveFine,
       handleDismissViolation: handleDismissFine,
+      handlePayFine, handleDisputeFine,
       heatmapNodes, setHeatmapNodes,
       currentTime, liveAlertCount
     }}>
