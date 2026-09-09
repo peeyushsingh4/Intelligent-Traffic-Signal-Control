@@ -1,0 +1,30 @@
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.pytest_cache/
+
+# Databases and Models
+*.db
+*.sqlite
+*.sqlite3
+backend/models_store/
+backend/churnguard.db
+
+# Node / Vite
+node_modules/
+dist/
+dist-ssr/
+*.local
+
+# Logs
+*.log
+
+# OS
+.DS_Store
