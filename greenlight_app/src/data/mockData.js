@@ -338,19 +338,114 @@ export const DIVERSION_TEMPLATES = [
     timeSavingsMin: 24,
     capacityImpact: '+35% Corridor Flow',
     status: 'ACTIVE',
-    signageMessage: 'HEAVY QUEUE WEH SOUTH. DIVERSION: USE LBS MARG & EASTERN EXPWY. SAVINGS 24 MINS.'
+    signageMessage: 'HEAVY QUEUE WEH SOUTH. DIVERSION: USE LBS MARG & EASTERN EXPWY. SAVINGS 24 MINS.',
+    mapCenter: [19.0650, 72.8680],
+    mapZoom: 13,
+    divertRatePct: 40,
+    divertedCount: 684,
+    hazard: {
+      type: 'CONGESTION',
+      label: 'WEH Kalanagar Bottleneck (Avg 6 km/h)',
+      location: [19.0635, 72.8510],
+      queueKm: 2.1,
+      delayMin: 32,
+      blockedPolyline: [
+        [19.0830, 72.8525],
+        [19.0740, 72.8518],
+        [19.0635, 72.8510],
+        [19.0550, 72.8500]
+      ]
+    },
+    bypassRoute: [
+      [19.0805, 72.8530], // Vakola Diversion Slip-Ramp
+      [19.0725, 72.8635], // CST Road Link
+      [19.0680, 72.8750], // LBS Marg Main Arterial
+      [19.0600, 72.8830], // BKC-EEH Elevated Flyover
+      [19.0490, 72.8870], // Eastern Express Highway (Free Flow)
+      [19.0400, 72.8630]  // Sion Rejoin Point
+    ],
+    vmsGantries: [
+      { id: 'vms-01', name: 'VMS #04 (Vakola Flyover South)', pos: [19.0815, 72.8535], message: 'DIVERSION: USE LBS MARG' },
+      { id: 'vms-02', name: 'VMS #09 (CST Road Junction)', pos: [19.0710, 72.8660], message: 'EEH CONNECTOR CLEAR' }
+    ]
   },
   {
     id: 'div-02',
     title: 'Monsoon Waterlogging — Palm Beach Coastal Bypass',
-    corridor: 'Nerul Underpass Corridor',
-    affectedCorridor: 'Nerul Underpass Corridor',
+    corridor: 'Nerul Underpass Corridor (Navi Mumbai)',
+    affectedCorridor: 'Nerul Underpass Corridor (Navi Mumbai)',
     alternateRoute: 'Palm Beach Road Elevated Bypass',
     recommendedRoute: 'Palm Beach Road Elevated Bypass',
     timeSavingsMin: 18,
     capacityImpact: '+20% Flood Clearance',
+    status: 'ACTIVE',
+    signageMessage: 'WATERLOGGING AHEAD. LIGHT VEHICLES USE PALM BEACH ROAD ELEVATED ROUTE.',
+    mapCenter: [19.0300, 73.0150],
+    mapZoom: 13,
+    divertRatePct: 55,
+    divertedCount: 412,
+    hazard: {
+      type: 'FLOOD',
+      label: 'Nerul Underpass Waterlogged (Depth 45cm)',
+      location: [19.0340, 73.0195],
+      queueKm: 1.6,
+      delayMin: 28,
+      blockedPolyline: [
+        [19.0440, 73.0180],
+        [19.0380, 73.0190],
+        [19.0340, 73.0195],
+        [19.0260, 73.0215]
+      ]
+    },
+    bypassRoute: [
+      [19.0480, 73.0120], // LP Junction Divert Ramp
+      [19.0380, 73.0060], // Palm Beach Coastal Road Entry
+      [19.0260, 73.0075], // Palm Beach Elevated Viaduct
+      [19.0150, 73.0130], // Seawoods Coastal Link
+      [19.0060, 73.0240]  // CBD Belapur Rejoin
+    ],
+    vmsGantries: [
+      { id: 'vms-03', name: 'VMS #12 (LP Flyover Approach)', pos: [19.0475, 73.0130], message: 'UNDERPASS CLOSED - USE PALM BEACH' },
+      { id: 'vms-04', name: 'VMS #15 (Moraj Circle Entry)', pos: [19.0360, 73.0065], message: 'ELEVATED VIADUCT OPEN' }
+    ]
+  },
+  {
+    id: 'div-03',
+    title: 'Dadar TT Urban Gridlock — Ambedkar Elevated Bypass',
+    corridor: 'Dadar TT Circle - Dr. Ambedkar Road',
+    affectedCorridor: 'Dadar TT Circle - Dr. Ambedkar Road',
+    alternateRoute: 'Dr. Ambedkar Road Elevated Flyover Corridor',
+    recommendedRoute: 'Dr. Ambedkar Road Elevated Flyover Corridor',
+    timeSavingsMin: 16,
+    capacityImpact: '+28% Urban Relief',
     status: 'IDLE',
-    signageMessage: 'WATERLOGGING AHEAD. LIGHT VEHICLES USE PALM BEACH ROAD ELEVATED ROUTE.'
+    signageMessage: 'DADAR TT GRIDLOCK. HEAVY VEHICLES DIVERT VIA AMBEDKAR ELEVATED VIADUCT.',
+    mapCenter: [19.0180, 72.8440],
+    mapZoom: 14,
+    divertRatePct: 35,
+    divertedCount: 195,
+    hazard: {
+      type: 'CONGESTION',
+      label: 'Dadar TT Circle Gridlock (Bus Breakdown)',
+      location: [19.0178, 72.8478],
+      queueKm: 1.2,
+      delayMin: 22,
+      blockedPolyline: [
+        [19.0250, 72.8465],
+        [19.0200, 72.8475],
+        [19.0178, 72.8478],
+        [19.0120, 72.8450]
+      ]
+    },
+    bypassRoute: [
+      [19.0270, 72.8450], // Matunga Diversion Gantry
+      [19.0210, 72.8420], // Dr. Ambedkar Elevated Flyover Entry
+      [19.0150, 72.8410], // Hindmata Elevated Bypass
+      [19.0060, 72.8390]  // Parel TT Overpass
+    ],
+    vmsGantries: [
+      { id: 'vms-05', name: 'VMS #07 (Matunga Circle Gantry)', pos: [19.0265, 72.8455], message: 'TAKE ELEVATED FLYOVER' }
+    ]
   }
 ];
 

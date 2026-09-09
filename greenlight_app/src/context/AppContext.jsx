@@ -102,13 +102,44 @@ export const AppProvider = ({ children }) => {
       const res = await fetch('http://localhost:5005/api/activate-diversion', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ diversionId })
+        body: JSON.stringify({ diversionId, action: 'activate' })
       });
       const data = await res.json();
       console.log("Backend diversion trigger response:", data);
     } catch (err) {
       console.warn("Backend API bridge note (server running on port 5005):", err);
     }
+  };
+
+  const handleDeactivateDiversion = async (diversionId) => {
+    setDiversions(prev => prev.map(d => 
+      d.id === diversionId ? { ...d, status: 'IDLE' } : d
+    ));
+
+    try {
+      await fetch('http://localhost:5005/api/activate-diversion', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ diversionId, action: 'deactivate' })
+      });
+    } catch (err) {
+      console.warn("Backend API bridge note:", err);
+    }
+  };
+
+  const handleToggleDiversion = (diversionId) => {
+    const item = diversions.find(d => d.id === diversionId);
+    if (item && item.status === 'ACTIVE') {
+      handleDeactivateDiversion(diversionId);
+    } else {
+      handleActivateDiversion(diversionId);
+    }
+  };
+
+  const handleIncrementDivertedCount = (diversionId, amount = 1) => {
+    setDiversions(prev => prev.map(d => 
+      d.id === diversionId ? { ...d, divertedCount: (d.divertedCount || 0) + amount } : d
+    ));
   };
 
   const openEvidenceModal = (violation) => {
@@ -139,7 +170,7 @@ export const AppProvider = ({ children }) => {
       vehicles, setVehicles,
       cameras, setCameras,
       activeCamera, setActiveCamera,
-      diversions, handleActivateDiversion,
+      diversions, handleActivateDiversion, handleDeactivateDiversion, handleToggleDiversion, handleIncrementDivertedCount,
       handleApproveFine, handleDismissFine,
       handleApproveViolation: handleApproveFine,
       handleDismissViolation: handleDismissFine,
