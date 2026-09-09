@@ -1,4 +1,4 @@
-// greenlight.exe — Master Production Mock Data Engine
+// iTraCS — Intelligent Traffic & Challan System — Master Production Mock Data Engine
 
 export const CAMERAS = [
   { 

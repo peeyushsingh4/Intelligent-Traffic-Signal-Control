@@ -1,5 +1,5 @@
 """
-Comprehensive Automated Unit & Integration Tests for GreenLight Traffic Control System.
+Comprehensive Automated Unit & Integration Tests for iTraCS Traffic Control System.
 """
 
 import json

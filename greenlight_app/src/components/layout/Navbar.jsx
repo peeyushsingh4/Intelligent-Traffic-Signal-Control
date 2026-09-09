@@ -29,7 +29,7 @@ export const Navbar = () => {
         </div>
         <div>
           <div className="flex items-center space-x-2">
-            <h1 className="text-lg font-bold text-white tracking-wider font-display">greenlight.exe</h1>
+            <h1 className="text-lg font-bold text-white tracking-wider font-display">iTraCS</h1>
             <span className={`px-2 py-0.5 text-[9px] font-mono font-bold rounded-full border ${
               isPolice 
                 ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30' 

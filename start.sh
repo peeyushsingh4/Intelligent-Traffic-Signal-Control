@@ -1,6 +1,6 @@
 #!/bin/bash
 # ========================================================
-# GREENLIGHT — ONE-CLICK RUNNER
+# iTraCS — ONE-CLICK RUNNER
 # Starts both the Backend Simulation Server & Frontend App
 # ========================================================
 
@@ -9,7 +9,7 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd "$SCRIPT_DIR"
 
 echo "========================================================="
-echo "🚦 GREENLIGHT: INTELLIGENT TRAFFIC SIGNAL CONTROL SYSTEM"
+echo "🚦 iTraCS: INTELLIGENT TRAFFIC & CHALLAN SYSTEM"
 echo "📂 Project Directory: $SCRIPT_DIR"
 echo "========================================================="
 
@@ -30,7 +30,7 @@ fi
 # Cleanup on Ctrl+C
 cleanup() {
     echo ""
-    echo "🛑 Shutting down Greenlight servers..."
+    echo "🛑 Shutting down iTraCS servers..."
     kill $BACKEND_PID $FRONTEND_PID 2>/dev/null
     exit 0
 }
@@ -50,7 +50,7 @@ cd ..
 
 sleep 2
 echo "========================================================="
-echo "✅ Greenlight is running!"
+echo "✅ iTraCS is running!"
 echo "📡 Backend API:      http://localhost:5005"
 echo "🖥️ Frontend App:     http://localhost:3000"
 echo "========================================================="

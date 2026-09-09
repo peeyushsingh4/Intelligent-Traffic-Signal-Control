@@ -1,6 +1,5 @@
-# 🚦 greenlight.exe — Intelligent Traffic Signal Control & AI Urban Mobility Platform
-
-An end-to-end, production-grade **AI Urban Traffic Control, Microscopic Simulation, Dynamic Diversion & Violation Enforcement Platform** tailored for Indian metropolitan corridors (**Mumbai & Navi Mumbai**).
+# 🚦 iTraCS — Intelligent Traffic & Challan System
+### AI-Powered Urban Traffic Control, Microscopic Simulation & Automated Enforcement Platform
 
 Combines **Deep Reinforcement Learning** (DQN / PPO adaptive signal control), **Computer Vision / ANPR** (Indian Vehicle & Road Perception), **Real-World SUMO Simulation** with **Monsoon Weather & Road Hazard Modeling**, and a **Modern Command Center Dashboard**.
 

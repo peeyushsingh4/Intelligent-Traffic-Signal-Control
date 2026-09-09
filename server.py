@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-greenlight.exe — MATSim-Aligned Agent-Based Transport Simulation API Server.
+iTraCS — Intelligent Traffic & Challan System — MATSim-Aligned Agent-Based Transport Simulation API Server.
 Reference: Multi-Agent Transport Simulation (https://matsim.org/)
 
 Provides REST endpoints for:
@@ -268,7 +268,7 @@ class RequestHandler(BaseHTTPRequestHandler):
 
 def run_server():
     print("=================================================================")
-    print("🚦 GREENLIGHT — MATSim (matsim.org) AGENT-BASED SIMULATION SERVER")
+    print("🚦 iTraCS — INTELLIGENT TRAFFIC & CHALLAN SYSTEM (matsim.org)")
     print(f"📡 API Listening at: http://{HOST}:{PORT}")
     print("⚡ Real-Time Green Reallocation · Emergency EVP · Machine Thoughts")
     print("=================================================================")
