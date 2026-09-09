@@ -149,13 +149,37 @@ class MatsimSimulationEngine:
                 "link-turbhe-detour": MatsimLink("link-turbhe-detour", "node-mankhurd", "node-palm-beach", 1450.0, 16.67, 1800.0, 80, 4, "Turbhe MIDC Bypass Corridor", is_alternate=True),
                 "link-vashi-sec17": MatsimLink("link-vashi-sec17", "node-sec17", "node-vashi-jct", 500.0, 11.11, 800.0, 30, 2, "Vashi Sector 17 Collector", is_alternate=False),
             }
-        else:
+        elif scenario == "palm_beach":
             # Palm Beach Road Nerul
             self.links = {
                 "link-palm-main": MatsimLink("link-palm-main", "node-vashi-dir", "node-nerul-jct", 950.0, 19.44, 2000.0, 70, 6, "Palm Beach Road Express (CBD Bound)", is_alternate=False),
                 "link-nerul-sec20": MatsimLink("link-nerul-sec20", "node-sec20", "node-nerul-jct", 450.0, 11.11, 700.0, 25, 2, "Nerul Sector 20 Local Crossing", is_alternate=False),
                 "link-seawoods-bypass": MatsimLink("link-seawoods-bypass", "node-vashi-dir", "node-cbd-belapur", 1300.0, 16.67, 1500.0, 65, 3, "Seawoods Grand Central Coastal Bypass", is_alternate=True),
                 "link-chanakya-way": MatsimLink("link-chanakya-way", "node-chanakya", "node-nerul-jct", 400.0, 11.11, 600.0, 20, 2, "TS Chanakya Maritime Road", is_alternate=False),
+            }
+        elif scenario == "dadar":
+            # Dadar TT Circle (Central Mumbai Arterial Junction)
+            self.links = {
+                "link-ambedkar-south": MatsimLink("link-ambedkar-south", "node-mahim", "node-dadar-tt", 900.0, 13.89, 1700.0, 65, 4, "Dr. Ambedkar Road (Southbound)", is_alternate=False),
+                "link-tilak-bridge": MatsimLink("link-tilak-bridge", "node-dadar-tt", "node-dadar-w", 650.0, 11.11, 1200.0, 40, 2, "Tilak Bridge Flyover Approach", is_alternate=False),
+                "link-senapati-bapat": MatsimLink("link-senapati-bapat", "node-mahim", "node-prabhadevi", 1250.0, 13.89, 1500.0, 70, 4, "Senapati Bapat Marg Bypass Corridor", is_alternate=True),
+                "link-khodadad-way": MatsimLink("link-khodadad-way", "node-wadala", "node-dadar-tt", 550.0, 11.11, 900.0, 30, 2, "Khodadad Circle Radial Feeder", is_alternate=False),
+            }
+        elif scenario == "weh":
+            # WEH Airport Flyover & Metro Junction
+            self.links = {
+                "link-weh-airport-s": MatsimLink("link-weh-airport-s", "node-jogeshwari", "node-airport-flyover", 1100.0, 19.44, 2200.0, 85, 6, "Western Express Highway Mainline", is_alternate=False),
+                "link-airport-ramp": MatsimLink("link-airport-ramp", "node-airport-flyover", "node-t2-terminal", 600.0, 13.89, 1300.0, 40, 3, "CSMIA T2 Elevated Terminal Connector", is_alternate=False),
+                "link-sahar-elevated": MatsimLink("link-sahar-elevated", "node-jogeshwari", "node-t2-terminal", 1350.0, 19.44, 1800.0, 75, 4, "Sahar Airport Dedicated Elevated Road", is_alternate=True),
+                "link-andheri-kurla": MatsimLink("link-andheri-kurla", "node-andheri-stn", "node-airport-flyover", 700.0, 11.11, 1100.0, 35, 2, "Andheri-Kurla Road Metro Line 1 Crossing", is_alternate=False),
+            }
+        else:
+            # Kurla - LBS Marg Metro Corridor
+            self.links = {
+                "link-lbs-kurla-s": MatsimLink("link-lbs-kurla-s", "node-ghatkopar", "node-kurla-cross", 850.0, 13.89, 1600.0, 60, 4, "LBS Marg Metro Arterial Corridor", is_alternate=False),
+                "link-phoenix-way": MatsimLink("link-phoenix-way", "node-kurla-cross", "node-bkc-connector", 550.0, 11.11, 1000.0, 35, 2, "BKC-Kurla Elevated Arm", is_alternate=False),
+                "link-sclr-express": MatsimLink("link-sclr-express", "node-ghatkopar", "node-bkc-connector", 1200.0, 16.67, 1900.0, 80, 4, "Santacruz-Chembur Link Road (SCLR) Bypass", is_alternate=True),
+                "link-kurla-stn": MatsimLink("link-kurla-stn", "node-kurla-stn", "node-kurla-cross", 450.0, 8.33, 700.0, 25, 2, "Kurla West Station Feeder", is_alternate=False),
             }
 
     def _seed_initial_population(self):

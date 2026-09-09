@@ -32,7 +32,7 @@ if str(BASE_DIR) not in sys.path:
 from src.simulation.matsim_engine import MatsimSimulationEngine
 
 PORT = 5005
-SCENARIOS = ["bkc", "vashi", "palm_beach"]
+SCENARIOS = ["bkc", "vashi", "palm_beach", "dadar", "weh", "lbs_metro"]
 
 
 class MatsimServerBridge:
