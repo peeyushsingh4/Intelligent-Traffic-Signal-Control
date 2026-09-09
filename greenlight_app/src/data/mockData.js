@@ -477,27 +477,34 @@ export const DIVERSION_TEMPLATES = [
       blockedPolyline: [
         [19.027500, 72.854000], // King's Circle (Maheshwari Udyan)
         [19.023200, 72.851200], // Ruia / Chitra Cinema North Approach
-        [19.020500, 72.849200], // Dadar Fire Station Ground Approach
+        [19.019500, 72.848800], // Dadar Fire Station Ground Approach
         [19.017800, 72.847800], // Khodadad Circle / Dadar TT Bottleneck
         [19.014200, 72.845800], // Hindmata Cinema ground road
         [19.010500, 72.844000], // Parel TT Ground Corridor
-        [19.006500, 72.842200]  // Lalbaug Flyover Ground Merge
+        [19.003587, 72.841882]  // Lalbaug Flyover Ground Merge
       ]
     },
     bypassRoute: [
-      [19.027500, 72.854000], // 1. Matunga Circle / King's Circle Diversion Point
-      [19.026800, 72.857200], // 2. Turn onto Rafi Ahmed Kidwai (RAK) Marg
-      [19.022500, 72.858800], // 3. RAK Marg Wadala Bridge
-      [19.018500, 72.860100], // 4. RAK Marg past Five Gardens
-      [19.014200, 72.861000], // 5. RAK Marg past Naigaon Police Grounds
-      [19.009800, 72.861400], // 6. RAK Marg past Sewri Hospital
-      [19.007500, 72.855000], // 7. Acharya Donde Marg / Parel Connector
-      [19.006200, 72.847000], // 8. Acharya Donde Marg westbound
-      [19.004500, 72.841500]  // 9. Rejoining Dr. Ambedkar Road at Lalbaug (Free Flow)
+      [19.027500, 72.854000], // 1. King's Circle (Maheshwari Udyan) Diversion Entry
+      [19.029164, 72.857517], // 2. Turn onto Rafi Ahmed Kidwai (RAK) Marg
+      [19.028703, 72.858593], // 3. RAK Marg Wadala Bridge curve
+      [19.026147, 72.860195], // 4. RAK Marg along Five Gardens East
+      [19.021889, 72.860727], // 5. RAK Marg Central Arterial
+      [19.019022, 72.860293], // 6. RAK Marg past Naigaon crossroad
+      [19.016965, 72.858757], // 7. RAK Marg past Naigaon Police Grounds
+      [19.014793, 72.856200], // 8. RAK Marg approach to Sewri
+      [19.013266, 72.855019], // 9. RAK Marg Sewri Hospital sector
+      [19.011285, 72.854387], // 10. RAK Marg South sector
+      [19.009921, 72.854240], // 11. RAK Marg Jerbai Wadia Road junction
+      [19.004833, 72.853946], // 12. RAK Marg approach to Acharya Donde Marg
+      [19.000583, 72.853722], // 13. Turn onto Acharya Donde Marg
+      [19.000480, 72.846335], // 14. Acharya Donde Marg westbound
+      [19.002066, 72.843636], // 15. Acharya Donde Marg Parel cross
+      [19.003587, 72.841882]  // 16. Rejoining Dr. Ambedkar Road at Lalbaug (Free Flow)
     ],
     vmsGantries: [
-      { id: 'vms-05', name: 'VMS #07 (Matunga Circle Gantry)', pos: [19.0270, 72.8560], message: 'DIVERSION: USE RAK MARG' },
-      { id: 'vms-06', name: 'VMS #08 (RAK Marg Wadala)', pos: [19.0165, 72.8605], message: 'LALBAUG ARTERIAL CLEAR' }
+      { id: 'vms-05', name: 'VMS #07 (Matunga Circle Gantry)', pos: [19.0285, 72.8565], message: 'DIVERSION: USE RAK MARG' },
+      { id: 'vms-06', name: 'VMS #08 (RAK Marg Wadala)', pos: [19.0170, 72.8590], message: 'LALBAUG ARTERIAL CLEAR' }
     ]
   }
 ];

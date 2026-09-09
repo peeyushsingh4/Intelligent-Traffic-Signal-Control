@@ -1,16 +1,30 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, Polyline, CircleMarker, useMap } from 'react-leaflet';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
+import { MapContainer, TileLayer, Marker, Popup, Polyline, CircleMarker, ZoomControl, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import { useApp, DEFAULT_HEATMAP_NODES } from '../../context/AppContext';
 
-// Helper component to smoothly fly to center and zoom when selected diversion changes
-const MapViewController = ({ center, zoom }) => {
+// Helper component to smoothly fly or fit bounds when selected diversion changes
+const MapViewController = ({ bounds, center, zoom }) => {
   const map = useMap();
+  const prevBoundsKey = useRef('');
+
   useEffect(() => {
-    if (center && center.length === 2) {
-      map.flyTo(center, zoom || 13, { duration: 1.2 });
+    if (bounds && bounds.length === 2) {
+      const boundsKey = `${bounds[0][0].toFixed(3)},${bounds[0][1].toFixed(3)}_${bounds[1][0].toFixed(3)},${bounds[1][1].toFixed(3)}`;
+      if (boundsKey !== prevBoundsKey.current) {
+        prevBoundsKey.current = boundsKey;
+        try {
+          map.fitBounds(bounds, { padding: [60, 60], maxZoom: 14, animate: true, duration: 1.1 });
+        } catch (e) {
+          if (center && center.length === 2) {
+            map.flyTo(center, zoom || 14, { duration: 1.1 });
+          }
+        }
+      }
+    } else if (center && center.length === 2) {
+      map.flyTo(center, zoom || 14, { duration: 1.1 });
     }
-  }, [center, zoom, map]);
+  }, [bounds, center, zoom, map]);
   return null;
 };
 
@@ -272,6 +286,22 @@ export const TrafficMap = ({
     [19.0560, 72.8495]
   ];
 
+  // Calculate route bounding box to automatically fit camera onto real road corridor
+  const routeBounds = useMemo(() => {
+    if (!showDiversions || !selectedDiversion) return null;
+    const allPts = [
+      ...(selectedDiversion.bypassRoute || []),
+      ...(selectedDiversion.hazard?.blockedPolyline || [])
+    ];
+    if (allPts.length < 2) return null;
+    const lats = allPts.map(p => p[0]);
+    const lngs = allPts.map(p => p[1]);
+    return [
+      [Math.min(...lats), Math.min(...lngs)],
+      [Math.max(...lats), Math.max(...lngs)]
+    ];
+  }, [showDiversions, selectedDiversion]);
+
   return (
     <div className="relative w-full h-full min-h-[350px] rounded-2xl overflow-hidden border border-slate-800 shadow-2xl bg-slate-950">
       
@@ -320,8 +350,15 @@ export const TrafficMap = ({
         style={{ width: '100%', height: '100%', minHeight: '350px', backgroundColor: '#070a11' }}
         zoomControl={false}
       >
-        {/* Dynamic Viewport Controller */}
-        <MapViewController center={selectedDiversion?.mapCenter || defaultCenter} zoom={selectedDiversion?.mapZoom || defaultZoom} />
+        {/* Dynamic Viewport Controller with Auto-Fit Road Bounds */}
+        <MapViewController 
+          bounds={routeBounds}
+          center={selectedDiversion?.mapCenter || defaultCenter} 
+          zoom={selectedDiversion?.mapZoom || defaultZoom} 
+        />
+
+        {/* Sleek Zoom Controller in Bottom Right */}
+        <ZoomControl position="bottomright" />
 
         {/* Clean High-Contrast Dark Map Tiles (OpenStreetMap + dark matrix filter, zero watermarks) */}
         <TileLayer
@@ -336,12 +373,12 @@ export const TrafficMap = ({
           <CircleMarker
             key={node.id}
             center={[node.lat, node.lng]}
-            radius={Math.max(8, node.score / 2.5)}
+            radius={showDiversions ? 6 : Math.max(8, node.score / 2.5)}
             pathOptions={{
               color: node.color || '#ef4444',
               fillColor: node.color || '#ef4444',
-              fillOpacity: 0.3,
-              weight: 2
+              fillOpacity: showDiversions ? 0.12 : 0.3,
+              weight: showDiversions ? 1 : 2
             }}
           >
             <Popup className="dark-leaflet-popup">
