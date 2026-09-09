@@ -18,21 +18,36 @@ export const DiversionPanel = () => {
   const [selectedId, setSelectedId] = useState(diversions[0]?.id || 'div-01');
   const [waveTrigger, setWaveTrigger] = useState(0);
   const [flowRate, setFlowRate] = useState(50); // Flow rate percentage (10% to 90%)
-  const [isSignageSending, setIsSignageSending] = useState(false);
+  
+  // Local state overrides to guarantee instant button responsiveness
+  const [activeOverrides, setActiveOverrides] = useState({});
 
   // Always bind to live diversion item in context
   const currentPlan = diversions.find(d => d.id === selectedId) || diversions[0];
-  const isActive = currentPlan?.status === 'ACTIVE';
+  
+  // Check active state with local override fallback for instantaneous UI reaction
+  const isPlanActive = activeOverrides[currentPlan?.id] !== undefined
+    ? activeOverrides[currentPlan?.id]
+    : currentPlan?.status === 'ACTIVE';
 
-  const handleWave = () => {
-    setWaveTrigger(w => w + 1);
+  const handleToggle = () => {
+    if (!currentPlan) return;
+    const nextState = !isPlanActive;
+    
+    // 1. Instant local UI state update
+    setActiveOverrides(prev => ({ ...prev, [currentPlan.id]: nextState }));
+    
+    // 2. Sync with global context & backend API
+    if (nextState) {
+      handleActivateDiversion(currentPlan.id);
+    } else {
+      handleDeactivateDiversion(currentPlan.id);
+    }
   };
 
-  const handleTestSignagePush = () => {
-    setIsSignageSending(true);
-    setTimeout(() => {
-      setIsSignageSending(false);
-    }, 1200);
+  const handleWave = () => {
+    // Increment wave trigger to inject convoy on map
+    setWaveTrigger(w => w + 1);
   };
 
   return (
@@ -76,7 +91,7 @@ export const DiversionPanel = () => {
           <div className="space-y-3">
             {diversions.map((d) => {
               const selected = currentPlan?.id === d.id;
-              const active = d.status === 'ACTIVE';
+              const active = activeOverrides[d.id] !== undefined ? activeOverrides[d.id] : d.status === 'ACTIVE';
 
               return (
                 <div 
@@ -98,7 +113,7 @@ export const DiversionPanel = () => {
                         ? 'bg-emerald-500 text-slate-950 border-emerald-400 shadow-sm' 
                         : 'bg-amber-500/15 text-amber-400 border-amber-500/30'
                     }`}>
-                      {d.status}
+                      {active ? 'ACTIVE' : 'STANDBY'}
                     </span>
                   </div>
 
@@ -128,12 +143,12 @@ export const DiversionPanel = () => {
       {/* RIGHT COLUMN: Map Overlay & Before/After Impact Analysis (7 cols) */}
       <div className="lg:col-span-7 flex flex-col space-y-4">
         
-        {/* Map View with Real-Time Animated Route & Diverted Traffic */}
+        {/* Map View with Real-Time Animated Route on Real Streets */}
         <div className="h-[58%] min-h-[380px] glass-panel rounded-3xl overflow-hidden relative p-1">
           <TrafficMap 
             showDiversions={true} 
             selectedDiversion={currentPlan}
-            isDiversionActive={isActive}
+            isDiversionActive={isPlanActive}
             waveTrigger={waveTrigger}
             flowRate={flowRate}
           />
@@ -147,8 +162,8 @@ export const DiversionPanel = () => {
                 <Radio className="w-4 h-4 text-amber-400 animate-pulse" />
                 <span>Digital Signage Dispatch (NTCIP 1203 / MQTT)</span>
               </span>
-              <span className="text-[11px] text-emerald-400 normal-case font-semibold">
-                {isActive ? '● Signs Broadcasting Live' : '○ Standby'}
+              <span className={`text-[11px] font-mono font-bold ${isPlanActive ? 'text-emerald-400' : 'text-amber-400'}`}>
+                {isPlanActive ? '● Signs Broadcasting Live' : '○ Standby / Ready'}
               </span>
             </div>
 
@@ -190,34 +205,37 @@ export const DiversionPanel = () => {
             </div>
           </div>
 
-          {/* Action Control Buttons (Working & Responsive) */}
+          {/* Action Control Buttons (Guaranteed Instant Working & Responsive) */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
             
             {/* Primary Toggle Action Button */}
-            {isActive ? (
-              <button
-                onClick={() => handleDeactivateDiversion(currentPlan.id)}
-                className="py-3 px-4 rounded-2xl text-xs font-bold font-sans transition flex items-center justify-center space-x-2 bg-red-500/20 hover:bg-red-500/30 text-red-300 border border-red-500/40 glow-red"
-              >
-                <Pause className="w-4 h-4" />
-                <span>Deactivate & Restore Normal Flow</span>
-              </button>
-            ) : (
-              <button
-                onClick={() => handleActivateDiversion(currentPlan.id)}
-                className="py-3 px-4 rounded-2xl text-xs font-bold font-sans transition flex items-center justify-center space-x-2 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold glow-emerald shadow-lg shadow-emerald-500/20"
-              >
-                <Zap className="w-4 h-4 text-slate-950" />
-                <span>Activate 1-Click Diversion Protocol</span>
-              </button>
-            )}
+            <button
+              onClick={handleToggle}
+              className={`py-3.5 px-4 rounded-2xl text-xs font-bold font-sans transition-all flex items-center justify-center space-x-2 shadow-lg cursor-pointer active:scale-95 ${
+                isPlanActive
+                  ? 'bg-red-500/25 hover:bg-red-500/35 text-red-200 border border-red-500/50 glow-red'
+                  : 'bg-emerald-500 hover:bg-emerald-400 text-slate-950 glow-emerald shadow-emerald-500/30'
+              }`}
+            >
+              {isPlanActive ? (
+                <>
+                  <Pause className="w-4 h-4 text-red-400" />
+                  <span>Deactivate & Restore Normal Flow</span>
+                </>
+              ) : (
+                <>
+                  <Zap className="w-4 h-4 text-slate-950 animate-bounce" />
+                  <span>Activate 1-Click Diversion Protocol</span>
+                </>
+              )}
+            </button>
 
             {/* Trigger Fleet Reroute Wave Button */}
             <button
               onClick={handleWave}
-              className="py-3 px-4 rounded-2xl text-xs font-bold font-sans transition flex items-center justify-center space-x-2 bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 border border-cyan-500/40 glow-cyan"
+              className="py-3.5 px-4 rounded-2xl text-xs font-bold font-sans transition-all flex items-center justify-center space-x-2 bg-cyan-500/20 hover:bg-cyan-500/35 text-cyan-200 border border-cyan-500/50 glow-cyan shadow-lg shadow-cyan-500/20 active:scale-95 cursor-pointer"
             >
-              <RefreshCw className="w-4 h-4 animate-spin-reverse" />
+              <RefreshCw className="w-4 h-4 text-cyan-400 animate-spin-reverse" />
               <span>Trigger Fleet Reroute Wave (+35 Cars)</span>
             </button>
 

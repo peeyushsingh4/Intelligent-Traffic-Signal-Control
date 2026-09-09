@@ -129,3 +129,8 @@
 .dark-leaflet-popup .leaflet-popup-tip {
   background: #0f172a !important;
 }
+
+/* High-Contrast Dark Map Tile Filter (Zero API key watermark) */
+.dark-tile-layer {
+  filter: invert(100%) hue-rotate(180deg) brightness(85%) contrast(110%);
+}
