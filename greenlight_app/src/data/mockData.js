@@ -339,47 +339,49 @@ export const DIVERSION_TEMPLATES = [
     capacityImpact: '+35% Corridor Flow',
     status: 'ACTIVE',
     signageMessage: 'HEAVY QUEUE WEH SOUTH. DIVERSION: USE CST RD -> LBS MARG -> EEH. SAVINGS 24 MINS.',
-    mapCenter: [19.0660, 72.8680],
+    mapCenter: [19.0660, 72.8640],
     mapZoom: 13,
     divertRatePct: 50,
     divertedCount: 742,
     hazard: {
       type: 'CONGESTION',
       label: 'WEH Kalanagar Bottleneck (Avg 6 km/h)',
-      location: [19.0620, 72.8502],
+      location: [19.061037, 72.846377],
       queueKm: 2.1,
       delayMin: 32,
       blockedPolyline: [
-        [19.0835, 72.8532], // WEH Santacruz Southbound
-        [19.0785, 72.8525], // Vakola Flyover
-        [19.0730, 72.8518], // WEH Military Camp
-        [19.0675, 72.8510], // Kalanagar flyover approach
-        [19.0620, 72.8502], // Kalanagar Junction Bottleneck (Avg 6 km/h)
-        [19.0560, 72.8495]  // Bandra Government Colony Merge
+        [19.085962, 72.845241], // WEH Santacruz Southbound
+        [19.084041, 72.846353], // Vakola Flyover
+        [19.081179, 72.846540], // Vakola Junction
+        [19.079314, 72.846722], // WEH Military Camp / Kalina approach
+        [19.074460, 72.847094], // University / Kalanagar north corridor
+        [19.068500, 72.846800], // Kalanagar Flyover approach
+        [19.061037, 72.846377], // Kalanagar Junction Bottleneck (Avg 6 km/h)
+        [19.055190, 72.846303], // Bandra Government Colony Merge
+        [19.053044, 72.845644]  // Bandra ROB descent
       ]
     },
     bypassRoute: [
-      [19.0815, 72.8535], // 1. Vakola Exit Slip-Ramp off WEH
-      [19.0800, 72.8552], // 2. Curve into CST Road / Vidyanagari Marg
-      [19.0785, 72.8580], // 3. CST Road past Kalina University gate
-      [19.0772, 72.8615], // 4. Kalina CST Road straight
-      [19.0758, 72.8655], // 5. CST Road towards Kurla West
-      [19.0740, 72.8698], // 6. CST Road past Kurla telephone exchange
-      [19.0722, 72.8735], // 7. Hans Bhugra Marg / CST Road Junction
-      [19.0705, 72.8765], // 8. Intersection of CST Road and LBS Marg
-      [19.0682, 72.8790], // 9. Turning South onto LBS Marg
-      [19.0655, 72.8815], // 10. LBS Marg commercial corridor
-      [19.0628, 72.8838], // 11. BKC-Chunabhatti Flyover Connector Ramp
-      [19.0598, 72.8858], // 12. Chunabhatti Elevated Viaduct over railway tracks
-      [19.0565, 72.8872], // 13. Elevated ramp descending towards Eastern Expressway
-      [19.0525, 72.8885], // 14. Merging onto Eastern Express Highway main carriageway
-      [19.0480, 72.8892], // 15. Eastern Express Highway Southbound (Free Flow)
-      [19.0435, 72.8896], // 16. EEH Priyadarshini Circle approach
-      [19.0390, 72.8898]  // 17. Free flow merge into South Mumbai arterial
+      [19.081179, 72.846540], // 1. Vakola Exit Slip-Ramp off WEH
+      [19.080500, 72.850200], // 2. Vidyanagari Marg / Hans Bhugra connector
+      [19.078800, 72.855400], // 3. CST Road past Kalina Campus
+      [19.077200, 72.861500], // 4. Kalina CST Road straight
+      [19.075200, 72.866500], // 5. CST Road towards Kurla West
+      [19.073500, 72.871200], // 6. CST Road past Kurla telephone exchange
+      [19.070638, 72.875339], // 7. Intersection of CST Road and LBS Marg
+      [19.065800, 72.873200], // 8. Turning South onto LBS Marg / Kurla commercial strip
+      [19.058976, 72.864538], // 9. BKC Connector entry ramp
+      [19.053913, 72.868089], // 10. BKC Connector elevated viaduct
+      [19.050638, 72.874852], // 11. BKC Elevated viaduct crossing Mithi river
+      [19.053604, 72.882287], // 12. BKC Connector descending ramp onto EEH
+      [19.054773, 72.884657], // 13. Merging onto Eastern Express Highway main carriageway
+      [19.052500, 72.887000], // 14. Eastern Express Highway Southbound (Free Flow)
+      [19.046500, 72.888500], // 15. EEH Priyadarshini Circle approach
+      [19.041000, 72.889500]  // 16. Free flow merge into South Mumbai arterial
     ],
     vmsGantries: [
-      { id: 'vms-01', name: 'VMS #04 (Vakola Gantry)', pos: [19.0825, 72.8560], message: 'DIVERSION: USE CST ROAD -> LBS MARG' },
-      { id: 'vms-02', name: 'VMS #09 (CST Road Junction)', pos: [19.0735, 72.8710], message: 'EEH CONNECTOR CLEAR' }
+      { id: 'vms-01', name: 'VMS #04 (Vakola Gantry)', pos: [19.0805, 72.8515], message: 'DIVERSION: USE CST ROAD -> LBS MARG' },
+      { id: 'vms-02', name: 'VMS #09 (CST Road Junction)', pos: [19.0725, 72.8730], message: 'EEH CONNECTOR CLEAR' }
     ]
   },
   {
@@ -393,41 +395,62 @@ export const DIVERSION_TEMPLATES = [
     capacityImpact: '+20% Flood Clearance',
     status: 'ACTIVE',
     signageMessage: 'WATERLOGGING AHEAD. LIGHT VEHICLES USE PALM BEACH ROAD ELEVATED ROUTE.',
-    mapCenter: [19.0280, 73.0150],
+    mapCenter: [19.0280, 73.0180],
     mapZoom: 13,
     divertRatePct: 55,
     divertedCount: 425,
     hazard: {
       type: 'FLOOD',
-      label: 'Nerul Underpass Waterlogged (Depth 45cm)',
-      location: [19.0340, 73.0195],
+      label: 'Uran Phata Underpass Waterlogged (Depth 45cm)',
+      location: [19.034240, 73.029770],
       queueKm: 1.6,
       delayMin: 28,
       blockedPolyline: [
-        [19.0450, 73.0175],
-        [19.0410, 73.0182],
-        [19.0375, 73.0188],
-        [19.0340, 73.0195],
-        [19.0300, 73.0205],
-        [19.0260, 73.0215]
+        [19.044396, 73.026970], // LP Flyover / DY Patil Stadium
+        [19.043295, 73.027980], // Sion-Panvel Highway Nerul East
+        [19.041978, 73.028586], // Past DY Patil Medical Campus
+        [19.038534, 73.029004], // Approaching Uran Phata
+        [19.037017, 73.029080], // Uran Phata Flyover North Approach
+        [19.034240, 73.029770], // Uran Phata Underpass (Waterlogged Epicenter)
+        [19.030598, 73.030020], // Uran Phata South Descent
+        [19.029870, 73.030526], // Sion-Panvel Highway Nerul Junction
+        [19.029804, 73.031199], // Nerul-Seawoods Expressway Section
+        [19.028863, 73.034520], // Seawoods Grand Central Highway curve
+        [19.026504, 73.037185], // Seawoods-Darave Arterial
+        [19.025862, 73.037907]  // Belapur Highway Convergence
       ]
     },
     bypassRoute: [
-      [19.0480, 73.0125], // 1. LP Flyover Diversion Exit
-      [19.0450, 73.0100], // 2. Connecting to Moraj Circle
-      [19.0415, 73.0075], // 3. Moraj Circle - Palm Beach Road Entry
-      [19.0375, 73.0068], // 4. Palm Beach Road 6-Lane Coastal Arterial
-      [19.0330, 73.0065], // 5. Palm Beach Road along Nerul Lake
-      [19.0285, 73.0070], // 6. Elevated Viaduct approach
-      [19.0240, 73.0080], // 7. Palm Beach Elevated Viaduct over creek
-      [19.0195, 73.0102], // 8. Seawoods Grand Central interchange
-      [19.0150, 73.0135], // 9. Seawoods Coastal Link
-      [19.0105, 73.0180], // 10. Belapur Coastal curve
-      [19.0060, 73.0245]  // 11. CBD Belapur Mainline Rejoin (Free Flow)
+      [19.044396, 73.026970], // 1. LP Flyover Diversion Exit
+      [19.043642, 73.021208], // 2. Rajiv Gandhi Flyover West Ramp
+      [19.043590, 73.017099], // 3. Rajiv Gandhi Flyover over Railway Lines
+      [19.043725, 73.014002], // 4. Mother Teresa Marg Connector
+      [19.044025, 73.008097], // 5. Palm Beach Marg Entry Junction
+      [19.043448, 73.008225], // 6. Palm Beach Marg Sector 14 Nerul West
+      [19.032843, 73.007659], // 7. Palm Beach Marg past Sector 19
+      [19.032167, 73.007604], // 8. Palm Beach Marg Nerul West
+      [19.027335, 73.007026], // 9. Palm Beach Marg opposite Jewel of Navi Mumbai
+      [19.026468, 73.006982], // 10. Palm Beach Marg along Lake shoreline
+      [19.025624, 73.007119], // 11. Palm Beach Marg curve past Nerul Lake
+      [19.023194, 73.008172], // 12. Palm Beach Marg approaching Karave
+      [19.022595, 73.008364], // 13. Nag Devi Marg intersection
+      [19.021407, 73.008409], // 14. Palm Beach 6-Lane Coastal section
+      [19.019302, 73.008193], // 15. Seawoods Coastal stretch
+      [19.017866, 73.008165], // 16. Palm Beach Elevated Viaduct approach
+      [19.014514, 73.008444], // 17. Seawoods Coastal Link
+      [19.012644, 73.009076], // 18. Palm Beach Coastal Viaduct over creek
+      [19.011677, 73.009898], // 19. Belapur Coastal Curve North
+      [19.010547, 73.011300], // 20. Belapur Coastal Curve Central
+      [19.008183, 73.014400], // 21. Belapur Bay Curve
+      [19.007690, 73.015550], // 22. CBD Belapur South approach
+      [19.007517, 73.016419], // 23. CBD Belapur Coastal curve
+      [19.008333, 73.022217], // 24. CBD Belapur Arterial Rejoin
+      [19.009800, 73.028500], // 25. Belapur Mainline Connector
+      [19.010823, 73.032875]  // 26. Sion-Panvel Highway Free-Flow Rejoin
     ],
     vmsGantries: [
-      { id: 'vms-03', name: 'VMS #12 (LP Flyover Approach)', pos: [19.0485, 73.0145], message: 'UNDERPASS CLOSED - USE PALM BEACH' },
-      { id: 'vms-04', name: 'VMS #15 (Moraj Circle Entry)', pos: [19.0405, 73.0090], message: 'ELEVATED VIADUCT OPEN' }
+      { id: 'vms-03', name: 'VMS #12 (LP Flyover Approach)', pos: [19.0436, 73.0215], message: 'UNDERPASS CLOSED - USE PALM BEACH' },
+      { id: 'vms-04', name: 'VMS #15 (Mother Teresa Marg Entry)', pos: [19.0438, 73.0115], message: 'PALM BEACH BYPASS OPEN' }
     ]
   },
   {
@@ -441,37 +464,40 @@ export const DIVERSION_TEMPLATES = [
     capacityImpact: '+28% Urban Relief',
     status: 'IDLE',
     signageMessage: 'DADAR TT GRIDLOCK. HEAVY TRAFFIC DIVERT VIA RAK MARG & SEWRI. SAVINGS 16 MINS.',
-    mapCenter: [19.0180, 72.8530],
+    mapCenter: [19.0180, 72.8510],
     mapZoom: 14,
     divertRatePct: 35,
     divertedCount: 245,
     hazard: {
       type: 'CONGESTION',
       label: 'Dadar TT Circle Gridlock (Bus Breakdown)',
-      location: [19.0178, 72.8478],
+      location: [19.017800, 72.847800],
       queueKm: 1.2,
       delayMin: 22,
       blockedPolyline: [
-        [19.0255, 72.8518], // Ruia / Chitra Cinema North Approach
-        [19.0215, 72.8496], // Dadar Fire Station Ground Approach
-        [19.0178, 72.8478], // Khodadad Circle / Dadar TT Bottleneck
-        [19.0145, 72.8462], // Hindmata Cinema ground road
-        [19.0115, 72.8445]  // Parel TT Ground Merge
+        [19.027500, 72.854000], // King's Circle (Maheshwari Udyan)
+        [19.023200, 72.851200], // Ruia / Chitra Cinema North Approach
+        [19.020500, 72.849200], // Dadar Fire Station Ground Approach
+        [19.017800, 72.847800], // Khodadad Circle / Dadar TT Bottleneck
+        [19.014200, 72.845800], // Hindmata Cinema ground road
+        [19.010500, 72.844000], // Parel TT Ground Corridor
+        [19.006500, 72.842200]  // Lalbaug Flyover Ground Merge
       ]
     },
     bypassRoute: [
-      [19.0275, 72.8540], // 1. Matunga Circle / King's Circle Diversion Point
-      [19.0255, 72.8568], // 2. Turn into Rafi Ahmed Kidwai (RAK) Marg
-      [19.0225, 72.8585], // 3. RAK Marg past Wadala Bridge
-      [19.0185, 72.8600], // 4. RAK Marg past Five Gardens
-      [19.0145, 72.8610], // 5. RAK Marg past Naigaon Police Grounds
-      [19.0105, 72.8615], // 6. RAK Marg past Sewri Hospital
-      [19.0075, 72.8555], // 7. Acharya Donde Marg / Parel Connector
-      [19.0050, 72.8420]  // 8. Rejoining Dr. Ambedkar Road at Lalbaug (Free Flow)
+      [19.027500, 72.854000], // 1. Matunga Circle / King's Circle Diversion Point
+      [19.026800, 72.857200], // 2. Turn onto Rafi Ahmed Kidwai (RAK) Marg
+      [19.022500, 72.858800], // 3. RAK Marg Wadala Bridge
+      [19.018500, 72.860100], // 4. RAK Marg past Five Gardens
+      [19.014200, 72.861000], // 5. RAK Marg past Naigaon Police Grounds
+      [19.009800, 72.861400], // 6. RAK Marg past Sewri Hospital
+      [19.007500, 72.855000], // 7. Acharya Donde Marg / Parel Connector
+      [19.006200, 72.847000], // 8. Acharya Donde Marg westbound
+      [19.004500, 72.841500]  // 9. Rejoining Dr. Ambedkar Road at Lalbaug (Free Flow)
     ],
     vmsGantries: [
-      { id: 'vms-05', name: 'VMS #07 (Matunga Circle Gantry)', pos: [19.0285, 72.8555], message: 'DIVERSIION: USE RAK MARG' },
-      { id: 'vms-06', name: 'VMS #08 (RAK Marg Wadala)', pos: [19.0185, 72.8620], message: 'LALBAUG ARTERIAL CLEAR' }
+      { id: 'vms-05', name: 'VMS #07 (Matunga Circle Gantry)', pos: [19.0270, 72.8560], message: 'DIVERSION: USE RAK MARG' },
+      { id: 'vms-06', name: 'VMS #08 (RAK Marg Wadala)', pos: [19.0165, 72.8605], message: 'LALBAUG ARTERIAL CLEAR' }
     ]
   }
 ];
