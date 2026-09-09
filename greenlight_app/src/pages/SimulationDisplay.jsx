@@ -21,37 +21,42 @@ const VEHICLE_COLORS = {
   ambulance: '#ef4444', // red-500
 };
 
-// Helper to generate fresh vehicle fleet
+// Helper to generate fresh vehicle fleet adhering strictly to Indian Left-Hand Traffic (LHT) rules:
+// - Southbound traffic on Western Express Hwy drives on the LEFT (East lane: x = 400)
+// - Northbound traffic towards Goregaon/Dahisar drives on the LEFT (West lane: x = 360)
+// - Eastbound traffic towards LBS Marg drives on the LEFT (North lane: y = 280)
+// - Westbound traffic towards BKC Financial Center drives on the LEFT (South lane: y = 320)
 const createFreshFleet = (scenario) => {
   const fleet = [
-    { id: 'v1', type: 'car', lane: 'north', x: 360, y: 40, speed: 2.2, plate: 'MH 02 CZ 4921', diverted: scenario === 'diversion' },
-    { id: 'v2', type: 'truck', lane: 'north', x: 360, y: -40, speed: 1.8, plate: 'MH 46 BB 3321', diverted: scenario === 'diversion' },
-    { id: 'v3', type: 'car', lane: 'north', x: 360, y: -120, speed: 2.4, plate: 'MH 01 BT 3842', diverted: scenario === 'diversion' },
-    { id: 'v4', type: 'auto', lane: 'north', x: 360, y: -200, speed: 2.0, plate: 'MH 43 AZ 1205', diverted: false },
-    { id: 'v5', type: 'car', lane: 'north', x: 360, y: -280, speed: 2.3, plate: 'MH 04 ER 5510', diverted: scenario === 'diversion' },
-    { id: 'v6', type: 'bus', lane: 'north', x: 360, y: -360, speed: 1.6, plate: 'MH 01 CV 2841', diverted: scenario === 'diversion' },
+    // Southbound from Western Express Hwy (in East lane: x = 400, moving DOWN)
+    { id: 'v1', type: 'car', lane: 'north', x: 400, y: 40, speed: 2.2, plate: 'MH 02 CZ 4921', diverted: scenario === 'diversion' },
+    { id: 'v2', type: 'truck', lane: 'north', x: 400, y: -40, speed: 1.8, plate: 'MH 46 BB 3321', diverted: scenario === 'diversion' },
+    { id: 'v3', type: 'car', lane: 'north', x: 400, y: -120, speed: 2.4, plate: 'MH 01 BT 3842', diverted: scenario === 'diversion' },
+    { id: 'v4', type: 'auto', lane: 'north', x: 400, y: -200, speed: 2.0, plate: 'MH 43 AZ 1205', diverted: false },
+    { id: 'v5', type: 'car', lane: 'north', x: 400, y: -280, speed: 2.3, plate: 'MH 04 ER 5510', diverted: scenario === 'diversion' },
+    { id: 'v6', type: 'bus', lane: 'north', x: 400, y: -360, speed: 1.6, plate: 'MH 01 CV 2841', diverted: scenario === 'diversion' },
 
-    // Southbound (moving up from south)
-    { id: 's1', type: 'car', lane: 'south', x: 400, y: 560, speed: 2.1, plate: 'MH 43 BE 8812' },
-    { id: 's2', type: 'auto', lane: 'south', x: 400, y: 640, speed: 1.8, plate: 'MH 12 QX 1144' },
-    { id: 's3', type: 'car', lane: 'south', x: 400, y: 720, speed: 2.3, plate: 'MH 03 BT 9012' },
+    // Northbound towards Goregaon / Dahisar (in West lane: x = 360, moving UP)
+    { id: 's1', type: 'car', lane: 'south', x: 360, y: 560, speed: 2.1, plate: 'MH 43 BE 8812' },
+    { id: 's2', type: 'auto', lane: 'south', x: 360, y: 640, speed: 1.8, plate: 'MH 12 QX 1144' },
+    { id: 's3', type: 'car', lane: 'south', x: 360, y: 720, speed: 2.3, plate: 'MH 03 BT 9012' },
 
-    // Eastbound (moving west from east)
-    { id: 'e1', type: 'car', lane: 'east', x: 680, y: 280, speed: 2.0, plate: 'MH 05 TT 7744' },
-    { id: 'e2', type: 'auto', lane: 'east', x: 760, y: 280, speed: 1.7, plate: 'MH 43 AZ 9901' },
+    // Westbound towards BKC Financial Center (in South lane: y = 320, moving LEFT)
+    { id: 'e1', type: 'car', lane: 'east', x: 680, y: 320, speed: 2.0, plate: 'MH 05 TT 7744' },
+    { id: 'e2', type: 'auto', lane: 'east', x: 760, y: 320, speed: 1.7, plate: 'MH 43 AZ 9901' },
 
-    // Westbound (moving east from west)
-    { id: 'w1', type: 'car', lane: 'west', x: 40, y: 320, speed: 2.2, plate: 'MH 03 CC 9090' },
-    { id: 'w2', type: 'truck', lane: 'west', x: -60, y: 320, speed: 1.7, plate: 'MH 22 AB 1100' },
+    // Eastbound towards LBS Marg / SCLR (in North lane: y = 280, moving RIGHT)
+    { id: 'w1', type: 'car', lane: 'west', x: 40, y: 280, speed: 2.2, plate: 'MH 03 CC 9090' },
+    { id: 'w2', type: 'truck', lane: 'west', x: -60, y: 280, speed: 1.7, plate: 'MH 22 AB 1100' },
   ];
 
   if (scenario === 'congestion') {
     fleet.push(
-      { id: 'c1', type: 'car', lane: 'north', x: 360, y: 120, speed: 0.8, plate: 'MH 01 XX 1010' },
-      { id: 'c2', type: 'car', lane: 'north', x: 360, y: 160, speed: 0.6, plate: 'MH 02 YY 2020' },
-      { id: 'c3', type: 'truck', lane: 'north', x: 360, y: 200, speed: 0.5, plate: 'MH 46 ZZ 3030' },
-      { id: 'c4', type: 'car', lane: 'north', x: 360, y: -80, speed: 0.7, plate: 'MH 03 WW 4040' },
-      { id: 'c5', type: 'bus', lane: 'north', x: 360, y: -160, speed: 0.5, plate: 'MH 43 AA 5050' }
+      { id: 'c1', type: 'car', lane: 'north', x: 400, y: 120, speed: 0.8, plate: 'MH 01 XX 1010' },
+      { id: 'c2', type: 'car', lane: 'north', x: 400, y: 160, speed: 0.6, plate: 'MH 02 YY 2020' },
+      { id: 'c3', type: 'truck', lane: 'north', x: 400, y: 200, speed: 0.5, plate: 'MH 46 ZZ 3030' },
+      { id: 'c4', type: 'car', lane: 'north', x: 400, y: -80, speed: 0.7, plate: 'MH 03 WW 4040' },
+      { id: 'c5', type: 'bus', lane: 'north', x: 400, y: -160, speed: 0.5, plate: 'MH 43 AA 5050' }
     );
   }
 
@@ -60,7 +65,7 @@ const createFreshFleet = (scenario) => {
       id: 'amb-108',
       type: 'ambulance',
       lane: 'north',
-      x: 360,
+      x: 400,
       y: -50,
       speed: 4.2,
       plate: 'AMB-108 (ICU)',
@@ -202,11 +207,11 @@ export const SimulationDisplay = () => {
   // ─── Spawn extra wave to see diversion in action ───
   const handleInjectDivertedWave = () => {
     const wave = [
-      { id: `div-${Date.now()}-1`, type: 'car', lane: 'north', x: 360, y: -20, speed: 2.4, plate: 'MH 02 AB 1111', diverted: true },
-      { id: `div-${Date.now()}-2`, type: 'car', lane: 'north', x: 360, y: -80, speed: 2.2, plate: 'MH 04 ER 2222', diverted: true },
-      { id: `div-${Date.now()}-3`, type: 'auto', lane: 'north', x: 360, y: -140, speed: 2.0, plate: 'MH 43 CC 3333', diverted: true },
-      { id: `div-${Date.now()}-4`, type: 'truck', lane: 'north', x: 360, y: -210, speed: 1.8, plate: 'MH 46 ZZ 4444', diverted: true },
-      { id: `div-${Date.now()}-5`, type: 'car', lane: 'north', x: 360, y: -270, speed: 2.5, plate: 'MH 01 TT 5555', diverted: true },
+      { id: `div-${Date.now()}-1`, type: 'car', lane: 'north', x: 400, y: -20, speed: 2.4, plate: 'MH 02 AB 1111', diverted: true },
+      { id: `div-${Date.now()}-2`, type: 'car', lane: 'north', x: 400, y: -80, speed: 2.2, plate: 'MH 04 ER 2222', diverted: true },
+      { id: `div-${Date.now()}-3`, type: 'auto', lane: 'north', x: 400, y: -140, speed: 2.0, plate: 'MH 43 CC 3333', diverted: true },
+      { id: `div-${Date.now()}-4`, type: 'truck', lane: 'north', x: 400, y: -210, speed: 1.8, plate: 'MH 46 ZZ 4444', diverted: true },
+      { id: `div-${Date.now()}-5`, type: 'car', lane: 'north', x: 400, y: -270, speed: 2.5, plate: 'MH 01 TT 5555', diverted: true },
     ];
     vehiclesRef.current.push(...wave);
     setDivertedCounter(c => c + 5);
@@ -276,24 +281,24 @@ export const SimulationDisplay = () => {
       ctx.lineWidth = 1.5;
       ctx.strokeRect(CX - HALF_ROAD, CY - HALF_ROAD, ROAD_WIDTH, ROAD_WIDTH);
 
-      // ─── Dedicated Diversion Detour Ramp (Smooth curved asphalt curve) ───
+      // ─── Dedicated Diversion Detour Ramp (Smooth left slip-road in Indian Left-Hand Traffic) ───
       if (activeScenario === 'diversion') {
         ctx.fillStyle = '#10372d';
         ctx.beginPath();
-        ctx.moveTo(CX - HALF_ROAD, CY - HALF_ROAD - 80);
-        ctx.quadraticCurveTo(CX - HALF_ROAD, CY - HALF_ROAD, CX + HALF_ROAD + 80, CY - HALF_ROAD);
-        ctx.lineTo(CX + HALF_ROAD + 80, CY + HALF_ROAD);
-        ctx.quadraticCurveTo(CX + HALF_ROAD, CY + HALF_ROAD, CX + HALF_ROAD, CY - HALF_ROAD - 80);
+        ctx.moveTo(CX + HALF_ROAD, CY - HALF_ROAD - 80);
+        ctx.quadraticCurveTo(CX + HALF_ROAD + 30, CY - HALF_ROAD, CX + HALF_ROAD + 80, CY - HALF_ROAD);
+        ctx.lineTo(CX + HALF_ROAD + 80, CY);
+        ctx.quadraticCurveTo(CX + HALF_ROAD, CY, CX + HALF_ROAD, CY - HALF_ROAD - 80);
         ctx.closePath();
         ctx.fill();
 
-        // Glowing bypass lane border
+        // Glowing bypass lane trajectory
         ctx.strokeStyle = '#10b981';
         ctx.lineWidth = 2.5;
         ctx.setLineDash([8, 6]);
         ctx.beginPath();
-        ctx.moveTo(CX - 15, CY - HALF_ROAD - 90);
-        ctx.quadraticCurveTo(CX - 15, CY - 15, CX + HALF_ROAD + 180, CY - 15);
+        ctx.moveTo(CX + 20, CY - HALF_ROAD - 70);
+        ctx.quadraticCurveTo(CX + HALF_ROAD + 10, CY - 20, CX + HALF_ROAD + 180, CY - 20);
         ctx.stroke();
         ctx.setLineDash([]);
       }
@@ -352,10 +357,10 @@ export const SimulationDisplay = () => {
         }
       };
 
-      drawSignalLight(CX - HALF_ROAD - 14, CY - HALF_ROAD - 8, signalState.north);
-      drawSignalLight(CX + HALF_ROAD + 14, CY + HALF_ROAD + 8, signalState.south);
-      drawSignalLight(CX + HALF_ROAD + 8, CY - HALF_ROAD - 14, signalState.east);
-      drawSignalLight(CX - HALF_ROAD - 8, CY + HALF_ROAD + 14, signalState.west);
+      drawSignalLight(CX + HALF_ROAD + 14, CY - HALF_ROAD - 8, signalState.north);
+      drawSignalLight(CX - HALF_ROAD - 14, CY + HALF_ROAD + 8, signalState.south);
+      drawSignalLight(CX + HALF_ROAD + 8, CY + HALF_ROAD + 14, signalState.east);
+      drawSignalLight(CX - HALF_ROAD - 8, CY - HALF_ROAD - 14, signalState.west);
 
       // ─── OVERHEAD VMS GANTRY (Variable Message Sign) ───
       if (activeScenario === 'diversion') {
@@ -384,7 +389,7 @@ export const SimulationDisplay = () => {
         ctx.lineCap = 'round';
         for (let i = 0; i < 7; i++) {
           const arrowX = CX + HALF_ROAD + 30 + i * 36 + arrowOffset;
-          const arrowY = CY - 15;
+          const arrowY = CY - 20;
           if (arrowX < W - 20) {
             ctx.beginPath();
             ctx.moveTo(arrowX, arrowY - 8);
@@ -416,54 +421,57 @@ export const SimulationDisplay = () => {
       // ─── Vehicle Kinematics Update ───
       if (isPlaying) {
         vehiclesRef.current.forEach(v => {
-          // Diverted vehicles (taking the LBS Marg curve)
+          // Diverted vehicles (taking the LBS Marg slip-road curve in Indian LHT)
           if (v.diverted) {
-            // Stage 1: Coming down North lane
-            if (v.y < CY - 60) {
+            // Stage 1: Coming down North approach (x = 400, Southbound)
+            if (v.y < CY - 75) {
               v.y += v.speed * 1.2;
+              v.x = 400;
             } 
-            // Stage 2: In the curve zone — smooth transition to East
-            else if (v.y >= CY - 60 && v.x < CX + HALF_ROAD + 30) {
-              v.x += v.speed * 1.5;
-              v.y += v.speed * 0.5;
+            // Stage 2: Left slip-road curve into East corridor (towards x > 420, y = 280)
+            else if (v.x < CX + HALF_ROAD + 40) {
+              v.x += v.speed * 1.6;
+              v.y = Math.min(CY - 20, v.y + v.speed * 0.8);
             } 
-            // Stage 3: On the Eastbound bypass lane
+            // Stage 3: High-speed Eastbound detour corridor (y = 280)
             else {
               v.x += v.speed * 1.8;
-              v.y = CY - 15; // Lock to Eastbound detour lane
+              v.y = CY - 20; // Lock to Eastbound LBS Marg detour lane (y = 280)
             }
 
             // Wrap around once exited right
             if (v.x > W + 40) {
-              v.x = 360;
+              v.x = 400;
               v.y = -40;
               setDivertedCounter(c => c + 1);
             }
           } 
-          // Standard vehicles
+          // Standard vehicles adhering to Indian Left-Hand Traffic (LHT)
           else {
             if (v.lane === 'north') {
-              // Stop at red light
+              // Southbound (in East lane: x = 400, moving DOWN)
               const atSignal = signalState.north === 'red' && v.y > CY - HALF_ROAD - 45 && v.y < CY - HALF_ROAD;
               if (!atSignal || v.isEmergency) {
                 v.y += v.speed;
               }
               if (v.y > H + 40) {
                 v.y = -30;
-                // Randomly assign diversion if scenario is active
                 if (activeScenario === 'diversion' && Math.random() > 0.3) {
                   v.diverted = true;
                 }
               }
             } else if (v.lane === 'south') {
+              // Northbound towards Goregaon/Dahisar (in West lane: x = 360, moving UP)
               const atSignal = signalState.south === 'red' && v.y < CY + HALF_ROAD + 45 && v.y > CY + HALF_ROAD;
               if (!atSignal) v.y -= v.speed;
               if (v.y < -40) v.y = H + 30;
             } else if (v.lane === 'east') {
+              // Westbound towards BKC Financial Center (in South lane: y = 320, moving LEFT)
               const atSignal = signalState.east === 'red' && v.x < CX + HALF_ROAD + 45 && v.x > CX + HALF_ROAD;
               if (!atSignal) v.x -= v.speed;
               if (v.x < -40) v.x = W + 30;
             } else if (v.lane === 'west') {
+              // Eastbound towards LBS Marg / SCLR (in North lane: y = 280, moving RIGHT)
               const atSignal = signalState.west === 'red' && v.x > CX - HALF_ROAD - 45 && v.x < CX - HALF_ROAD;
               if (!atSignal) v.x += v.speed;
               if (v.x > W + 40) v.x = -30;
@@ -482,20 +490,20 @@ export const SimulationDisplay = () => {
         ctx.save();
         ctx.translate(v.x, v.y);
 
-        // Rotation angle based on direction
+        // Rotation angle based on exact travel direction
         let angle = 0;
         if (v.diverted) {
-          if (v.x > CX + 10) angle = Math.PI / 2; // Eastbound
-          else if (v.y >= CY - 60) angle = Math.PI / 4; // Turning 45 deg
-          else angle = Math.PI; // Southbound
+          if (v.x >= CX + HALF_ROAD + 20) angle = Math.PI / 2;       // Full Eastbound (+X, facing right)
+          else if (v.y >= CY - 75) angle = (3 * Math.PI) / 4;        // Left curve South-East (135° downwards-right)
+          else angle = Math.PI;                                      // Southbound (+Y, facing down)
         } else if (v.lane === 'north') {
-          angle = Math.PI;
+          angle = Math.PI;       // Southbound (+Y, facing down)
         } else if (v.lane === 'south') {
-          angle = 0;
+          angle = 0;             // Northbound (-Y, facing up)
         } else if (v.lane === 'east') {
-          angle = -Math.PI / 2;
+          angle = -Math.PI / 2;  // Westbound (-X, facing left)
         } else if (v.lane === 'west') {
-          angle = Math.PI / 2;
+          angle = Math.PI / 2;   // Eastbound (+X, facing right)
         }
 
         ctx.rotate(angle);
@@ -510,13 +518,26 @@ export const SimulationDisplay = () => {
           ctx.shadowBlur = 12;
         }
 
-        // Vehicle Chassis
+        // Vehicle Chassis (centered at 0, 0 with Front at -size*0.7 and Rear at +size*0.7)
         ctx.fillStyle = color;
         ctx.fillRect(-size / 2, -size * 0.7, size, size * 1.4);
 
-        // Windshield
+        // Front Windshield (near front)
         ctx.fillStyle = '#0f172a';
-        ctx.fillRect(-size / 2 + 1.5, -size * 0.4, size - 3, size * 0.35);
+        ctx.fillRect(-size / 2 + 1.5, -size * 0.45, size - 3, size * 0.35);
+
+        // Rear Window (near rear)
+        ctx.fillRect(-size / 2 + 2, size * 0.25, size - 4, size * 0.2);
+
+        // Bright Dual Headlights at the FRONT
+        ctx.fillStyle = '#fef08a';
+        ctx.fillRect(-size / 2 + 1, -size * 0.7, 2.5, 2);
+        ctx.fillRect(size / 2 - 3.5, -size * 0.7, 2.5, 2);
+
+        // Dual Red Taillights at the REAR
+        ctx.fillStyle = '#ef4444';
+        ctx.fillRect(-size / 2 + 1, size * 0.7 - 2, 2.5, 2);
+        ctx.fillRect(size / 2 - 3.5, size * 0.7 - 2, 2.5, 2);
 
         ctx.shadowBlur = 0;
         ctx.restore();
