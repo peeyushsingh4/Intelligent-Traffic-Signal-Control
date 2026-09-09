@@ -432,19 +432,19 @@ export const DIVERSION_TEMPLATES = [
   },
   {
     id: 'div-03',
-    title: 'Dadar TT Urban Gridlock — Ambedkar Elevated Bypass',
+    title: 'Dadar TT Urban Gridlock — RAK Marg Arterial Bypass',
     corridor: 'Dadar TT Circle - Dr. Ambedkar Road',
-    affectedCorridor: 'Dadar TT Circle - Dr. Ambedkar Road',
-    alternateRoute: 'Dr. Ambedkar Road Elevated Flyover Corridor',
-    recommendedRoute: 'Dr. Ambedkar Road Elevated Flyover Corridor',
+    affectedCorridor: 'Dr. Ambedkar Road Southbound (Khodadad Circle)',
+    alternateRoute: 'Rafi Ahmed Kidwai (RAK) Marg -> Sewri-Parel Connector',
+    recommendedRoute: 'RAK Marg -> Acharya Donde Marg -> Lalbaug',
     timeSavingsMin: 16,
     capacityImpact: '+28% Urban Relief',
     status: 'IDLE',
-    signageMessage: 'DADAR TT GRIDLOCK. HEAVY VEHICLES DIVERT VIA AMBEDKAR ELEVATED VIADUCT.',
-    mapCenter: [19.0180, 72.8440],
+    signageMessage: 'DADAR TT GRIDLOCK. HEAVY TRAFFIC DIVERT VIA RAK MARG & SEWRI. SAVINGS 16 MINS.',
+    mapCenter: [19.0180, 72.8530],
     mapZoom: 14,
     divertRatePct: 35,
-    divertedCount: 210,
+    divertedCount: 245,
     hazard: {
       type: 'CONGESTION',
       label: 'Dadar TT Circle Gridlock (Bus Breakdown)',
@@ -452,23 +452,26 @@ export const DIVERSION_TEMPLATES = [
       queueKm: 1.2,
       delayMin: 22,
       blockedPolyline: [
-        [19.0250, 72.8465],
-        [19.0215, 72.8472],
-        [19.0178, 72.8478],
-        [19.0140, 72.8460],
-        [19.0110, 72.8445]
+        [19.0255, 72.8518], // Ruia / Chitra Cinema North Approach
+        [19.0215, 72.8496], // Dadar Fire Station Ground Approach
+        [19.0178, 72.8478], // Khodadad Circle / Dadar TT Bottleneck
+        [19.0145, 72.8462], // Hindmata Cinema ground road
+        [19.0115, 72.8445]  // Parel TT Ground Merge
       ]
     },
     bypassRoute: [
-      [19.0270, 72.8450], // 1. Matunga Post Office Exit
-      [19.0235, 72.8435], // 2. Dr. Ambedkar Road Elevated Flyover Ramp
-      [19.0195, 72.8420], // 3. Elevated Flyover soaring over Dadar TT Circle
-      [19.0150, 72.8410], // 4. Hindmata Elevated Viaduct
-      [19.0105, 72.8400], // 5. Parel TT Overpass
-      [19.0060, 72.8390]  // 6. Lalbaug Flyover Connector (Free Flow)
+      [19.0275, 72.8540], // 1. Matunga Circle / King's Circle Diversion Point
+      [19.0255, 72.8568], // 2. Turn into Rafi Ahmed Kidwai (RAK) Marg
+      [19.0225, 72.8585], // 3. RAK Marg past Wadala Bridge
+      [19.0185, 72.8600], // 4. RAK Marg past Five Gardens
+      [19.0145, 72.8610], // 5. RAK Marg past Naigaon Police Grounds
+      [19.0105, 72.8615], // 6. RAK Marg past Sewri Hospital
+      [19.0075, 72.8555], // 7. Acharya Donde Marg / Parel Connector
+      [19.0050, 72.8420]  // 8. Rejoining Dr. Ambedkar Road at Lalbaug (Free Flow)
     ],
     vmsGantries: [
-      { id: 'vms-05', name: 'VMS #07 (Matunga Circle Gantry)', pos: [19.0275, 72.8465], message: 'TAKE ELEVATED FLYOVER' }
+      { id: 'vms-05', name: 'VMS #07 (Matunga Circle Gantry)', pos: [19.0285, 72.8555], message: 'DIVERSIION: USE RAK MARG' },
+      { id: 'vms-06', name: 'VMS #08 (RAK Marg Wadala)', pos: [19.0185, 72.8620], message: 'LALBAUG ARTERIAL CLEAR' }
     ]
   }
 ];

@@ -19,93 +19,111 @@ const createCameraIcon = (status) => {
   const color = status === 'ONLINE' || status === 'active' ? '#10b981' : '#f59e0b';
   return L.divIcon({
     className: 'custom-map-pin',
-    html: `<div style="background-color: ${color}; width: 14px; height: 14px; border-radius: 50%; border: 2px solid white; box-shadow: 0 0 10px ${color};"></div>`,
+    html: `<div style="background-color: ${color}; width: 14px; height: 14px; border-radius: 50%; border: 2px solid white; box-shadow: 0 0 12px ${color};"></div>`,
     iconSize: [14, 14],
     iconAnchor: [7, 7]
   });
 };
 
-// Hazard / Bottleneck Marker
-const createHazardIcon = (type, label) => {
+// Hazard / Bottleneck Marker with Pulsing Ripple
+const createHazardIcon = (type, label, queueKm) => {
   const isFlood = type === 'FLOOD';
   const bg = isFlood ? '#0284c7' : '#ef4444';
   const iconSymbol = isFlood ? '🌊' : '⛔';
   return L.divIcon({
     className: 'custom-hazard-pin',
     html: `
-      <div style="position: relative; display: flex; align-items: center; justify-content: center; cursor: pointer;">
-        <div style="position: absolute; width: 34px; height: 34px; border-radius: 50%; background: ${bg}; opacity: 0.35; animation: ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite;"></div>
-        <div style="position: relative; background: #090d16; border: 2px solid ${bg}; color: white; padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: bold; font-family: monospace; display: flex; align-items: center; gap: 4px; box-shadow: 0 0 16px ${bg}; white-space: nowrap;">
-          <span>${iconSymbol}</span>
-          <span>${label || 'BOTTLENECK'}</span>
+      <div style="position: relative; display: flex; flex-direction: column; align-items: center; cursor: pointer;">
+        <!-- Pulsing Ripple Beacon -->
+        <div style="position: absolute; top: 14px; left: 50%; transform: translate(-50%, -50%); width: 42px; height: 42px; border-radius: 50%; background: ${bg}; opacity: 0.35; animation: ping 1.8s cubic-bezier(0, 0, 0.2, 1) infinite;"></div>
+        
+        <!-- High-Tech Badge -->
+        <div style="position: relative; background: rgba(9, 13, 22, 0.95); border: 2px solid ${bg}; color: white; padding: 4px 10px; border-radius: 14px; font-size: 11px; font-weight: 800; font-family: monospace; display: flex; align-items: center; gap: 6px; box-shadow: 0 0 20px ${bg}; white-space: nowrap; backdrop-filter: blur(6px);">
+          <span style="font-size: 13px;">${iconSymbol}</span>
+          <span style="letter-spacing: 0.4px;">${label || 'BOTTLENECK'}</span>
         </div>
+        ${queueKm ? `<div style="font-size: 9px; font-family: monospace; color: #fecaca; background: rgba(0,0,0,0.85); padding: 1px 6px; border-radius: 6px; margin-top: 3px; border: 1px solid ${bg}66;">Queue: ${queueKm} km · Speed &lt;8 km/h</div>` : ''}
       </div>
     `,
-    iconSize: [120, 30],
-    iconAnchor: [60, 15]
+    iconSize: [160, 48],
+    iconAnchor: [80, 20]
   });
 };
 
-// VMS Digital Signage Marker
+// VMS Digital Signage Gantry Marker
 const createVmsIcon = (name) => {
   return L.divIcon({
     className: 'custom-vms-pin',
     html: `
-      <div style="background: #020617; border: 1.5px solid #f59e0b; color: #fbbf24; padding: 3px 8px; border-radius: 8px; font-size: 10px; font-family: monospace; font-weight: bold; display: flex; align-items: center; gap: 4px; box-shadow: 0 0 12px #f59e0b99; white-space: nowrap;">
-        <span style="color: #fbbf24; animation: pulse 1s infinite;">📡</span>
-        <span>${name}</span>
+      <div style="background: rgba(2, 6, 23, 0.94); border: 1.5px solid #f59e0b; color: #fbbf24; padding: 3px 9px; border-radius: 10px; font-size: 10px; font-family: monospace; font-weight: 700; display: flex; align-items: center; gap: 5px; box-shadow: 0 0 14px rgba(245, 158, 11, 0.45); white-space: nowrap; backdrop-filter: blur(6px);">
+        <span style="color: #fbbf24; display: inline-block; animation: pulse 1s infinite;">📡</span>
+        <span style="color: #fef3c7;">${name}</span>
       </div>
     `,
-    iconSize: [120, 24],
-    iconAnchor: [60, 12]
+    iconSize: [130, 26],
+    iconAnchor: [65, 13]
   });
 };
 
-// Waypoint Pin (Entry / Exit)
-const createWaypointIcon = (label, color = '#10b981') => {
+// Waypoint Pin (Entry / Exit) with Anchor Stem (Prevents Overlap)
+const createWaypointIcon = (label, color = '#10b981', isExit = false) => {
   return L.divIcon({
     className: 'custom-waypoint-pin',
     html: `
-      <div style="background: #064e3b; border: 1.5px solid ${color}; color: #ecfdf5; padding: 3px 8px; border-radius: 8px; font-size: 10px; font-family: monospace; font-weight: bold; box-shadow: 0 0 12px ${color}99; white-space: nowrap;">
-        ${label}
+      <div style="display: flex; flex-direction: ${isExit ? 'column-reverse' : 'column'}; align-items: center; filter: drop-shadow(0 4px 12px rgba(0,0,0,0.8));">
+        <div style="background: rgba(6, 78, 59, 0.95); border: 1.5px solid ${color}; color: #ecfdf5; padding: 4px 10px; border-radius: 20px; font-size: 10px; font-family: monospace; font-weight: 800; letter-spacing: 0.5px; box-shadow: 0 0 16px ${color}88; white-space: nowrap; backdrop-filter: blur(6px);">
+          ${label}
+        </div>
+        <div style="width: 2px; height: 10px; background: ${color};"></div>
+        <div style="width: 6px; height: 6px; border-radius: 50%; background: ${color}; box-shadow: 0 0 8px ${color};"></div>
       </div>
     `,
-    iconSize: [120, 22],
-    iconAnchor: [60, 11]
+    iconSize: [140, 44],
+    iconAnchor: [70, isExit ? 6 : 38]
   });
 };
 
-// Animated Vehicle Icon on Leaflet Map
+// Niche Animated Vehicle Icon with Glowing Headlight Cones & Tail Lights
 const createMovingVehicleIcon = (v) => {
-  const { type, color, bearing, isWave } = v;
+  const { type, color, bearing, isWave, plate } = v;
   const isBus = type === 'bus';
-  const width = isBus ? 13 : 11;
-  const height = isBus ? 24 : 17;
-  const glow = isWave ? '0 0 12px #38bdf8' : `0 0 8px ${color}`;
-  const border = isWave ? '2px solid #38bdf8' : '1px solid #ffffff';
+  const width = isBus ? 14 : 11;
+  const height = isBus ? 25 : 18;
+  const glow = isWave ? '0 0 16px #38bdf8' : `0 0 10px ${color}`;
+  const border = isWave ? '2px solid #38bdf8' : '1.5px solid #ffffff';
 
   return L.divIcon({
     className: 'leaflet-animated-vehicle',
     html: `
-      <div style="transform: rotate(${bearing}deg); width: ${width + 6}px; height: ${height + 6}px; display: flex; align-items: center; justify-content: center; transition: transform 0.05s linear;">
-        <div style="background: ${color}; width: ${width}px; height: ${height}px; border-radius: 3px; position: relative; border: ${border}; box-shadow: ${glow};">
-          <!-- Front Headlights (Bright Yellow) -->
-          <div style="position: absolute; top: -1px; left: 1.5px; width: 2.5px; height: 2px; background: #fef08a; border-radius: 50%; box-shadow: 0 0 4px #fef08a;"></div>
-          <div style="position: absolute; top: -1px; right: 1.5px; width: 2.5px; height: 2px; background: #fef08a; border-radius: 50%; box-shadow: 0 0 4px #fef08a;"></div>
-          <!-- Windshield -->
-          <div style="position: absolute; top: 3px; left: 1.5px; right: 1.5px; height: 3.5px; background: #0f172a; border-radius: 1px;"></div>
-          <!-- Rear Taillights (Red) -->
-          <div style="position: absolute; bottom: -1px; left: 1.5px; width: 2px; height: 1.5px; background: #ef4444;"></div>
-          <div style="position: absolute; bottom: -1px; right: 1.5px; width: 2px; height: 1.5px; background: #ef4444;"></div>
+      <div style="transform: rotate(${bearing}deg); width: ${width + 16}px; height: ${height + 24}px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative;">
+        <!-- Forward Headlight Light Cones (Projects on pavement) -->
+        <div style="position: absolute; top: -14px; width: 24px; height: 18px; background: radial-gradient(ellipse at 50% 100%, rgba(254, 240, 138, 0.55) 0%, rgba(254, 240, 138, 0) 80%); pointer-events: none;"></div>
+
+        <!-- Vehicle Body -->
+        <div style="background: ${color}; width: ${width}px; height: ${height}px; border-radius: 4px; position: relative; border: ${border}; box-shadow: ${glow}; transition: transform 0.05s linear;">
+          <!-- Dual LED Headlights -->
+          <div style="position: absolute; top: -1px; left: 1.5px; width: 2.5px; height: 2.5px; background: #fef08a; border-radius: 50%; box-shadow: 0 0 6px #fef08a;"></div>
+          <div style="position: absolute; top: -1px; right: 1.5px; width: 2.5px; height: 2.5px; background: #fef08a; border-radius: 50%; box-shadow: 0 0 6px #fef08a;"></div>
+          
+          <!-- Front Windshield -->
+          <div style="position: absolute; top: 3.5px; left: 1.5px; right: 1.5px; height: 3.5px; background: #0f172a; border-radius: 1px;"></div>
+          
+          <!-- Taxi or Bus Roof Distinction -->
+          ${type === 'cab' ? '<div style="position: absolute; top: 8px; left: 3px; right: 3px; height: 3px; background: #000000; border-radius: 1px;"></div>' : ''}
+          ${isBus ? '<div style="position: absolute; top: 9px; left: 2px; right: 2px; height: 6px; background: rgba(15,23,42,0.6); border-radius: 1px;"></div>' : ''}
+
+          <!-- Dual Red Taillights -->
+          <div style="position: absolute; bottom: -1px; left: 1.5px; width: 2.5px; height: 2px; background: #ef4444; box-shadow: 0 0 6px #ef4444;"></div>
+          <div style="position: absolute; bottom: -1px; right: 1.5px; width: 2.5px; height: 2px; background: #ef4444; box-shadow: 0 0 6px #ef4444;"></div>
         </div>
       </div>
     `,
-    iconSize: [width + 6, height + 6],
-    iconAnchor: [(width + 6) / 2, (height + 6) / 2]
+    iconSize: [width + 16, height + 24],
+    iconAnchor: [(width + 16) / 2, (height + 24) / 2]
   });
 };
 
-// Polyline Geometry Interpolation
+// Polyline Geometry Interpolation along Real Road Coordinates
 function getPointAndBearingAlongPolyline(points, t) {
   if (!points || points.length < 2) return { pos: [0, 0], bearing: 0 };
   
@@ -127,7 +145,6 @@ function getPointAndBearingAlongPolyline(points, t) {
       const lng = points[i][1] + (points[i+1][1] - points[i][1]) * segT;
       const dLat = points[i+1][0] - points[i][0];
       const dLng = points[i+1][1] - points[i][1];
-      // Bearing in degrees from North (0° = North, 90° = East, 180° = South, 270° = West)
       const bearing = (Math.atan2(dLng, dLat) * (180 / Math.PI) + 360) % 360;
       return { pos: [lat, lng], bearing };
     }
@@ -149,7 +166,7 @@ export const TrafficMap = ({
   const heatmapNodes = (app.heatmapNodes && app.heatmapNodes.length > 0) ? app.heatmapNodes : (DEFAULT_HEATMAP_NODES || []);
   const setActiveCamera = app.setActiveCamera || (() => {});
 
-  // Default center if no diversion selected
+  // Center coordinate and zoom from selected template
   const defaultCenter = selectedDiversion?.mapCenter || [19.0660, 72.8680];
   const defaultZoom = selectedDiversion?.mapZoom || 13;
 
@@ -169,22 +186,22 @@ export const TrafficMap = ({
     return () => clearInterval(interval);
   }, [isDiversionActive]);
 
-  // Simulated Moving Vehicles along the Bypass Polyline
+  // Initial vehicle fleet with Mumbai mix (Taxis, BEST Buses, EV Cars, Sedans)
   const [vehicles, setVehicles] = useState(() => {
     const types = [
-      { type: 'car', color: '#10b981' },
-      { type: 'cab', color: '#facc15' },
-      { type: 'sedan', color: '#f8fafc' },
-      { type: 'bus', color: '#ef4444' },
-      { type: 'suv', color: '#38bdf8' },
-      { type: 'car', color: '#a855f7' },
-      { type: 'cab', color: '#facc15' },
-      { type: 'car', color: '#34d399' }
+      { type: 'car', color: '#10b981', plate: 'MH 02 EE 7731' },
+      { type: 'cab', color: '#facc15', plate: 'MH 01 AB 4421' },
+      { type: 'sedan', color: '#f8fafc', plate: 'MH 04 CD 1980' },
+      { type: 'bus', color: '#ef4444', plate: 'BEST 302 EXPR' },
+      { type: 'suv', color: '#38bdf8', plate: 'MH 02 BG 3319' },
+      { type: 'car', color: '#a855f7', plate: 'MH 03 DZ 9140' },
+      { type: 'cab', color: '#facc15', plate: 'MH 02 CZ 4921' },
+      { type: 'car', color: '#34d399', plate: 'MH 43 AT 8812' }
     ];
     return types.map((t, idx) => ({
       id: `veh-${idx}`,
       t: idx / types.length,
-      speed: 0.0035 + (idx % 3) * 0.0008,
+      speed: 0.0032 + (idx % 3) * 0.0007,
       ...t
     }));
   });
@@ -196,13 +213,14 @@ export const TrafficMap = ({
       setLiveCounter(c => c + 35);
       setWaveBanner(`🌊 DISPATCHED SURGE WAVE: +35 VEHICLES REROUTED ONTO ${selectedDiversion?.recommendedRoute || 'BYPASS CORRIDOR'}`);
       
-      // Inject 5 fast wave convoy vehicles at the start
+      // Inject 5 fast wave convoy vehicles at the slip-ramp entrance
       const newWaveVehicles = [0, 1, 2, 3, 4].map(k => ({
         id: `wave-${Date.now()}-${k}`,
-        t: k * 0.04,
-        speed: 0.0095 + k * 0.0005,
+        t: k * 0.045,
+        speed: 0.011 + k * 0.0006,
         type: k === 0 ? 'bus' : 'cab',
         color: '#38bdf8',
+        plate: `WAVE-FLUX-${k + 1}`,
         isWave: true
       }));
 
@@ -215,7 +233,7 @@ export const TrafficMap = ({
     prevWaveTrigger.current = waveTrigger;
   }, [waveTrigger, selectedDiversion]);
 
-  // Animation Loop for real-time map traffic flow
+  // Animation Loop for real-time traffic flow along real road coordinates
   useEffect(() => {
     let frameId;
     let lastTime = performance.now();
@@ -224,7 +242,8 @@ export const TrafficMap = ({
       const delta = Math.min((currentTime - lastTime) / 1000, 0.1);
       lastTime = currentTime;
 
-      const speedMultiplier = isDiversionActive ? (flowRate / 32) : 0.2;
+      // Speed adapts dynamically to diversion active toggle and user's flow rate slider
+      const speedMultiplier = isDiversionActive ? (flowRate / 32) : 0.22;
 
       setVehicles(prev => prev.map(v => ({
         ...v,
@@ -256,11 +275,11 @@ export const TrafficMap = ({
   return (
     <div className="relative w-full h-full min-h-[350px] rounded-2xl overflow-hidden border border-slate-800 shadow-2xl bg-slate-950">
       
-      {/* Real-time Dynamic Status HUD Overlay */}
+      {/* Niche Dynamic Operations HUD Overlay */}
       {showDiversions && selectedDiversion && (
         <div className="absolute top-3 left-3 right-3 z-[500] pointer-events-none flex flex-wrap items-center justify-between gap-2">
           {/* Active Status Badge */}
-          <div className="glass-panel px-3 py-1.5 rounded-xl border border-slate-800 flex items-center space-x-2 text-xs font-mono pointer-events-auto shadow-xl bg-slate-900/90 backdrop-blur-md">
+          <div className="glass-panel px-3 py-1.5 rounded-xl border border-slate-800 flex items-center space-x-2.5 text-xs font-mono pointer-events-auto shadow-xl bg-slate-900/90 backdrop-blur-md">
             <span className={`w-2.5 h-2.5 rounded-full ${isDiversionActive ? 'bg-emerald-400 animate-ping' : 'bg-amber-400'}`}></span>
             <span className="font-bold text-white uppercase tracking-wider">
               {isDiversionActive ? '🟢 DIVERSION ACTIVE (1-CLICK FLOW)' : '🟡 STANDBY / READY'}
@@ -304,7 +323,7 @@ export const TrafficMap = ({
         {/* Dynamic Viewport Controller */}
         <MapViewController center={selectedDiversion?.mapCenter || defaultCenter} zoom={selectedDiversion?.mapZoom || defaultZoom} />
 
-        {/* Clean Dark Tiles via OpenStreetMap with high-contrast filter (Zero API key watermark) */}
+        {/* Clean High-Contrast Dark Map Tiles (OpenStreetMap + dark matrix filter, zero watermarks) */}
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> | iTraCS'
@@ -389,7 +408,7 @@ export const TrafficMap = ({
             {selectedDiversion.hazard?.location && (
               <Marker 
                 position={selectedDiversion.hazard.location} 
-                icon={createHazardIcon(selectedDiversion.hazard.type, selectedDiversion.hazard.label)}
+                icon={createHazardIcon(selectedDiversion.hazard.type, selectedDiversion.hazard.label, selectedDiversion.hazard.queueKm)}
               >
                 <Popup>
                   <div className="p-2 font-mono text-xs text-slate-100">
@@ -436,16 +455,16 @@ export const TrafficMap = ({
               }} 
             />
 
-            {/* Start Waypoint (Diversion Entry Slip-Road) */}
+            {/* Start Waypoint (Diversion Entry Slip-Road) - positioned cleanly with stem */}
             <Marker 
               position={activeBypassRoute[0]} 
-              icon={createWaypointIcon('🟢 DIVERSION ENTRY')} 
+              icon={createWaypointIcon('🟢 DIVERSION ENTRY', '#10b981', false)} 
             />
 
             {/* End Waypoint (Mainline Rejoin Point) */}
             <Marker 
               position={activeBypassRoute[activeBypassRoute.length - 1]} 
-              icon={createWaypointIcon('🏁 REJOIN FREE FLOW', '#065f46')} 
+              icon={createWaypointIcon('🏁 REJOIN FREE FLOW', '#059669', true)} 
             />
 
             {/* VMS Gantries along the route */}
@@ -469,7 +488,7 @@ export const TrafficMap = ({
               </Marker>
             ))}
 
-            {/* 3. REAL-TIME ANIMATED VEHICLES MOVING PRECISELY ALONG THE ROAD CURVES */}
+            {/* 3. REAL-TIME ANIMATED VEHICLES WITH DYNAMIC HEADLIGHT CONES ALONG THE ROAD */}
             {vehicles.map((v) => {
               const { pos, bearing } = getPointAndBearingAlongPolyline(activeBypassRoute, v.t);
               return (
@@ -477,27 +496,39 @@ export const TrafficMap = ({
                   key={v.id}
                   position={pos}
                   icon={createMovingVehicleIcon({ ...v, bearing })}
-                  interactive={false}
-                />
+                >
+                  <Popup>
+                    <div className="p-1.5 font-mono text-xs text-slate-100">
+                      <div className="font-bold text-emerald-400 border-b border-slate-700 pb-1 mb-1">
+                        🚗 {v.plate || 'MH 02 CZ 4921'}
+                      </div>
+                      <div className="text-slate-300 text-[11px] space-y-0.5">
+                        <div>Vehicle Class: <strong className="text-white uppercase">{v.type}</strong></div>
+                        <div>Detour Speed: <strong className="text-emerald-400">{isDiversionActive ? '54 km/h' : '18 km/h'}</strong></div>
+                        <div>Delay Saved: <strong className="text-amber-400">+{selectedDiversion.timeSavingsMin}m</strong></div>
+                      </div>
+                    </div>
+                  </Popup>
+                </Marker>
               );
             })}
           </>
         )}
       </MapContainer>
 
-      {/* Map Legend Overlay */}
-      <div className="absolute bottom-4 left-4 z-[500] glass-panel px-3 py-2 rounded-xl text-[11px] font-mono flex items-center space-x-4 bg-slate-900/90 border border-slate-800 shadow-xl">
+      {/* Niche Map Legend Overlay */}
+      <div className="absolute bottom-4 left-4 z-[500] glass-panel px-3.5 py-2 rounded-xl text-[11px] font-mono flex items-center space-x-4 bg-slate-900/90 border border-slate-800 shadow-xl backdrop-blur-md">
         <div className="flex items-center space-x-1.5">
           <span className="w-3 h-1 bg-red-500 rounded-full glow-red"></span>
-          <span className="text-slate-300">Congested Mainline</span>
+          <span className="text-slate-300">Bottleneck Corridor</span>
         </div>
         <div className="flex items-center space-x-1.5">
           <span className="w-3 h-1 bg-emerald-400 rounded-full glow-emerald"></span>
-          <span className="text-slate-300">Active Detour Flow</span>
+          <span className="text-slate-300">Bypass Detour Stream</span>
         </div>
         <div className="flex items-center space-x-1.5">
           <span className="text-amber-400">📡</span>
-          <span className="text-slate-300">VMS Sign</span>
+          <span className="text-slate-300">VMS Gantry</span>
         </div>
       </div>
     </div>
