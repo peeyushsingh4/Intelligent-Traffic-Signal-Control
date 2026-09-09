@@ -49,11 +49,64 @@ const CCTV_CAMERAS = {
     speedLimit: 70,
     fps: 24.0,
     bitrate: '4.5 Mbps'
+  },
+  dadar: {
+    id: 'CAM-04',
+    scenarioId: 'dadar',
+    name: 'Dadar TT Circle (Central Mumbai)',
+    location: 'Dr. Ambedkar Rd × Tilak Bridge Flyover',
+    coordinates: '19.0178° N, 72.8478° E',
+    rawUrl: '/videos/istockphoto-1170897707-640_adpp_is.mp4',
+    trackedUrl: '/videos/istockphoto-1170897707-640_adpp_is_tracked.mp4',
+    tracksJson: '/videos/istockphoto-1170897707-640_adpp_is_compact.json',
+    detourCorridor: 'Senapati Bapat Marg Bypass',
+    speedLimit: 50,
+    fps: 30.0,
+    bitrate: '6.1 Mbps'
+  },
+  weh: {
+    id: 'CAM-05',
+    scenarioId: 'weh',
+    name: 'WEH Airport Flyover & Metro (Andheri East)',
+    location: 'Western Express Highway Metro Line 7 Pier',
+    coordinates: '19.1197° N, 72.8464° E',
+    rawUrl: '/videos/istockphoto-2228456242-640_adpp_is.mp4',
+    trackedUrl: '/videos/istockphoto-2228456242-640_adpp_is_tracked.mp4',
+    tracksJson: '/videos/istockphoto-2228456242-640_adpp_is_compact.json',
+    detourCorridor: 'Sahar Airport Elevated Road',
+    speedLimit: 70,
+    fps: 30.0,
+    bitrate: '5.4 Mbps'
+  },
+  lbs_metro: {
+    id: 'CAM-06',
+    scenarioId: 'lbs_metro',
+    name: 'Kurla - LBS Marg Metro Corridor (Mumbai)',
+    location: 'Lal Bahadur Shastri Marg × Metro Line 2B',
+    coordinates: '19.0728° N, 72.8797° E',
+    rawUrl: '/videos/istockphoto-2228456262-640_adpp_is.mp4',
+    trackedUrl: '/videos/istockphoto-2228456262-640_adpp_is_tracked.mp4',
+    tracksJson: '/videos/istockphoto-2228456262-640_adpp_is_compact.json',
+    detourCorridor: 'Santacruz-Chembur Link Road (SCLR)',
+    speedLimit: 60,
+    fps: 30.0,
+    bitrate: '5.9 Mbps'
   }
 };
 
-export const IndianRoadDatasetFeed = () => {
-  const [scenarioKey, setScenarioKey] = useState('bkc');
+export const IndianRoadDatasetFeed = ({ initialScenario = 'bkc', currentScenario, onScenarioChange }) => {
+  const [scenarioKey, setScenarioKey] = useState(currentScenario || initialScenario);
+
+  useEffect(() => {
+    if (currentScenario && CCTV_CAMERAS[currentScenario]) {
+      setScenarioKey(currentScenario);
+    }
+  }, [currentScenario]);
+
+  const handleSelectScenario = (key) => {
+    setScenarioKey(key);
+    if (onScenarioChange) onScenarioChange(key);
+  };
   const [viewMode, setViewMode] = useState('OVERLAY'); // 'OVERLAY' (Dynamic HUD), 'TRACKED_VIDEO' (YOLO Render), 'RAW'
   const [tracksData, setTracksData] = useState(null);
   const [liveDetections, setLiveDetections] = useState([]);
@@ -242,12 +295,15 @@ export const IndianRoadDatasetFeed = () => {
           {/* Camera Selection */}
           <select 
             value={scenarioKey} 
-            onChange={(e) => setScenarioKey(e.target.value)} 
+            onChange={(e) => handleSelectScenario(e.target.value)} 
             className="control-select text-[10px] font-mono py-1 bg-slate-950 text-slate-200 border border-slate-700 rounded-lg px-2"
           >
             <option value="bkc">CAM-01: BKC Arterial</option>
             <option value="vashi">CAM-02: Vashi Expressway</option>
             <option value="palm_beach">CAM-03: Palm Beach Signal</option>
+            <option value="dadar">CAM-04: Dadar TT 4-Way</option>
+            <option value="weh">CAM-05: WEH Airport Metro</option>
+            <option value="lbs_metro">CAM-06: Kurla-LBS Metro</option>
           </select>
 
           {/* View Mode Switcher */}

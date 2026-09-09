@@ -80,7 +80,9 @@ def process_video_accurate(video_filename):
     print(f"=======================================================")
 
     cap = cv2.VideoCapture(input_path)
-    fps = cap.get(cv2.CAP_PROP_FPS) or 25.0
+    raw_fps = cap.get(cv2.CAP_PROP_FPS) or 25.0
+    step = 2 if raw_fps > 45 else 1
+    fps = round(raw_fps / step, 1)
     width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
     height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
     total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
@@ -101,12 +103,16 @@ def process_video_accurate(video_filename):
         writer = cv2.VideoWriter(out_video_path, fourcc, fps, (width, height))
 
     frame_num = 0
-    max_frames = min(total_frames, 450)
+    raw_frame_idx = 0
+    max_frames = min(int(total_frames / step), 450)
 
     while cap.isOpened() and frame_num < max_frames:
         ret, frame = cap.read()
         if not ret:
             break
+        raw_frame_idx += 1
+        if step > 1 and (raw_frame_idx % step != 0):
+            continue
 
         timestamp = round(frame_num / fps, 1)
 
@@ -217,8 +223,8 @@ def process_video_accurate(video_filename):
 
 if __name__ == "__main__":
     for v in [
-        "istockphoto-2193558699-640_adpp_is.mp4",
-        "istockphoto-1328725609-640_adpp_is.mp4",
-        "istockphoto-1173077963-640_adpp_is.mp4"
+        "istockphoto-1170897707-640_adpp_is.mp4",
+        "istockphoto-2228456242-640_adpp_is.mp4",
+        "istockphoto-2228456262-640_adpp_is.mp4"
     ]:
         process_video_accurate(v)

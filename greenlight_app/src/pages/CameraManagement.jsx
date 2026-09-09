@@ -39,14 +39,18 @@ export const CameraManagement = () => {
             <span className="text-xs font-mono text-emerald-400 font-bold">IP: {activeCamera.ip}</span>
           </div>
 
-          <div className="flex-1 min-h-[350px]"><IndianRoadDatasetFeed /></div>
+          <div className="flex-1 min-h-[350px]">
+            <IndianRoadDatasetFeed 
+              currentScenario={activeCamera?.simulationScenario || 'bkc'} 
+            />
+          </div>
         </div>
 
         {/* Camera Fleet Selector List (5 cols) */}
         <div className="lg:col-span-5 glass-panel p-5 rounded-3xl border border-slate-800 flex flex-col space-y-4">
           <div className="flex items-center justify-between border-b border-slate-800 pb-3">
             <h3 className="text-sm font-bold text-white font-display">Intersection Camera Stream List</h3>
-            <span className="text-xs font-mono text-slate-400 font-bold">5 Registered Corridors</span>
+            <span className="text-xs font-mono text-emerald-400 font-bold">{cameras.length} Active Corridors</span>
           </div>
 
           <div className="flex-1 overflow-y-auto space-y-3">
