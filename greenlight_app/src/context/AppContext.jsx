@@ -30,6 +30,38 @@ export const AppProvider = ({ children }) => {
 
   const [activeCamera, setActiveCamera] = useState(CAMERAS[0]);
 
+  // Theme state: 'dark' or 'light'
+  const [theme, setTheme] = useState(() => {
+    try {
+      const saved = localStorage.getItem('itracs-theme');
+      if (saved) return saved;
+      return window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+    } catch (e) {
+      return 'dark';
+    }
+  });
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('itracs-theme', theme);
+    } catch (e) {}
+
+    const root = document.documentElement;
+    if (theme === 'light') {
+      root.classList.add('light');
+      root.classList.remove('dark');
+      root.setAttribute('data-theme', 'light');
+    } else {
+      root.classList.add('dark');
+      root.classList.remove('light');
+      root.setAttribute('data-theme', 'dark');
+    }
+  }, [theme]);
+
+  const toggleTheme = useCallback(() => {
+    setTheme(prev => (prev === 'dark' ? 'light' : 'dark'));
+  }, []);
+
   // Global Toast Notifications Stack
   const [toasts, setToasts] = useState([]);
 
@@ -279,6 +311,7 @@ export const AppProvider = ({ children }) => {
       handlePayFine, handleDisputeFine,
       heatmapNodes, setHeatmapNodes,
       currentTime, liveAlertCount,
+      theme, setTheme, toggleTheme,
       toasts, addToast, removeToast, showSuccess, showError, showInfo, showWarning
     }}>
       {children}

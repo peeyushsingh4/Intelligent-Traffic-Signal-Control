@@ -134,3 +134,271 @@
 .dark-tile-layer {
   filter: invert(100%) hue-rotate(180deg) brightness(85%) contrast(110%);
 }
+
+/* ==========================================================================
+   LIGHT MODE DESIGN SYSTEM
+   High-contrast daytime presentation mode for municipal command centers & citizens
+   ========================================================================== */
+
+html.light,
+[data-theme="light"] {
+  color-scheme: light;
+  --color-slate-950: #f8fafc;
+  --color-slate-900: #ffffff;
+  --color-slate-800: #e2e8f0;
+  --color-slate-700: #cbd5e1;
+  --color-slate-600: #94a3b8;
+  --color-slate-500: #64748b;
+  --color-slate-400: #475569;
+  --color-slate-300: #334155;
+  --color-slate-200: #1e293b;
+  --color-slate-100: #0f172a;
+}
+
+html.light body,
+[data-theme="light"] body {
+  background-color: #f8fafc !important;
+  color: #0f172a !important;
+}
+
+/* Base surface containers */
+html.light .bg-slate-950,
+html.light .bg-slate-950\/95,
+html.light .bg-slate-950\/90,
+html.light .bg-slate-950\/80,
+html.light .bg-slate-950\/70,
+[data-theme="light"] .bg-slate-950,
+[data-theme="light"] .bg-slate-950\/95,
+[data-theme="light"] .bg-slate-950\/90,
+[data-theme="light"] .bg-slate-950\/80,
+[data-theme="light"] .bg-slate-950\/70 {
+  background-color: #f8fafc !important;
+}
+
+html.light .bg-slate-950\/40,
+html.light .bg-slate-950\/60,
+[data-theme="light"] .bg-slate-950\/40,
+[data-theme="light"] .bg-slate-950\/60 {
+  background-color: rgba(248, 250, 252, 0.8) !important;
+}
+
+html.light .bg-slate-900,
+html.light .bg-slate-900\/90,
+html.light .bg-slate-900\/80,
+html.light .bg-slate-900\/60,
+[data-theme="light"] .bg-slate-900,
+[data-theme="light"] .bg-slate-900\/90,
+[data-theme="light"] .bg-slate-900\/80,
+[data-theme="light"] .bg-slate-900\/60 {
+  background-color: #ffffff !important;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06), 0 1px 2px -1px rgba(0, 0, 0, 0.04);
+}
+
+html.light .bg-slate-800,
+html.light .bg-slate-800\/80,
+html.light .bg-slate-800\/60,
+html.light .bg-slate-800\/40,
+[data-theme="light"] .bg-slate-800,
+[data-theme="light"] .bg-slate-800\/80,
+[data-theme="light"] .bg-slate-800\/60,
+[data-theme="light"] .bg-slate-800\/40 {
+  background-color: #f1f5f9 !important;
+}
+
+html.light .bg-black\/60,
+[data-theme="light"] .bg-black\/60 {
+  background-color: #f1f5f9 !important;
+}
+
+/* Border styling in light mode */
+html.light .border-slate-800,
+html.light .border-slate-800\/80,
+html.light .border-slate-800\/90,
+html.light .border-slate-700,
+html.light .border-slate-700\/80,
+html.light .border-slate-700\/60,
+html.light .border-slate-900,
+html.light .divide-slate-800\/80 > :not([hidden]) ~ :not([hidden]),
+[data-theme="light"] .border-slate-800,
+[data-theme="light"] .border-slate-800\/80,
+[data-theme="light"] .border-slate-800\/90,
+[data-theme="light"] .border-slate-700,
+[data-theme="light"] .border-slate-700\/80,
+[data-theme="light"] .border-slate-700\/60,
+[data-theme="light"] .border-slate-900 {
+  border-color: #e2e8f0 !important;
+}
+
+/* Text readability in light mode */
+html.light .text-slate-100,
+[data-theme="light"] .text-slate-100 {
+  color: #0f172a !important;
+}
+
+html.light .text-slate-200,
+[data-theme="light"] .text-slate-200 {
+  color: #1e293b !important;
+}
+
+html.light .text-slate-300,
+[data-theme="light"] .text-slate-300 {
+  color: #334155 !important;
+}
+
+html.light .text-slate-400,
+[data-theme="light"] .text-slate-400 {
+  color: #475569 !important;
+}
+
+html.light .text-slate-500,
+[data-theme="light"] .text-slate-500 {
+  color: #64748b !important;
+}
+
+/* Headings and labels that had text-white */
+html.light :is(h1, h2, h3, h4, h5, h6, strong, b).text-white,
+html.light p.text-white,
+html.light span.text-white,
+html.light div.text-white:not([class*="bg-red-"]):not([class*="bg-emerald-"]):not([class*="bg-amber-"]):not([class*="bg-blue-"]):not([class*="bg-slate-800"]):not(.badge-solid):not(.btn-primary),
+[data-theme="light"] :is(h1, h2, h3, h4, h5, h6, strong, b).text-white,
+[data-theme="light"] p.text-white,
+[data-theme="light"] span.text-white,
+[data-theme="light"] div.text-white:not([class*="bg-red-"]):not([class*="bg-emerald-"]):not([class*="bg-amber-"]):not([class*="bg-blue-"]):not([class*="bg-slate-800"]):not(.badge-solid):not(.btn-primary) {
+  color: #0f172a !important;
+}
+
+/* Preserve bright white text inside colored action buttons and badges */
+html.light [class*="bg-red-500"] :is(span, p, div, strong, span.text-white),
+html.light [class*="bg-emerald-500"] :is(span, p, div, strong, span.text-white),
+html.light [class*="bg-amber-500"] :is(span, p, div, strong, span.text-white),
+html.light [class*="bg-cyan-500"] :is(span, p, div, strong, span.text-white),
+html.light .text-white-forced {
+  color: #ffffff !important;
+}
+
+/* Accents with enhanced contrast on white */
+html.light .text-emerald-400,
+[data-theme="light"] .text-emerald-400 {
+  color: #059669 !important;
+}
+
+html.light .text-emerald-300,
+[data-theme="light"] .text-emerald-300 {
+  color: #047857 !important;
+}
+
+html.light .text-amber-400,
+[data-theme="light"] .text-amber-400 {
+  color: #d97706 !important;
+}
+
+html.light .text-amber-300,
+[data-theme="light"] .text-amber-300 {
+  color: #b45309 !important;
+}
+
+html.light .text-cyan-400,
+[data-theme="light"] .text-cyan-400 {
+  color: #0284c7 !important;
+}
+
+html.light .text-red-400,
+[data-theme="light"] .text-red-400 {
+  color: #dc2626 !important;
+}
+
+html.light .text-red-300,
+[data-theme="light"] .text-red-300 {
+  color: #b91c1c !important;
+}
+
+/* Glassmorphism panels in light mode */
+html.light .glass-panel,
+[data-theme="light"] .glass-panel {
+  background: rgba(255, 255, 255, 0.9) !important;
+  backdrop-filter: blur(12px) !important;
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.06) !important;
+}
+
+html.light .glass-card,
+[data-theme="light"] .glass-card {
+  background: rgba(255, 255, 255, 0.95) !important;
+  backdrop-filter: blur(8px) !important;
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04) !important;
+}
+
+html.light .glass-panel-hover:hover,
+[data-theme="light"] .glass-panel-hover:hover {
+  background: #ffffff !important;
+  border-color: rgba(16, 185, 129, 0.5) !important;
+  box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.12) !important;
+}
+
+/* Controls, inputs, and selects in light mode */
+html.light .control-select,
+html.light .control-input,
+[data-theme="light"] .control-select,
+[data-theme="light"] .control-input {
+  background: #ffffff !important;
+  border: 1px solid #cbd5e1 !important;
+  color: #0f172a !important;
+}
+
+html.light .control-button--secondary,
+[data-theme="light"] .control-button--secondary {
+  border: 1px solid #cbd5e1 !important;
+  color: #0f172a !important;
+  background: #f1f5f9 !important;
+}
+
+html.light .control-button--secondary:not(:disabled):hover,
+[data-theme="light"] .control-button--secondary:not(:disabled):hover {
+  background: #e2e8f0 !important;
+}
+
+/* OpenStreetMap Natural Tiles in Light Mode (No dark inversion) */
+html.light .dark-tile-layer,
+[data-theme="light"] .dark-tile-layer {
+  filter: none !important;
+}
+
+/* Leaflet Popups in light mode */
+html.light .dark-leaflet-popup .leaflet-popup-content-wrapper,
+[data-theme="light"] .dark-leaflet-popup .leaflet-popup-content-wrapper {
+  background: #ffffff !important;
+  color: #0f172a !important;
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12) !important;
+}
+
+html.light .dark-leaflet-popup .leaflet-popup-tip,
+[data-theme="light"] .dark-leaflet-popup .leaflet-popup-tip {
+  background: #ffffff !important;
+}
+
+/* Scrollbar in light mode */
+html.light ::-webkit-scrollbar-track,
+[data-theme="light"] ::-webkit-scrollbar-track {
+  background: #f1f5f9 !important;
+}
+
+html.light ::-webkit-scrollbar-thumb,
+[data-theme="light"] ::-webkit-scrollbar-thumb {
+  background: #cbd5e1 !important;
+  border-radius: 3px;
+}
+
+html.light ::-webkit-scrollbar-thumb:hover,
+[data-theme="light"] ::-webkit-scrollbar-thumb:hover {
+  background: #059669 !important;
+}
+
+/* Traffic Grid in light mode */
+html.light .traffic-grid,
+[data-theme="light"] .traffic-grid {
+  background-image: linear-gradient(rgba(100, 116, 139, 0.08) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(100, 116, 139, 0.08) 1px, transparent 1px) !important;
+}
+

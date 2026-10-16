@@ -1,8 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { Play, Pause, RotateCcw, Zap, Eye, ShieldAlert, Cpu, Layers } from 'lucide-react';
+import { useApp } from '../../context/AppContext';
 
 export const ThreeDTrafficSim = () => {
+  const { theme } = useApp();
   const mountRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(true);
   const [scenario, setScenario] = useState('DIVERSION'); // DIVERSION, HEAVY_QUEUE, EMERGENCY
@@ -25,8 +27,10 @@ export const ThreeDTrafficSim = () => {
 
     // 1. Scene, Camera, Renderer
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x070a11);
-    scene.fog = new THREE.FogExp2(0x070a11, 0.015);
+    const isLight = theme === 'light';
+    const bgColor = isLight ? 0xf8fafc : 0x070a11;
+    scene.background = new THREE.Color(bgColor);
+    scene.fog = new THREE.FogExp2(bgColor, 0.015);
 
     const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
     camera.position.set(45, 55, 65);
@@ -238,7 +242,7 @@ export const ThreeDTrafficSim = () => {
       }
       renderer.dispose();
     };
-  }, [isPlaying, scenario, cameraView]);
+  }, [isPlaying, scenario, cameraView, theme]);
 
   return (
     <div className="relative w-full h-full min-h-[420px] rounded-3xl overflow-hidden glass-panel border border-slate-800 flex flex-col">

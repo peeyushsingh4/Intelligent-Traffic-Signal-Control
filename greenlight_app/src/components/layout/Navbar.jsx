@@ -3,14 +3,16 @@ import { useApp } from '../../context/AppContext';
 import { 
   Shield, Activity, AlertTriangle, UserCheck, Video, Clock, 
   Car, Lock, Menu, X, LayoutDashboard, MonitorPlay, 
-  FileText, Navigation, DollarSign, ShieldAlert, Camera, BarChart3, Cpu, AlertCircle, Phone, Mail, Globe 
+  FileText, Navigation, DollarSign, ShieldAlert, Camera, BarChart3, Cpu, AlertCircle, Phone, Mail, Globe,
+  Sun, Moon
 } from 'lucide-react';
 import { IAM_ROLES } from '../../data/mockData';
 
 export const Navbar = () => {
   const { 
     currentRole, switchRole, activeTab, setActiveTab, 
-    currentTime, liveAlertCount, fines 
+    currentTime, liveAlertCount, fines,
+    theme, toggleTheme
   } = useApp();
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -153,6 +155,26 @@ export const Navbar = () => {
           </div>
         </div>
 
+        {/* Theme Toggle Button (Light / Dark) */}
+        <button
+          onClick={toggleTheme}
+          className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-900 border border-slate-700/80 hover:border-slate-500 text-slate-200 transition-all font-mono text-xs cursor-pointer shadow-md"
+          title={theme === 'light' ? 'Switch to Dark Mode (Cyberpunk HUD)' : 'Switch to Light Mode (Daytime Presentation)'}
+          aria-label="Toggle visual theme"
+        >
+          {theme === 'light' ? (
+            <>
+              <Moon className="w-4 h-4 text-indigo-500 fill-indigo-500/20" />
+              <span className="hidden sm:inline font-bold text-[11px] text-slate-700">Dark</span>
+            </>
+          ) : (
+            <>
+              <Sun className="w-4 h-4 text-amber-400 fill-amber-400/20" />
+              <span className="hidden sm:inline font-bold text-[11px] text-amber-300">Light</span>
+            </>
+          )}
+        </button>
+
         {/* Mobile Menu Hamburger Button */}
         <button
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -167,7 +189,7 @@ export const Navbar = () => {
       {mobileMenuOpen && (
         <div className="md:hidden fixed inset-x-0 top-16 bg-slate-950 border-b border-slate-800 shadow-2xl p-4 z-50 max-h-[calc(100vh-4rem)] overflow-y-auto">
           {/* Mobile IAM Role Header */}
-          <div className="p-3 mb-3 rounded-2xl bg-slate-900 border border-slate-800 font-mono text-xs flex items-center justify-between">
+          <div className="p-3 mb-2 rounded-2xl bg-slate-900 border border-slate-800 font-mono text-xs flex items-center justify-between">
             <div className="flex items-center gap-2">
               {isPolice ? <Shield className="w-4 h-4 text-emerald-400" /> : <Car className="w-4 h-4 text-amber-400" />}
               <span className="text-white font-bold">{isPolice ? 'Insp. Rajesh (Officer)' : 'Arun Patel (Citizen)'}</span>
@@ -183,6 +205,20 @@ export const Navbar = () => {
               <option value="TRAFFIC_POLICE">Traffic Police Scope</option>
               <option value="CITIZEN">Citizen Portal Scope</option>
             </select>
+          </div>
+
+          {/* Mobile Theme Toggle Button */}
+          <div className="p-3 mb-3 rounded-2xl bg-slate-900 border border-slate-800 font-mono text-xs flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              {theme === 'light' ? <Sun className="w-4 h-4 text-amber-500" /> : <Moon className="w-4 h-4 text-indigo-400" />}
+              <span className="text-white font-bold">Theme: {theme === 'light' ? 'Light Mode' : 'Dark Mode'}</span>
+            </div>
+            <button
+              onClick={toggleTheme}
+              className="py-1 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs font-bold text-white flex items-center gap-1.5 cursor-pointer"
+            >
+              {theme === 'light' ? 'Switch to Dark' : 'Switch to Light'}
+            </button>
           </div>
 
           {/* Quick Metrics Bar on Mobile */}

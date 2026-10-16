@@ -100,7 +100,7 @@ const AccessRestrictedScreen = ({ requestedTab, onGoToPortal, onSwitchToPolice }
 };
 
 const AppContent = () => {
-  const { activeTab, setActiveTab, currentRole, switchRole, isTabAllowed, selectedViolation } = useApp();
+  const { activeTab, setActiveTab, currentRole, switchRole, isTabAllowed, selectedViolation, theme } = useApp();
 
   const renderActivePage = () => {
     // Enforce IAM permissions
@@ -155,7 +155,11 @@ const AppContent = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans max-w-full overflow-x-hidden selection:bg-emerald-500/30 selection:text-emerald-200">
+    <div className={`min-h-screen flex flex-col font-sans max-w-full overflow-x-hidden transition-colors duration-200 ${
+      theme === 'light'
+        ? 'bg-slate-50 text-slate-900 selection:bg-emerald-500/20 selection:text-emerald-900'
+        : 'bg-slate-950 text-slate-100 selection:bg-emerald-500/30 selection:text-emerald-200'
+    }`}>
       <ToastContainer />
       <Navbar />
       
