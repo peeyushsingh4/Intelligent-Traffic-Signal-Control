@@ -12,13 +12,13 @@ export const MachineThoughtConsole = ({ thoughts = [], links = [], onTriggerSurg
 
   const triggerOfficialMatsim = async () => {
     setIsRunningOfficial(true);
-    setMatsimNotice('⏳ Launching Official Java MATSim 2026.0 Controler on Mumbai BKC...');
+    setMatsimNotice('Launching Official Java MATSim 2026.0 Controler on Mumbai BKC...');
     try {
       const res = await fetch(`${API}/matsim/run-official`, { method: 'POST' });
       const data = await res.json();
-      setMatsimNotice('✅ Official Java MATSim simulation finished! Output saved to: matsim_dist/output/mumbai_bkc');
+      setMatsimNotice('Official Java MATSim simulation finished! Output saved to: matsim_dist/output/mumbai_bkc');
     } catch (e) {
-      setMatsimNotice('✅ Official Java MATSim completed! Output: output/mumbai_bkc');
+      setMatsimNotice('Official Java MATSim completed! Output: output/mumbai_bkc');
     } finally {
       setIsRunningOfficial(false);
       setTimeout(() => setMatsimNotice(''), 8000);
@@ -80,7 +80,7 @@ export const MachineThoughtConsole = ({ thoughts = [], links = [], onTriggerSurg
         return {
           icon: Brain,
           label: 'BOTTLENECK DIAGNOSIS',
-          bg: 'bg-purple-500/20 text-purple-300 border-purple-500/40',
+          bg: 'bg-sky-500/20 text-sky-300 border-sky-500/40',
         };
       default:
         return {
@@ -103,7 +103,7 @@ export const MachineThoughtConsole = ({ thoughts = [], links = [], onTriggerSurg
           <div>
             <div className="flex items-center gap-2">
               <h3 className="text-sm font-bold text-white font-display">AI Cognitive Decision Console</h3>
-              <span className="px-2 py-0.5 text-[9px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 rounded-full font-bold">
+              <span className="px-2 py-0.5 text-[9px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 rounded-md font-bold">
                 MATSim Explainable AI
               </span>
             </div>

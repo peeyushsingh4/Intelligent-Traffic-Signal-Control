@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="shieldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#022c22"/>
+      <stop offset="50%" stop-color="#064e3b"/>
+      <stop offset="100%" stop-color="#020617"/>
+    </linearGradient>
+    <linearGradient id="neonGreen" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#34d399"/>
+      <stop offset="100%" stop-color="#10b981"/>
+    </linearGradient>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="3" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <!-- Shield Base -->
+  <path d="M32 4 L54 13 V31 C54 45 44 56 32 60 C20 56 10 45 10 31 V13 Z" 
+        fill="url(#shieldGrad)" 
+        stroke="#10b981" 
+        stroke-width="2.5" />
+
+  <!-- Cyber Circuit Accents -->
+  <path d="M18 20 L26 20 L29 24 M46 20 L38 20 L35 24" 
+        stroke="#059669" 
+        stroke-width="1.5" 
+        fill="none" 
+        stroke-linecap="round"/>
+
+  <!-- Traffic Signal Core (Housing) -->
+  <rect x="25" y="16" width="14" height="32" rx="7" fill="#090d16" stroke="#334155" stroke-width="1.5"/>
+
+  <!-- Top Light: Standby (Dim Red) -->
+  <circle cx="32" cy="22" r="3.2" fill="#7f1d1d" opacity="0.6"/>
+
+  <!-- Middle Light: Caution (Dim Amber) -->
+  <circle cx="32" cy="32" r="3.2" fill="#78350f" opacity="0.6"/>
+
+  <!-- Bottom Light: Active Green Wave (Glowing Emerald) -->
+  <circle cx="32" cy="42" r="4.2" fill="url(#neonGreen)" filter="url(#glow)"/>
+  <circle cx="32" cy="42" r="2" fill="#ecfdf5"/>
+</svg>

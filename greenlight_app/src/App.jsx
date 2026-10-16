@@ -12,6 +12,11 @@ import { FieldOfficerApp } from './pages/FieldOfficerApp';
 import { CameraManagement } from './pages/CameraManagement';
 import { ExecutiveAnalytics } from './pages/ExecutiveAnalytics';
 import { SimulationDisplay } from './pages/SimulationDisplay';
+import { NotFound } from './pages/NotFound';
+import { PrivacyPolicy } from './pages/PrivacyPolicy';
+import { TermsConditions } from './pages/TermsConditions';
+import { Footer } from './components/layout/Footer';
+import { ToastContainer } from './components/common/ToastContainer';
 import { Shield, Lock, Car } from 'lucide-react';
 
 // Error Boundary to catch and display runtime errors
@@ -34,7 +39,7 @@ class ErrorBoundary extends React.Component {
     if (this.state.hasError) {
       return (
         <div style={{ padding: '40px', background: '#0f172a', color: '#f8fafc', fontFamily: 'monospace', minHeight: '100vh' }}>
-          <h1 style={{ color: '#ef4444', fontSize: '24px', marginBottom: '16px' }}>⚠ Runtime Error Caught</h1>
+          <h1 style={{ color: '#ef4444', fontSize: '24px', marginBottom: '16px' }}>Application Runtime Exception Caught</h1>
           <pre style={{ color: '#f59e0b', background: '#1e293b', padding: '20px', borderRadius: '12px', overflow: 'auto', fontSize: '13px', lineHeight: '1.6' }}>
             {this.state.error && this.state.error.toString()}
           </pre>
@@ -133,22 +138,37 @@ const AppContent = () => {
         return <ExecutiveAnalytics />;
       case 'simulation_display':
         return <SimulationDisplay />;
+      case 'privacy_policy':
+        return <PrivacyPolicy />;
+      case 'terms_conditions':
+        return <TermsConditions />;
+      case 'not_found':
+      case '404':
+        return <NotFound requestedPath={`/${activeTab}`} />;
       default:
+        // If unrecognized route, show 404 page
+        if (activeTab && !['control_room', 'citizen_vehicles'].includes(activeTab)) {
+          return <NotFound requestedPath={`/${activeTab}`} />;
+        }
         return currentRole === 'CITIZEN' ? <VehicleOwnerPortal /> : <ControlRoom />;
     }
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans">
+    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans max-w-full overflow-x-hidden selection:bg-emerald-500/30 selection:text-emerald-200">
+      <ToastContainer />
       <Navbar />
       
       <div className="flex-1 flex overflow-hidden">
         <Sidebar />
         
-        <main className="flex-1 overflow-hidden bg-slate-950/40">
-          <ErrorBoundary>
-            {renderActivePage()}
-          </ErrorBoundary>
+        <main className="flex-1 overflow-y-auto overflow-x-hidden bg-slate-950/40 flex flex-col justify-between min-h-0">
+          <div className="flex-1">
+            <ErrorBoundary>
+              {renderActivePage()}
+            </ErrorBoundary>
+          </div>
+          <Footer />
         </main>
       </div>
 

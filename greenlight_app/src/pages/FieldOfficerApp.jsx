@@ -1,16 +1,22 @@
 import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
-import { ShieldAlert, Search, AlertTriangle, Car, CheckCircle, Navigation } from 'lucide-react';
+import { ShieldAlert, Search, AlertTriangle, Car, CheckCircle, Navigation, Phone } from 'lucide-react';
 
 export const FieldOfficerApp = () => {
-  const { violations } = useApp();
+  const { violations, showSuccess, showInfo } = useApp();
   const [searchPlate, setSearchPlate] = useState('MH 02 CZ 4921');
   const [searchedRecord, setSearchedRecord] = useState(violations[0]);
+  const [incidentDispatched, setIncidentDispatched] = useState(false);
 
   const handleSearch = (e) => {
     e.preventDefault();
     const found = violations.find(v => v.plateNumber.toLowerCase().includes(searchPlate.toLowerCase())) || violations[0];
     setSearchedRecord(found);
+  };
+
+  const handleDispatchIncident = () => {
+    setIncidentDispatched(true);
+    showSuccess('Patrol Unit #4 dispatched to BKC Flyover North Ramp. Field siren active.', 'Patrol Dispatched');
   };
 
   return (
@@ -40,7 +46,7 @@ export const FieldOfficerApp = () => {
               onChange={(e) => setSearchPlate(e.target.value)}
               className="flex-1 p-2.5 bg-slate-950 border border-slate-800 rounded-xl text-white font-bold uppercase focus:outline-none focus:border-amber-500"
             />
-            <button type="submit" className="p-2.5 bg-amber-500 text-slate-950 font-bold rounded-xl">
+            <button type="submit" className="p-2.5 bg-amber-500 text-slate-950 font-bold rounded-xl cursor-pointer">
               <Search className="w-4 h-4" />
             </button>
           </div>
@@ -56,22 +62,51 @@ export const FieldOfficerApp = () => {
               </span>
             </div>
 
-            <div className="space-y-1 text-slate-300">
+            <div className="space-y-1.5 text-slate-300">
               <div>Owner: <span className="text-white font-bold">{searchedRecord.ownerName}</span></div>
               <div>Make: <span className="text-slate-400">{searchedRecord.vehicleMake} ({searchedRecord.vehicleColor})</span></div>
               <div>Latest Infringement: <span className="text-amber-400 font-bold">{searchedRecord.violationType}</span></div>
               <div>Outstanding Penalty: <span className="text-red-400 font-bold">₹{searchedRecord.fineAmount}</span></div>
+              <div className="pt-1 border-t border-slate-800/80">
+                <a 
+                  href={`tel:${searchedRecord.ownerPhone || '+919820144921'}`}
+                  className="text-emerald-400 hover:text-emerald-300 text-[11px] font-bold flex items-center gap-1.5"
+                >
+                  <Phone className="w-3.5 h-3.5" />
+                  <span>Call Owner: {searchedRecord.ownerPhone || '+91 98201 44921'}</span>
+                </a>
+              </div>
             </div>
           </div>
         )}
 
         {/* Incident Alert Dispatch Banner */}
-        <div className="bg-red-500/10 p-3 rounded-2xl border border-red-500/30 space-y-1 text-xs">
+        <div className="bg-red-500/10 p-3 rounded-2xl border border-red-500/30 space-y-2 text-xs">
           <div className="flex items-center space-x-2 text-red-400 font-bold font-mono">
-            <AlertTriangle className="w-4 h-4 animate-bounce" />
+            <AlertTriangle className="w-4 h-4" />
             <span>ACCIDENT ALERT: BKC FLYOVER</span>
           </div>
           <div className="text-[10px] text-slate-300 font-sans">Multi-vehicle congestion detected. Reroute dispatched via Signage.</div>
+          <button
+            onClick={handleDispatchIncident}
+            className={`w-full py-2 px-3 rounded-xl font-mono text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer ${
+              incidentDispatched 
+                ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40' 
+                : 'bg-red-500 hover:bg-red-400 text-white'
+            }`}
+          >
+            {incidentDispatched ? (
+              <>
+                <CheckCircle className="w-3.5 h-3.5" />
+                <span>Unit En Route (ETA 4 min)</span>
+              </>
+            ) : (
+              <>
+                <Navigation className="w-3.5 h-3.5" />
+                <span>Dispatch Interceptor Unit</span>
+              </>
+            )}
+          </button>
         </div>
 
         <div className="w-24 h-1 bg-slate-700 rounded-full mx-auto mb-1"></div>

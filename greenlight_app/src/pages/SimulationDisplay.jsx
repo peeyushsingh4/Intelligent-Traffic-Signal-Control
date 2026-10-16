@@ -16,7 +16,7 @@ import {
 const VEHICLE_COLORS = {
   car: '#06b6d4',       // cyan-500
   truck: '#f59e0b',     // amber-500
-  bus: '#8b5cf6',       // violet-500
+  bus: '#0284c7',       // sky-600
   auto: '#10b981',      // emerald-500
   ambulance: '#ef4444', // red-500
 };
@@ -140,7 +140,7 @@ export const SimulationDisplay = () => {
 
     addThought(
       'TELEMETRY',
-      '📊 Normal Traffic Flow: Adaptive Multi-Agent Cycle Active',
+      'Normal Traffic Flow: Adaptive Multi-Agent Cycle Active',
       'All four approaches operating below 45% saturation. Signal timing distributed evenly (30s green per phase, 90s total cycle). Agents proceeding on nominal shortest-path trajectories.',
       0.94,
       { mode: 'Adaptive Nominal', saturation: '42%', cycleLength: '90s', diversion: 'INACTIVE' }
@@ -159,7 +159,7 @@ export const SimulationDisplay = () => {
 
     addThought(
       'SIGNAL_REALLOCATION',
-      '⏱️ Congestion Spike Detected: 14s Green Time Transferred from Free Lanes',
+      'Congestion Spike Detected: 14s Green Time Transferred from Free Lanes',
       'Western Express Hwy density crossed critical threshold (84% load, 18 queued vehicles). AI signal controller subtracted 14 seconds from low-load East/West free lanes (30s → 16s) and transferred directly to congested North approach (30s → 44s) to flush queue.',
       0.96,
       { bottleneckDensity: '84%', donorLane: 'East/West (Free)', donorGreen: '16s (-14s)', beneficiaryGreen: '44s (+14s)', queueReduction: '-38%' }
@@ -178,7 +178,7 @@ export const SimulationDisplay = () => {
 
     addThought(
       'EMERGENCY_EVP',
-      '🚨 Ambulance AMB-108 Approaching: Green Wave Corridor LOCKED',
+      'Ambulance AMB-108 Approaching: Green Wave Corridor LOCKED',
       'Emergency ICU Ambulance detected approaching at 64 km/h (North corridor). AI controller triggered ISO-22951 preemption: locked opposing signals to solid RED, cleared intersection zone, and held solid GREEN for emergency path.',
       0.99,
       { vehicle: 'AMB-108 (ICU)', speed: '64 km/h', preemptionTime: '0.8s', clearanceSignal: 'ALL_RED_OPPOSING', protocol: 'ISO-22951' }
@@ -197,7 +197,7 @@ export const SimulationDisplay = () => {
 
     addThought(
       'DIVERSION_EXEC',
-      '🔀 Dynamic Diversion Activated: 65% Traffic Rerouted to LBS Marg Bypass',
+      'Dynamic Diversion Activated: 65% Traffic Rerouted to LBS Marg Bypass',
       'Western Express Highway approach reached bottleneck capacity (72%). Variable Message Signs (VMS) updated in real-time. Within-day dynamic routing activated: 65% of Southbound vehicles physically diverted onto LBS Marg Alternate Corridor, avoiding 14.2 minutes of delay.',
       0.97,
       { saturation: '72%', divertedRatio: '65%', alternateRoute: 'LBS Marg Detour', queueCollapse: '18 → 4 vehicles', delayAvoided: '-14.2 min', co2Offset: '+0.62 kg' }
@@ -376,7 +376,7 @@ export const SimulationDisplay = () => {
         ctx.fillStyle = flash ? '#34d399' : '#10b981';
         ctx.font = 'bold 11px monospace';
         ctx.textAlign = 'center';
-        ctx.fillText('🔀 OVERHEAD VMS: 65% FLOW DIVERTED', CX, 76);
+        ctx.fillText('OVERHEAD VMS: 65% FLOW DIVERTED', CX, 76);
         ctx.fillStyle = '#fbbf24';
         ctx.font = 'bold 10px monospace';
         ctx.fillText('USE LBS MARG ALTERNATE • SAVINGS: 14 MIN', CX, 90);
@@ -414,7 +414,7 @@ export const SimulationDisplay = () => {
         ctx.fillStyle = '#ffffff';
         ctx.font = 'bold 10px monospace';
         ctx.textAlign = 'center';
-        ctx.fillText('🚨 EMERGENCY WAVE: AMB-108 PREEMPTION', CX, 36);
+        ctx.fillText('EMERGENCY WAVE: AMB-108 PREEMPTION', CX, 36);
         ctx.textAlign = 'left';
       }
 
@@ -552,7 +552,7 @@ export const SimulationDisplay = () => {
           ctx.fillStyle = '#34d399';
           ctx.font = 'bold 8px monospace';
           ctx.textAlign = 'center';
-          ctx.fillText('🔀 DIVERTED', v.x, v.y - 11);
+          ctx.fillText('DIVERTED', v.x, v.y - 11);
           ctx.textAlign = 'left';
         }
 
@@ -566,7 +566,7 @@ export const SimulationDisplay = () => {
           ctx.fillStyle = '#fca5a5';
           ctx.font = 'bold 8px monospace';
           ctx.textAlign = 'center';
-          ctx.fillText('🚨 AMB-108', v.x, v.y - 13);
+          ctx.fillText('AMB-108', v.x, v.y - 13);
           ctx.textAlign = 'left';
         }
       });
@@ -841,7 +841,7 @@ export const SimulationDisplay = () => {
               'bg-slate-900/90 text-cyan-200 border-b border-slate-800'
             }`}>
               <span className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-current animate-ping" />
+                <span className="w-2 h-2 rounded-full bg-current" />
                 {SCENARIOS[activeScenario].label}
               </span>
               <span className="text-[10px] text-slate-300 font-sans font-normal truncate max-w-[280px]">
@@ -865,7 +865,7 @@ export const SimulationDisplay = () => {
               <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded-sm" style={{ background: VEHICLE_COLORS.auto }} /> Auto</span>
               <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded-sm" style={{ background: VEHICLE_COLORS.ambulance }} /> Ambulance</span>
               <span className="flex items-center gap-1.5 ml-auto text-emerald-400 font-bold">
-                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+                <span className="w-2 h-2 rounded-full bg-emerald-400" />
                 MATSim 2026.0
               </span>
             </div>

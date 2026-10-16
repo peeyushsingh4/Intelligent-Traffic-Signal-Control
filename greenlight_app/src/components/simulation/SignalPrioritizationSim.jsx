@@ -64,7 +64,7 @@ export const SignalPrioritizationSim = () => {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 border-b border-slate-800 pb-3">
         <div>
           <div className="flex items-center space-x-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></span>
+            <span className="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
             <h3 className="text-sm font-bold text-white font-display">Deep RL Lane Prioritization & Signal Simulator</h3>
           </div>
           <p className="text-[11px] text-slate-400">Microscopic TraCI Physics Engine Demonstrating Dynamic Congestion Clearing</p>
@@ -111,7 +111,7 @@ export const SignalPrioritizationSim = () => {
               trafficDistribution === 'RED_SIGNAL_HOLD' ? 'bg-red-600 text-white font-bold glow-red' : 'text-slate-400 hover:text-white'
             }`}
           >
-            🔴 Red Signal Lane Hold (CCTV)
+            Red Signal Lane Hold (CCTV)
           </button>
         </div>
       </div>
@@ -137,24 +137,24 @@ export const SignalPrioritizationSim = () => {
           {/* Center Signal Box */}
           <div className="z-10 bg-slate-950/95 p-3 rounded-2xl border-2 border-emerald-500/40 text-center shadow-2xl backdrop-blur-md space-y-1 glow-emerald">
             <div className="text-[9px] font-mono text-slate-400 uppercase">AI Signal Controller</div>
-            <div className={`text-[11px] font-bold font-mono px-2.5 py-0.5 rounded-full ${
+            <div className={`text-[11px] font-bold font-mono px-2.5 py-0.5 rounded-md ${
               currentPhase === 'NORTH_SOUTH_GREEN' 
                 ? 'bg-emerald-500 text-slate-950 font-extrabold' 
                 : 'bg-amber-500 text-slate-950 font-extrabold'
             }`}>
-              {currentPhase === 'NORTH_SOUTH_GREEN' ? '🟢 NORTH-SOUTH GREEN' : '🟢 EAST-WEST GREEN'}
+              {currentPhase === 'NORTH_SOUTH_GREEN' ? 'NORTH-SOUTH GREEN' : 'EAST-WEST GREEN'}
             </div>
             <div className="text-[9px] text-emerald-400 font-mono">Duration: {phaseTimer}s</div>
           </div>
 
           {/* North Approach Lane (Top) */}
           <div className="absolute top-2 z-20 flex flex-col items-center space-y-1">
-            <span className="px-2 py-0.5 text-[9px] font-mono font-bold bg-red-500/20 text-red-400 border border-red-500/30 rounded-full animate-pulse">
+            <span className="px-2 py-0.5 text-[9px] font-mono font-bold bg-red-500/20 text-red-400 border border-red-500/30 rounded-md animate-pulse">
               North Lane: {northQueue} Veh [CONGESTED]
             </span>
             <div className="flex space-x-1">
               {[...Array(Math.min(8, northQueue))].map((_, i) => (
-                <span key={i} className="w-2 h-2 bg-red-500 rounded-full glow-red"></span>
+                <span key={i} className="w-2 h-2 bg-red-500 rounded-sm glow-red"></span>
               ))}
             </div>
           </div>
@@ -163,24 +163,24 @@ export const SignalPrioritizationSim = () => {
           <div className="absolute bottom-2 z-20 flex flex-col items-center space-y-1">
             <div className="flex space-x-1">
               {[...Array(Math.min(6, southQueue))].map((_, i) => (
-                <span key={i} className="w-2 h-2 bg-amber-500 rounded-full"></span>
+                <span key={i} className="w-2 h-2 bg-amber-500 rounded-sm"></span>
               ))}
             </div>
-            <span className="px-2 py-0.5 text-[9px] font-mono text-slate-300 bg-slate-900/90 border border-slate-800 rounded-full">
+            <span className="px-2 py-0.5 text-[9px] font-mono text-slate-300 bg-slate-900/90 border border-slate-800 rounded-md">
               South Lane: {southQueue} Veh
             </span>
           </div>
 
           {/* East Approach Lane (Right) */}
           <div className="absolute right-2 top-1/2 -translate-y-1/2 z-20 flex flex-col items-end space-y-1">
-            <span className="px-2 py-0.5 text-[9px] font-mono text-emerald-400 bg-slate-900/90 border border-emerald-500/30 rounded-full">
+            <span className="px-2 py-0.5 text-[9px] font-mono text-emerald-400 bg-slate-900/90 border border-emerald-500/30 rounded-md">
               East: {eastQueue} Veh
             </span>
           </div>
 
           {/* West Approach Lane (Left) */}
           <div className="absolute left-2 top-1/2 -translate-y-1/2 z-20 flex flex-col items-start space-y-1">
-            <span className="px-2 py-0.5 text-[9px] font-mono text-emerald-400 bg-slate-900/90 border border-emerald-500/30 rounded-full">
+            <span className="px-2 py-0.5 text-[9px] font-mono text-emerald-400 bg-slate-900/90 border border-emerald-500/30 rounded-md">
               West: {westQueue} Veh
             </span>
           </div>
@@ -242,11 +242,11 @@ export const SignalPrioritizationSim = () => {
       <div className="bg-slate-950 p-4 rounded-2xl border border-red-500/30 space-y-3">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div className="flex items-center space-x-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping"></span>
+            <span className="w-2.5 h-2.5 rounded-full bg-red-500"></span>
             <span className="text-xs font-bold text-white font-mono uppercase flex items-center gap-2">
               <span>CCTV Ground Truth: Stationary Approach Lane at Red Signal</span>
-              <span className="px-2 py-0.5 text-[9px] bg-red-500/20 text-red-400 border border-red-500/40 rounded-full font-bold animate-pulse">
-                🔴 SOLID RED · LANE STOPPED
+              <span className="px-2 py-0.5 text-[9px] bg-red-500/20 text-red-400 border border-red-500/40 rounded-md font-bold">
+                SOLID RED : LANE STOPPED
               </span>
             </span>
           </div>

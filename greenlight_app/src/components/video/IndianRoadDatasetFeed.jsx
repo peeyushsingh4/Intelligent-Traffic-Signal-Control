@@ -95,7 +95,7 @@ const CCTV_CAMERAS = {
   red_signal: {
     id: 'CAM-07',
     scenarioId: 'red_signal',
-    name: 'BKC East Approach — Red Signal Stop Line (Lane Stopped)',
+    name: 'BKC East Approach: Red Signal Stop Line (Lane Stopped)',
     location: 'BKC East Crossing Stop Line · Red Phase Hold',
     coordinates: '19.0657° N, 72.8686° E',
     signalState: 'RED',
@@ -257,7 +257,7 @@ export const IndianRoadDatasetFeed = ({ initialScenario = 'bkc', currentScenario
         id: Date.now(),
         timestamp: new Date().toLocaleTimeString(),
         phase: 'EMERGENCY_EVP',
-        title: '🚨 Ambulance AMB-108 Detected: Green Wave Priority Activated',
+        title: 'Ambulance AMB-108 Detected: Green Wave Priority Activated',
         reasoning: 'Emergency vehicle detected at 64 km/h approaching intersection. All conflicting signals preempted to solid RED.',
         confidence: 0.99,
         telemetry: { vehicle: 'AMB-108 (ICU)', speed: '64 km/h', preemption: 'ALL_RED_OPPOSING' }
@@ -273,7 +273,7 @@ export const IndianRoadDatasetFeed = ({ initialScenario = 'bkc', currentScenario
         id: Date.now(),
         timestamp: new Date().toLocaleTimeString(),
         phase: 'DIVERSION_EXEC',
-        title: '🔀 Dynamic Traffic Diversion: 65% Volume Rerouted via LBS Marg',
+        title: 'Dynamic Traffic Diversion: 65% Volume Rerouted via LBS Marg',
         reasoning: 'Primary approach at 72% capacity. Digital VMS sign activated to divert upstream volume onto secondary bypass.',
         confidence: 0.97,
         telemetry: { divertedVolume: '65%', alternateRoute: 'LBS Marg Detour', delaySaved: '-14.2 min' }
@@ -294,14 +294,13 @@ export const IndianRoadDatasetFeed = ({ initialScenario = 'bkc', currentScenario
       <header className="p-3 border-b border-slate-800 bg-slate-900/95 flex flex-wrap gap-2 items-center justify-between">
         <div className="flex items-center gap-2">
           <span className="relative flex h-2.5 w-2.5">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
             <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
           </span>
           <h3 className="text-sm font-bold text-slate-100 font-display">{activeCam.name}</h3>
-          <span className="px-1.5 py-0.5 text-[9px] font-mono bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 rounded-full font-bold">
+          <span className="px-1.5 py-0.5 text-[9px] font-mono bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 rounded-md font-bold">
             {activeCam.id}
           </span>
-          <span className="px-2 py-0.5 text-[9px] font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 rounded-full flex items-center gap-1">
+          <span className="px-2 py-0.5 text-[9px] font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 rounded-md flex items-center gap-1">
             <Leaf size={10} className="text-emerald-400" />
             CO₂ Saved: +{state.metrics.co2SavedKg} kg (-{state.metrics.co2SavedPercent}%)
           </span>
@@ -320,7 +319,7 @@ export const IndianRoadDatasetFeed = ({ initialScenario = 'bkc', currentScenario
             <option value="dadar">CAM-04: Dadar TT 4-Way</option>
             <option value="weh">CAM-05: WEH Airport Metro</option>
             <option value="lbs_metro">CAM-06: Kurla-LBS Metro</option>
-            <option value="red_signal">🔴 CAM-07: Red Signal Stop Line (Lane Stopped)</option>
+            <option value="red_signal">CAM-07: Red Signal Stop Line (Lane Stopped)</option>
           </select>
 
           {/* View Mode Switcher */}
@@ -369,7 +368,7 @@ export const IndianRoadDatasetFeed = ({ initialScenario = 'bkc', currentScenario
           <div className="absolute top-2 left-2 right-2 flex justify-between items-start pointer-events-none z-20 text-[9px] font-mono">
             <div className="p-1.5 rounded-lg bg-slate-950/90 backdrop-blur-md border border-slate-800 text-slate-200 shadow-lg">
               <div className="flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-red-500 animate-ping"></span>
+                <span className="w-2 h-2 rounded-full bg-red-500"></span>
                 <strong className="text-red-400">REC ●</strong>
                 <span className="text-cyan-400 font-bold">{activeCam.id}</span>
                 <span className="text-slate-600">|</span>
@@ -385,12 +384,12 @@ export const IndianRoadDatasetFeed = ({ initialScenario = 'bkc', currentScenario
                 }`}>
                   <span className="text-slate-400">SIGNAL:</span>
                   <div className="flex gap-1 bg-slate-900 p-1 rounded border border-slate-700">
-                    <div className={`w-2 h-2 rounded-full ${isRed ? 'bg-red-500 animate-pulse shadow-[0_0_8px_#ef4444]' : 'bg-slate-700'}`}></div>
-                    <div className="w-2 h-2 rounded-full bg-slate-700"></div>
-                    <div className={`w-2 h-2 rounded-full ${!isRed ? 'bg-emerald-500 shadow-[0_0_8px_#10b981]' : 'bg-slate-700'}`}></div>
+                    <div className={`w-2 h-2 rounded-sm ${isRed ? 'bg-red-500' : 'bg-slate-700'}`}></div>
+                    <div className="w-2 h-2 rounded-sm bg-slate-700"></div>
+                    <div className={`w-2 h-2 rounded-sm ${!isRed ? 'bg-emerald-500' : 'bg-slate-700'}`}></div>
                   </div>
                   <span className={`font-bold ${isRed ? 'text-red-400' : 'text-emerald-400'}`}>
-                    {emergencyBlink ? 'EVP PRIORITY' : (isRed ? '🔴 RED SIGNAL (LANE STOPPED)' : '🟢 GREEN WAVE')}
+                    {emergencyBlink ? 'EVP PRIORITY' : (isRed ? 'RED SIGNAL (LANE STOPPED)' : 'GREEN WAVE')}
                   </span>
                 </div>
               );
@@ -399,10 +398,10 @@ export const IndianRoadDatasetFeed = ({ initialScenario = 'bkc', currentScenario
 
           {/* Red Signal Stop Line Banner */}
           {activeCam.signalState === 'RED' && (
-            <div className="absolute top-11 inset-x-2 z-30 p-2 bg-red-950/95 backdrop-blur-md text-red-200 rounded-lg border border-red-500/80 flex items-center justify-between text-[10px] shadow-lg animate-pulse">
+            <div className="absolute top-11 inset-x-2 z-30 p-2 bg-red-950/95 backdrop-blur-md text-red-200 rounded-lg border border-red-500/80 flex items-center justify-between text-[10px] shadow-lg">
               <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-red-500 animate-ping"></span>
-                <span className="font-bold uppercase tracking-wide">🔴 RED LIGHT ACTIVE: Eastbound Approach Stopped at Stop Line (Queue Idling)</span>
+                <span className="w-2 h-2 rounded-sm bg-red-500"></span>
+                <span className="font-bold uppercase tracking-wide">RED LIGHT ACTIVE: Eastbound Approach Stopped at Stop Line (Queue Idling)</span>
               </div>
               <span className="font-mono font-bold bg-red-500/30 px-2 py-0.5 rounded text-red-100 border border-red-400/40">
                 SOLID RED · 45s HOLD
@@ -412,9 +411,9 @@ export const IndianRoadDatasetFeed = ({ initialScenario = 'bkc', currentScenario
 
           {/* Emergency Vehicle Priority Banner */}
           {emergencyBlink && (
-            <div className="absolute top-11 inset-x-2 z-30 p-2 bg-red-600/95 backdrop-blur-md text-white rounded-lg border border-red-400 flex items-center gap-2 animate-pulse text-[10px] shadow-lg">
+            <div className="absolute top-11 inset-x-2 z-30 p-2 bg-red-600/95 backdrop-blur-md text-white rounded-lg border border-red-400 flex items-center gap-2 text-[10px] shadow-lg">
               <ShieldAlert size={15} className="text-white shrink-0" />
-              <span className="font-bold uppercase">🚨 ISO-22951: Ambulance AMB-108 approaching at 64 km/h — Opposing Red locked</span>
+              <span className="font-bold uppercase">ISO-22951: Ambulance AMB-108 approaching at 64 km/h: Opposing Red locked</span>
             </div>
           )}
 
@@ -422,7 +421,7 @@ export const IndianRoadDatasetFeed = ({ initialScenario = 'bkc', currentScenario
           {state.metrics.diversionActive && (
             <div className="absolute bottom-10 inset-x-2 z-30 p-2 bg-emerald-950/95 backdrop-blur-md text-emerald-200 rounded-lg border border-emerald-500/60 flex items-center gap-2 text-[10px] shadow-lg">
               <Navigation size={14} className="text-emerald-400 shrink-0" />
-              <span className="font-bold uppercase">🔀 OVERHEAD VMS: 65% Traffic Diverted → {activeCam.detourCorridor} (-14.2 min)</span>
+              <span className="font-bold uppercase">OVERHEAD VMS: 65% Traffic Diverted to {activeCam.detourCorridor} (-14.2 min)</span>
             </div>
           )}
 
@@ -454,7 +453,7 @@ export const IndianRoadDatasetFeed = ({ initialScenario = 'bkc', currentScenario
                         <span className="font-bold text-cyan-400">{det.type}</span>
                         <span className="text-slate-400">·</span>
                         <span className={isStopped ? 'text-red-400 font-bold' : (isIdling ? 'text-amber-400 font-bold' : 'text-white')}>
-                          {isStopped ? '🔴 0 km/h (STOPPED)' : `${det.speed} km/h`}
+                          {isStopped ? '0 km/h (STOPPED)' : `${det.speed} km/h`}
                         </span>
                       </div>
                       

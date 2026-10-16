@@ -29,7 +29,7 @@ export const ControlRoom = () => {
         {/* Header & Filter Toolbar */}
         <div className="glass-panel p-4 rounded-2xl flex items-center justify-between">
           <div className="flex items-center space-x-2">
-            <div className="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping"></div>
+            <div className="w-2.5 h-2.5 rounded-full bg-red-500"></div>
             <h2 className="font-bold text-white font-display text-sm">Live AI Violation Stream</h2>
           </div>
           <div className="flex space-x-1 bg-slate-900/90 p-1 rounded-lg border border-slate-800 text-[11px]">
@@ -122,7 +122,7 @@ export const ControlRoom = () => {
             <span>MATSim Multi-Agent Traffic Engine</span>
           </span>
           <span className="px-2.5 py-1 text-[10px] font-mono font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 rounded-xl flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+            <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
             Live Multi-Agent CCTV
           </span>
         </div>

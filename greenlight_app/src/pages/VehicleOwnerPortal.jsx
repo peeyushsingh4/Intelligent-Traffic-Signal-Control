@@ -9,7 +9,7 @@ import {
 import { REGISTERED_VEHICLES } from '../data/mockData';
 
 export const VehicleOwnerPortal = ({ activeSection = 'citizen_vehicles' }) => {
-  const { fines, handlePayFine, handleDisputeFine, violations, setActiveTab } = useApp();
+  const { fines, handlePayFine, handleDisputeFine, violations, setActiveTab, showSuccess, showError } = useApp();
 
   // Selected portal sub-view: 'VEHICLES', 'EVIDENCE', 'DISPUTES'
   const getSectionFromTab = (tab) => {
@@ -59,23 +59,52 @@ export const VehicleOwnerPortal = ({ activeSection = 'citizen_vehicles' }) => {
   // Lookup vehicle details from registry or generate standard entry
   const vehicle = REGISTERED_VEHICLES[selectedPlate] || {
     plateNumber: selectedPlate,
-    ownerName: 'Registered Citizen Owner',
-    phone: '+91 98200 XXXXX',
-    email: 'citizen.owner@parivahan.gov.in',
+    ownerName: 'Arun Patel',
+    phone: '+91 98201 44921',
+    email: 'arun.patel@gmail.com',
     model: 'Personal Motor Vehicle (LMV)',
     vehicleClass: 'Motor Car (LMV)',
     fuelType: 'Petrol / BS-VI',
     color: 'Standard Finish',
     rto: 'MH-02 Mumbai West',
     registrationDate: '10-Jan-2023',
-    chassisNo: 'MA3EWB31S00******',
-    engineNo: 'K12MN87******',
+    chassisNo: 'MA3EWB31S0091823',
+    engineNo: 'K12MN8723910',
     insuranceCompany: 'National Insurance Company',
-    insurancePolicyNo: 'NIC-MOT-2026-XXXXX',
+    insurancePolicyNo: 'NIC-MOT-2026-94812',
     insuranceExpiry: '31-Dec-2026',
-    pucCertNo: 'MH02PUC2026XXXX',
+    pucCertNo: 'MH02PUC20268841',
     pucExpiry: '30-Oct-2026',
     status: 'ACTIVE_REGISTERED'
+  };
+
+  const downloadReceipt = (f, txn = f.transactionId || 'TXN-PARIVAHAN-SUCCESS') => {
+    const text = `=======================================================
+GOVERNMENT OF MAHARASHTRA · MOTOR VEHICLES DEPARTMENT
+OFFICIAL e-CHALLAN PAYMENT RECEIPT (PARIVAHAN DIGITAL)
+=======================================================
+Challan No:         ${f.challanNo || f.fineId || 'CHL-MH02-2026-9001'}
+Registration No:    ${f.plateNumber || selectedPlate}
+Offense / Citation: ${f.offense || f.violationType || 'Traffic Violation'}
+Penalty Amount:     INR ${f.amount || 1000}
+Payment Status:     PAID (SUCCESS)
+Transaction Ref:    ${txn}
+Payment Date:       ${new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })} IST
+Gateway Channel:    Bharat BillPay / UPI National Switch
+RTO Jurisdiction:   MH-02 Mumbai West
+=======================================================
+Valid legal receipt under Section 133A & IT Act 2000.
+`;
+    const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `Receipt_${f.challanNo || 'eChallan'}.txt`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+    showSuccess(`Official e-Receipt downloaded for Challan ${f.challanNo || ''}.`, 'e-Receipt Saved');
   };
 
   // Fines for this vehicle
@@ -294,6 +323,20 @@ export const VehicleOwnerPortal = ({ activeSection = 'citizen_vehicles' }) => {
                 </div>
 
                 <div className="flex justify-between border-b border-slate-800/80 pb-1.5">
+                  <span className="text-slate-400">Contact Mobile</span>
+                  <a href={`tel:${vehicle.phone}`} className="text-emerald-400 hover:text-emerald-300 font-bold hover:underline transition">
+                    {vehicle.phone}
+                  </a>
+                </div>
+
+                <div className="flex justify-between border-b border-slate-800/80 pb-1.5">
+                  <span className="text-slate-400">Parivahan Email</span>
+                  <a href={`mailto:${vehicle.email}`} className="text-cyan-400 hover:text-cyan-300 font-bold hover:underline transition truncate max-w-[170px]">
+                    {vehicle.email}
+                  </a>
+                </div>
+
+                <div className="flex justify-between border-b border-slate-800/80 pb-1.5">
                   <span className="text-slate-400">Make & Model</span>
                   <span className="text-slate-200 font-bold">{vehicle.model}</span>
                 </div>
@@ -489,10 +532,8 @@ export const VehicleOwnerPortal = ({ activeSection = 'citizen_vehicles' }) => {
 
                           {isPaid && (
                             <button
-                              onClick={() => {
-                                alert(`Official e-Receipt downloaded for Challan ${f.challanNo}. Transaction: ${f.transactionId}`);
-                              }}
-                              className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-emerald-400 font-mono text-xs font-bold transition flex items-center gap-1.5"
+                              onClick={() => downloadReceipt(f)}
+                              className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-emerald-400 font-mono text-xs font-bold transition flex items-center gap-1.5 cursor-pointer"
                             >
                               <Download size={13} />
                               <span>Download e-Receipt</span>
@@ -501,7 +542,7 @@ export const VehicleOwnerPortal = ({ activeSection = 'citizen_vehicles' }) => {
 
                           {isDisputed && (
                             <span className="text-[11px] font-mono text-amber-400 bg-amber-500/10 px-3 py-1 rounded-xl border border-amber-500/30">
-                              ⚖️ Dispute Under Review by Traffic Magistrate
+                              Dispute Under Review by Traffic Magistrate
                             </span>
                           )}
                         </div>
@@ -693,7 +734,7 @@ export const VehicleOwnerPortal = ({ activeSection = 'citizen_vehicles' }) => {
                     >
                       {vehicleFines.filter(f => f.status === 'PENDING').map(f => (
                         <option key={f.id} value={f.id}>
-                          {f.challanNo} — {f.offense || f.violationType} (₹{f.amount})
+                          {f.challanNo} - {f.offense || f.violationType} (₹{f.amount})
                         </option>
                       ))}
                     </select>
@@ -953,12 +994,21 @@ export const VehicleOwnerPortal = ({ activeSection = 'citizen_vehicles' }) => {
                   <div>Amount Paid: <strong className="text-white">₹{activePayChallan.amount}</strong></div>
                 </div>
 
-                <button
-                  onClick={() => setActivePayChallan(null)}
-                  className="w-full py-2.5 bg-slate-800 hover:bg-slate-700 text-white font-bold rounded-xl text-xs transition"
-                >
-                  Done & Back to Portal
-                </button>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => downloadReceipt(activePayChallan, paymentTxn)}
+                    className="flex-1 py-2.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold rounded-xl text-xs transition flex items-center justify-center gap-1.5 cursor-pointer glow-emerald"
+                  >
+                    <Download size={14} />
+                    <span>Download e-Receipt</span>
+                  </button>
+                  <button
+                    onClick={() => setActivePayChallan(null)}
+                    className="flex-1 py-2.5 bg-slate-800 hover:bg-slate-700 text-white font-bold rounded-xl text-xs transition cursor-pointer"
+                  >
+                    Done & Return
+                  </button>
+                </div>
               </div>
             )}
 

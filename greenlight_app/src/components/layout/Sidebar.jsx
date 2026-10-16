@@ -48,7 +48,7 @@ export const Sidebar = () => {
               {isPolice ? <Shield size={14} className="text-emerald-400" /> : <Car size={14} className="text-amber-400" />}
               <span>{isPolice ? 'OFFICER IAM' : 'CITIZEN IAM'}</span>
             </div>
-            <span className="px-1.5 py-0.5 text-[9px] rounded-full bg-slate-900 border border-slate-700 text-slate-300">
+            <span className="px-1.5 py-0.5 text-[9px] rounded-md bg-slate-900 border border-slate-700 text-slate-300">
               {isPolice ? 'ROLE: POLICE' : 'ROLE: CITIZEN'}
             </span>
           </div>
@@ -77,7 +77,7 @@ export const Sidebar = () => {
               <button
                 key={`${item.id}-${idx}`}
                 onClick={() => setActiveTab(item.id)}
-                className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-medium transition-all ${
+                className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-medium transition-colors cursor-pointer ${
                   isActive 
                     ? isPolice 
                       ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 font-semibold glow-emerald' 
@@ -99,6 +99,28 @@ export const Sidebar = () => {
               </button>
             );
           })}
+        </div>
+
+        {/* Legal & Policy Navigation Shortcuts */}
+        <div className="pt-2 border-t border-slate-800/80 space-y-1">
+          <button
+            onClick={() => setActiveTab('privacy_policy')}
+            className={`w-full flex items-center gap-2 px-3 py-1.5 rounded-lg text-[11px] transition cursor-pointer ${
+              activeTab === 'privacy_policy' ? 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 font-bold' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900'
+            }`}
+          >
+            <Lock size={12} className="text-emerald-400" />
+            <span>Privacy Policy</span>
+          </button>
+          <button
+            onClick={() => setActiveTab('terms_conditions')}
+            className={`w-full flex items-center gap-2 px-3 py-1.5 rounded-lg text-[11px] transition cursor-pointer ${
+              activeTab === 'terms_conditions' ? 'bg-amber-500/15 text-amber-300 border border-amber-500/30 font-bold' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900'
+            }`}
+          >
+            <FileText size={12} className="text-amber-400" />
+            <span>Terms of Enforcement</span>
+          </button>
         </div>
 
         {/* Citizen Restricted Notice */}

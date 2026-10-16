@@ -39,24 +39,23 @@ const createCameraIcon = (status) => {
   });
 };
 
-// Hazard / Bottleneck Marker with Pulsing Ripple
+// Hazard / Bottleneck Marker
 const createHazardIcon = (type, label, queueKm) => {
   const isFlood = type === 'FLOOD';
   const bg = isFlood ? '#0284c7' : '#ef4444';
-  const iconSymbol = isFlood ? '🌊' : '⛔';
   return L.divIcon({
     className: 'custom-hazard-pin',
     html: `
       <div style="position: relative; display: flex; flex-direction: column; align-items: center; cursor: pointer;">
-        <!-- Pulsing Ripple Beacon -->
-        <div style="position: absolute; top: 14px; left: 50%; transform: translate(-50%, -50%); width: 42px; height: 42px; border-radius: 50%; background: ${bg}; opacity: 0.35; animation: ping 1.8s cubic-bezier(0, 0, 0.2, 1) infinite;"></div>
+        <!-- Steady Ripple Beacon -->
+        <div style="position: absolute; top: 14px; left: 50%; transform: translate(-50%, -50%); width: 32px; height: 32px; border-radius: 4px; background: ${bg}; opacity: 0.25;"></div>
         
-        <!-- High-Tech Badge -->
-        <div style="position: relative; background: rgba(9, 13, 22, 0.95); border: 2px solid ${bg}; color: white; padding: 4px 10px; border-radius: 14px; font-size: 11px; font-weight: 800; font-family: monospace; display: flex; align-items: center; gap: 6px; box-shadow: 0 0 20px ${bg}; white-space: nowrap; backdrop-filter: blur(6px);">
-          <span style="font-size: 13px;">${iconSymbol}</span>
+        <!-- Technical Badge -->
+        <div style="position: relative; background: rgba(9, 13, 22, 0.95); border: 1.5px solid ${bg}; color: white; padding: 4px 10px; border-radius: 8px; font-size: 11px; font-weight: 700; font-family: monospace; display: flex; align-items: center; gap: 6px; white-space: nowrap;">
+          <span style="width: 8px; height: 8px; border-radius: 2px; background: ${bg}; display: inline-block;"></span>
           <span style="letter-spacing: 0.4px;">${label || 'BOTTLENECK'}</span>
         </div>
-        ${queueKm ? `<div style="font-size: 9px; font-family: monospace; color: #fecaca; background: rgba(0,0,0,0.85); padding: 1px 6px; border-radius: 6px; margin-top: 3px; border: 1px solid ${bg}66;">Queue: ${queueKm} km · Speed &lt;8 km/h</div>` : ''}
+        ${queueKm ? `<div style="font-size: 9px; font-family: monospace; color: #fecaca; background: rgba(0,0,0,0.85); padding: 1px 6px; border-radius: 4px; margin-top: 3px; border: 1px solid ${bg}66;">Queue: ${queueKm} km · Speed &lt;8 km/h</div>` : ''}
       </div>
     `,
     iconSize: [160, 48],
@@ -69,8 +68,8 @@ const createVmsIcon = (name) => {
   return L.divIcon({
     className: 'custom-vms-pin',
     html: `
-      <div style="background: rgba(2, 6, 23, 0.94); border: 1.5px solid #f59e0b; color: #fbbf24; padding: 3px 9px; border-radius: 10px; font-size: 10px; font-family: monospace; font-weight: 700; display: flex; align-items: center; gap: 5px; box-shadow: 0 0 14px rgba(245, 158, 11, 0.45); white-space: nowrap; backdrop-filter: blur(6px);">
-        <span style="color: #fbbf24; display: inline-block; animation: pulse 1s infinite;">📡</span>
+      <div style="background: rgba(2, 6, 23, 0.94); border: 1.5px solid #f59e0b; color: #fbbf24; padding: 3px 9px; border-radius: 6px; font-size: 10px; font-family: monospace; font-weight: 700; display: flex; align-items: center; gap: 6px; white-space: nowrap;">
+        <span style="width: 6px; height: 6px; border-radius: 1px; background: #fbbf24; display: inline-block;"></span>
         <span style="color: #fef3c7;">${name}</span>
       </div>
     `,
@@ -208,7 +207,7 @@ export const TrafficMap = ({
       { type: 'sedan', color: '#f8fafc', plate: 'MH 04 CD 1980' },
       { type: 'bus', color: '#ef4444', plate: 'BEST 302 EXPR' },
       { type: 'suv', color: '#38bdf8', plate: 'MH 02 BG 3319' },
-      { type: 'car', color: '#a855f7', plate: 'MH 03 DZ 9140' },
+      { type: 'car', color: '#0284c7', plate: 'MH 03 DZ 9140' },
       { type: 'cab', color: '#facc15', plate: 'MH 02 CZ 4921' },
       { type: 'car', color: '#34d399', plate: 'MH 43 AT 8812' }
     ];
@@ -225,7 +224,7 @@ export const TrafficMap = ({
   useEffect(() => {
     if (waveTrigger > prevWaveTrigger.current) {
       setLiveCounter(c => c + 35);
-      setWaveBanner(`🌊 DISPATCHED SURGE WAVE: +35 VEHICLES REROUTED ONTO ${selectedDiversion?.recommendedRoute || 'BYPASS CORRIDOR'}`);
+      setWaveBanner(`SURGE WAVE DISPATCHED: +35 VEHICLES REROUTED ONTO ${selectedDiversion?.recommendedRoute || 'BYPASS CORRIDOR'}`);
       
       // Inject 5 fast wave convoy vehicles at the slip-ramp entrance
       const newWaveVehicles = [0, 1, 2, 3, 4].map(k => ({
@@ -310,9 +309,9 @@ export const TrafficMap = ({
         <div className="absolute top-3 left-3 right-3 z-[500] pointer-events-none flex flex-wrap items-center justify-between gap-2">
           {/* Active Status Badge */}
           <div className="glass-panel px-3 py-1.5 rounded-xl border border-slate-800 flex items-center space-x-2.5 text-xs font-mono pointer-events-auto shadow-xl bg-slate-900/90 backdrop-blur-md">
-            <span className={`w-2.5 h-2.5 rounded-full ${isDiversionActive ? 'bg-emerald-400 animate-ping' : 'bg-amber-400'}`}></span>
+            <span className={`w-2 h-2 rounded-sm ${isDiversionActive ? 'bg-emerald-400' : 'bg-amber-400'}`}></span>
             <span className="font-bold text-white uppercase tracking-wider">
-              {isDiversionActive ? '🟢 DIVERSION ACTIVE (1-CLICK FLOW)' : '🟡 STANDBY / READY'}
+              {isDiversionActive ? 'DIVERSION ACTIVE (AUTOMATED FLOW)' : 'STANDBY / READY'}
             </span>
           </div>
 
@@ -338,8 +337,8 @@ export const TrafficMap = ({
 
       {/* Surge Wave Dispatched Notification Banner */}
       {waveBanner && (
-        <div className="absolute top-14 left-1/2 -translate-x-1/2 z-[501] glass-panel border border-cyan-500/50 bg-cyan-950/95 text-cyan-200 text-xs font-mono font-bold px-4 py-2.5 rounded-2xl shadow-2xl flex items-center space-x-2 animate-bounce">
-          <span className="text-cyan-400 text-base">⚡</span>
+        <div className="absolute top-14 left-1/2 -translate-x-1/2 z-[501] glass-panel border border-cyan-500/50 bg-cyan-950/95 text-cyan-200 text-xs font-mono font-bold px-4 py-2.5 rounded-2xl shadow-2xl flex items-center space-x-2">
+          <span className="w-2 h-2 rounded-sm bg-cyan-400"></span>
           <span>{waveBanner}</span>
         </div>
       )}
@@ -411,7 +410,7 @@ export const TrafficMap = ({
           >
             <Popup>
               <div className="p-1 font-sans text-xs">
-                <strong className="text-emerald-400">{cam.id}</strong> — {cam.name}
+                <strong className="text-emerald-400">{cam.id}</strong>: {cam.name}
                 <div className="text-slate-400">{cam.zone || cam.name} ({cam.speedLimitKmh || 60} km/h)</div>
               </div>
             </Popup>
@@ -455,7 +454,7 @@ export const TrafficMap = ({
                     <div>Bottleneck Queue: <strong>{selectedDiversion.hazard.queueKm} km</strong></div>
                     <div>Commuter Delay: <strong className="text-amber-400">+{selectedDiversion.hazard.delayMin} mins</strong></div>
                     <div className="mt-1 text-emerald-400">
-                      {isDiversionActive ? '⚡ Traffic Being Diverted' : 'Waiting for Diversion Protocol'}
+                      {isDiversionActive ? 'Traffic Being Diverted' : 'Waiting for Diversion Protocol'}
                     </div>
                   </div>
                 </Popup>
@@ -495,13 +494,13 @@ export const TrafficMap = ({
             {/* Start Waypoint (Diversion Entry Slip-Road) - positioned cleanly with stem */}
             <Marker 
               position={activeBypassRoute[0]} 
-              icon={createWaypointIcon('🟢 DIVERSION ENTRY', '#10b981', false)} 
+              icon={createWaypointIcon('ENTRY: DIVERSION CORRIDOR', '#10b981', false)} 
             />
 
             {/* End Waypoint (Mainline Rejoin Point) */}
             <Marker 
               position={activeBypassRoute[activeBypassRoute.length - 1]} 
-              icon={createWaypointIcon('🏁 REJOIN FREE FLOW', '#059669', true)} 
+              icon={createWaypointIcon('EXIT: REJOIN MAINLINE', '#059669', true)} 
             />
 
             {/* VMS Gantries along the route */}
@@ -537,7 +536,7 @@ export const TrafficMap = ({
                   <Popup>
                     <div className="p-1.5 font-mono text-xs text-slate-100">
                       <div className="font-bold text-emerald-400 border-b border-slate-700 pb-1 mb-1">
-                        🚗 {v.plate || 'MH 02 CZ 4921'}
+                        Plate: {v.plate || 'MH 02 CZ 4921'}
                       </div>
                       <div className="text-slate-300 text-[11px] space-y-0.5">
                         <div>Vehicle Class: <strong className="text-white uppercase">{v.type}</strong></div>
@@ -556,15 +555,15 @@ export const TrafficMap = ({
       {/* Niche Map Legend Overlay */}
       <div className="absolute bottom-4 left-4 z-[500] glass-panel px-3.5 py-2 rounded-xl text-[11px] font-mono flex items-center space-x-4 bg-slate-900/90 border border-slate-800 shadow-xl backdrop-blur-md">
         <div className="flex items-center space-x-1.5">
-          <span className="w-3 h-1 bg-red-500 rounded-full glow-red"></span>
+          <span className="w-3 h-1 bg-red-500 rounded-sm"></span>
           <span className="text-slate-300">Bottleneck Corridor</span>
         </div>
         <div className="flex items-center space-x-1.5">
-          <span className="w-3 h-1 bg-emerald-400 rounded-full glow-emerald"></span>
+          <span className="w-3 h-1 bg-emerald-400 rounded-sm"></span>
           <span className="text-slate-300">Bypass Detour Stream</span>
         </div>
         <div className="flex items-center space-x-1.5">
-          <span className="text-amber-400">📡</span>
+          <span className="w-2 h-2 rounded-xs bg-amber-400"></span>
           <span className="text-slate-300">VMS Gantry</span>
         </div>
       </div>

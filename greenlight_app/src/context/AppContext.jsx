@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { 
   CAMERAS, MOCK_VIOLATIONS, FINES_DATABASE, DIVERSION_TEMPLATES, 
   REGISTERED_VEHICLES, IAM_ROLES 
@@ -30,6 +30,67 @@ export const AppProvider = ({ children }) => {
 
   const [activeCamera, setActiveCamera] = useState(CAMERAS[0]);
 
+  // Global Toast Notifications Stack
+  const [toasts, setToasts] = useState([]);
+
+  const removeToast = useCallback((id) => {
+    setToasts((prev) => prev.filter((t) => t.id !== id));
+  }, []);
+
+  const addToast = useCallback((toast) => {
+    const id = `toast-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`;
+    const newToast = { id, type: 'info', duration: 4000, ...toast };
+    
+    setToasts((prev) => [...prev, newToast]);
+
+    if (newToast.duration > 0) {
+      setTimeout(() => {
+        removeToast(id);
+      }, newToast.duration);
+    }
+    return id;
+  }, [removeToast]);
+
+  const showSuccess = useCallback((message, title = 'Operation Successful') => {
+    return addToast({ type: 'success', title, message });
+  }, [addToast]);
+
+  const showError = useCallback((message, title = 'Attention Required') => {
+    return addToast({ type: 'error', title, message });
+  }, [addToast]);
+
+  const showInfo = useCallback((message, title = 'System Update') => {
+    return addToast({ type: 'info', title, message });
+  }, [addToast]);
+
+  const showWarning = useCallback((message, title = 'System Warning') => {
+    return addToast({ type: 'warning', title, message });
+  }, [addToast]);
+
+  // Dynamic Browser Tab Page Titles
+  useEffect(() => {
+    const titles = {
+      control_room: 'iTraCS: Control Room (CCTV Live)',
+      simulation_display: 'iTraCS: 2D Multi-Agent Transport Simulation',
+      evidence_viewer: 'iTraCS: Violation & ANPR Review',
+      diversions: 'iTraCS: Highway Diversions (OSM)',
+      fines: 'iTraCS: Fines Adjudication Workspace',
+      camera_management: 'iTraCS: Camera Fleet & Streams',
+      field_officer: 'iTraCS: Field Officer Patrol Console',
+      analytics: 'iTraCS: Executive Analytics & Safety',
+      testing: 'iTraCS: Model Perception Testing',
+      vehicle_owner_portal: 'iTraCS: Citizen Parivahan E-Challan Portal',
+      citizen_vehicles: 'iTraCS: Citizen Vehicle & Challan Status',
+      citizen_evidence: 'iTraCS: Citizen CCTV Photo Proof',
+      citizen_disputes: 'iTraCS: Citizen Dispute & Grievance Portal',
+      privacy_policy: 'iTraCS: Privacy and Data Protection Policy | DPDP Act 2023',
+      terms_conditions: 'iTraCS: Terms and Conditions of Traffic Enforcement | Section 133A'
+    };
+
+    const targetTitle = titles[activeTab] || 'iTraCS: Intelligent Traffic & Challan System';
+    document.title = targetTitle;
+  }, [activeTab]);
+
   // Live clock for Navbar
   const [currentTime, setCurrentTime] = useState('');
   useEffect(() => {
@@ -43,16 +104,23 @@ export const AppProvider = ({ children }) => {
 
   const liveAlertCount = violations.filter(v => v.status === 'OPERATOR_REVIEW').length;
 
-  // IAM Role Switcher with automatic landing page redirection
+  // IAM Role Switcher with automatic landing page redirection & toast
   const switchRole = (roleId) => {
     const targetRole = IAM_ROLES[roleId] ? roleId : 'TRAFFIC_POLICE';
     setCurrentRole(targetRole);
     setActivePersona(targetRole);
     const landing = IAM_ROLES[targetRole].landingTab;
     setActiveTab(landing);
+
+    if (targetRole === 'TRAFFIC_POLICE') {
+      showInfo('Switched to Traffic Police Officer scope (Insp. Rajesh Shinde). Full enforcement capabilities active.', 'IAM Context Switched');
+    } else {
+      showInfo('Switched to Citizen / Vehicle Owner scope (Arun Patel). Secure Parivahan e-challan viewing active.', 'IAM Context Switched');
+    }
   };
 
   const isTabAllowed = (tabId) => {
+    if (['privacy_policy', 'terms_conditions', 'not_found', '404'].includes(tabId)) return true;
     const roleConfig = IAM_ROLES[currentRole] || IAM_ROLES.TRAFFIC_POLICE;
     return roleConfig.allowedTabs.includes(tabId);
   };
@@ -60,8 +128,13 @@ export const AppProvider = ({ children }) => {
   // Citizen Pay Fine Handler
   const handlePayFine = (fineId, paymentMethod = 'UPI (Instant)') => {
     const txnId = `UPI/${Date.now().toString().slice(-8)}/SUCCESS`;
+    let paidAmount = 1000;
+    let challanCode = fineId;
+
     setFines(prev => prev.map(f => {
       if (f.id === fineId || f.fineId === fineId || f.challanNo === fineId) {
+        paidAmount = f.amount || 1000;
+        challanCode = f.challanNo || fineId;
         return {
           ...f,
           status: 'PAID',
@@ -72,6 +145,11 @@ export const AppProvider = ({ children }) => {
       }
       return f;
     }));
+
+    showSuccess(
+      `Settlement of ₹${paidAmount} via ${paymentMethod} confirmed for ${challanCode}. Txn: ${txnId}`, 
+      'Challan Payment Settled'
+    );
     return txnId;
   };
 
@@ -90,6 +168,11 @@ export const AppProvider = ({ children }) => {
       }
       return f;
     }));
+
+    showSuccess(
+      `Dispute ticket filed under reason "${reason}". Adjudication officer will review within 3 business days.`,
+      'Grievance Registered'
+    );
   };
 
   // Handle 1-Click Diversion Activation -> Triggers Python API Bridge Server on Port 5005
@@ -97,6 +180,8 @@ export const AppProvider = ({ children }) => {
     setDiversions(prev => prev.map(d => 
       d.id === diversionId ? { ...d, status: 'ACTIVE' } : d
     ));
+
+    showSuccess('1-Click Diversion Protocol Activated: Variable Message Signs (VMS) dispatched.', 'Diversion Deployed');
 
     try {
       const res = await fetch('http://localhost:5005/api/activate-diversion', {
@@ -115,6 +200,8 @@ export const AppProvider = ({ children }) => {
     setDiversions(prev => prev.map(d => 
       d.id === diversionId ? { ...d, status: 'IDLE' } : d
     ));
+
+    showInfo('Diversion protocol deactivated. Restoring standard corridor timing.', 'Flow Restored');
 
     try {
       await fetch('http://localhost:5005/api/activate-diversion', {
@@ -153,11 +240,26 @@ export const AppProvider = ({ children }) => {
   const handleApproveFine = (violationId) => {
     setViolations(prev => prev.map(v => v.id === violationId ? { ...v, status: 'AUTO_FINED' } : v));
     closeEvidenceModal();
+    showSuccess('Violation validated and endorsed. Official e-challan dispatched via SMS & Parivahan gateway.', 'Challan Approved');
   };
 
   const handleDismissFine = (violationId) => {
     setViolations(prev => prev.filter(v => v.id !== violationId));
     closeEvidenceModal();
+    showInfo('Citation dismissed following officer review. Record marked invalid.', 'Citation Dismissed');
+  };
+
+  // Add New Camera Feed
+  const handleAddCamera = (newCamera) => {
+    const created = {
+      id: `cam-${Date.now().toString().slice(-4)}`,
+      fps: 30,
+      status: 'ONLINE',
+      ...newCamera
+    };
+    setCameras(prev => [created, ...prev]);
+    setActiveCamera(created);
+    showSuccess(`CCTV Feed "${created.name}" registered and streaming live on ${created.ip}.`, 'Camera Feed Online');
   };
 
   return (
@@ -168,7 +270,7 @@ export const AppProvider = ({ children }) => {
       selectedViolation, openEvidenceModal, closeEvidenceModal,
       violations, fines, setFines,
       vehicles, setVehicles,
-      cameras, setCameras,
+      cameras, setCameras, handleAddCamera,
       activeCamera, setActiveCamera,
       diversions, handleActivateDiversion, handleDeactivateDiversion, handleToggleDiversion, handleIncrementDivertedCount,
       handleApproveFine, handleDismissFine,
@@ -176,7 +278,8 @@ export const AppProvider = ({ children }) => {
       handleDismissViolation: handleDismissFine,
       handlePayFine, handleDisputeFine,
       heatmapNodes, setHeatmapNodes,
-      currentTime, liveAlertCount
+      currentTime, liveAlertCount,
+      toasts, addToast, removeToast, showSuccess, showError, showInfo, showWarning
     }}>
       {children}
     </AppContext.Provider>

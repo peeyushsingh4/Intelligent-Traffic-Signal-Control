@@ -1,4 +1,4 @@
-// iTraCS — Intelligent Traffic & Challan System — Master Production Mock Data Engine
+// iTraCS : Intelligent Traffic & Challan System : Master Production Mock Data Engine
 
 export const CAMERAS = [
   { 
@@ -105,7 +105,7 @@ export const CAMERAS = [
   },
   { 
     id: 'cam-red-07', 
-    name: 'BKC East Approach — Red Signal Stop Line (Lane Stopped)', 
+    name: 'BKC East Approach : Red Signal Stop Line (Lane Stopped)', 
     zone: 'BKC East Stop Line', 
     speedLimitKmh: 50, 
     status: 'ONLINE', 
@@ -330,7 +330,7 @@ export const FINES_DATABASE = [
 export const DIVERSION_TEMPLATES = [
   {
     id: 'div-01',
-    title: 'WEH Heavy Congestion — BKC Arterial Detour',
+    title: 'WEH Heavy Congestion : BKC Arterial Detour',
     corridor: 'Western Express Highway Southbound',
     affectedCorridor: 'Western Express Highway Southbound',
     alternateRoute: 'LBS Marg -> Eastern Expressway Connector',
@@ -386,7 +386,7 @@ export const DIVERSION_TEMPLATES = [
   },
   {
     id: 'div-02',
-    title: 'Monsoon Waterlogging — Palm Beach Coastal Bypass',
+    title: 'Monsoon Waterlogging : Palm Beach Coastal Bypass',
     corridor: 'Nerul Underpass Corridor (Navi Mumbai)',
     affectedCorridor: 'Nerul Underpass Corridor (Navi Mumbai)',
     alternateRoute: 'Palm Beach Road Elevated Bypass',
@@ -455,7 +455,7 @@ export const DIVERSION_TEMPLATES = [
   },
   {
     id: 'div-03',
-    title: 'Dadar TT Urban Gridlock — RAK Marg Arterial Bypass',
+    title: 'Dadar TT Urban Gridlock : RAK Marg Arterial Bypass',
     corridor: 'Dadar TT Circle - Dr. Ambedkar Road',
     affectedCorridor: 'Dr. Ambedkar Road Southbound (Khodadad Circle)',
     alternateRoute: 'Rafi Ahmed Kidwai (RAK) Marg -> Sewri-Parel Connector',

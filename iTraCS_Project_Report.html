@@ -1,0 +1,2263 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc 3.11" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>iTraCS Project Report</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="report_style.css" />
+  <script defer=""
+  src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js"
+  type="text/javascript"></script>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">iTraCS Project Report</h1>
+</header>
+<h1
+id="itracs-intelligent-traffic-signal-control-enforcement-system">iTraCS:
+INTELLIGENT TRAFFIC SIGNAL CONTROL &amp; ENFORCEMENT SYSTEM</h1>
+<div data-align="center">
+<h3 id="a-project-report-on">A PROJECT REPORT ON</h3>
+<h2
+id="itracs-intelligent-traffic-signal-control-enforcement-system-1"><strong>iTraCS:
+Intelligent Traffic Signal Control &amp; Enforcement
+System</strong></h2>
+<p><em>Submitted in partial fulfillment of the requirements of the
+degree of</em> ### <strong>BACHELOR OF ENGINEERING</strong>
+<strong>(Computer Engineering)</strong></p>
+<p><em>by</em> ### <strong>1. Tejaswi Khode (BEB221)</strong> ###
+<strong>2. Khushi Khatri (BEB222)</strong> ### <strong>3. Peeyush Singh
+(BEB238)</strong></p>
+<p><br/></p>
+<p><strong>Under the Guidance of</strong> ### <strong>Prof. Rajendra
+Gawli</strong></p>
+<p><br/></p>
+<p><strong>Department of Computer Engineering</strong> ###
+<strong>Lokmanya Tilak College of Engineering</strong> <strong>Sector-4,
+Vikas Nagar, Koparkhairane, Navi Mumbai – 400709</strong>
+<strong>University of Mumbai</strong> <strong>(Academic Year:
+2026–2027)</strong></p>
+</div>
+<hr />
+<h2 id="certificate"><strong>CERTIFICATE</strong></h2>
+<p>This is to certify that the project entitled <strong>“iTraCS:
+Intelligent Traffic Signal Control &amp; Enforcement System”</strong> is
+a bonafide work of:</p>
+<ol type="1">
+<li><strong>Tejaswi Khode</strong> (Roll No: BEB221)</li>
+<li><strong>Khushi Khatri</strong> (Roll No: BEB222)</li>
+<li><strong>Peeyush Singh</strong> (Roll No: BEB238)</li>
+</ol>
+<p>submitted to the <strong>University of Mumbai</strong> in partial
+fulfillment of the requirement for the award of the degree of
+<strong>“Bachelor of Engineering”</strong> in <strong>“Computer
+Engineering”</strong>.</p>
+<p><br/><br/> <br/><br/></p>
+<hr />
+<p><strong>(Prof. Rajendra Gawli)</strong><br />
+<em>Project Guide</em></p>
+<p><br/><br/></p>
+<p>__________________________________
+                                    
+__________________________________<br />
+<strong>Dr. Sheeba P. S.</strong>
+                                                                                 
+<strong>Dr. Subhash Shinde</strong><br />
+<em>Head of Department</em>
+                                                                          
+<em>Principal</em><br />
+Department of Computer Engineering
+                                           Lokmanya Tilak College of
+Engineering</p>
+<hr />
+<h2 id="project-report-approval"><strong>PROJECT REPORT
+APPROVAL</strong></h2>
+<p>This project report entitled <strong>“iTraCS: Intelligent Traffic
+Signal Control &amp; Enforcement System”</strong> submitted by:</p>
+<ol type="1">
+<li><strong>Tejaswi Khode</strong> (BEB221)</li>
+<li><strong>Khushi Khatri</strong> (BEB222)</li>
+<li><strong>Peeyush Singh</strong> (BEB238)</li>
+</ol>
+<p>is approved for the degree of <strong>Bachelor of Engineering in
+Computer Engineering</strong> by the University of Mumbai.</p>
+<p><br/><br/></p>
+<h3 id="examiners"><strong>Examiners:</strong></h3>
+<ol type="1">
+<li><hr /></li>
+<li><hr /></li>
+</ol>
+<p><br/><br/></p>
+<p><strong>Date:</strong> ________________________<br />
+<strong>Place:</strong> Koparkhairane, Navi Mumbai</p>
+<hr />
+<h2 id="declaration"><strong>DECLARATION</strong></h2>
+<p>We declare that this written submission represents our ideas in our
+own words and where others’ ideas or words have been included, we have
+adequately cited and referenced the original sources. We also declare
+that we have adhered to all principles of academic honesty and integrity
+and have not misrepresented, fabricated, or falsified any idea, data,
+fact, or source in our submission. We understand that any violation of
+the above will be cause for disciplinary action by the Institute and can
+also evoke penal action from the sources which have thus not been
+properly cited or from whom proper permission has not been taken when
+needed.</p>
+<p><br/><br/></p>
+<ol type="1">
+<li><hr />
+<strong>Tejaswi Khode</strong> (Roll No: BEB221)</li>
+</ol>
+<p><br/></p>
+<ol start="2" type="1">
+<li><hr />
+<strong>Khushi Khatri</strong> (Roll No: BEB222)</li>
+</ol>
+<p><br/></p>
+<ol start="3" type="1">
+<li><hr />
+<strong>Peeyush Singh</strong> (Roll No: BEB238)</li>
+</ol>
+<p><br/><br/></p>
+<p><strong>Date:</strong> ________________________<br />
+<strong>Place:</strong> Koparkhairane, Navi Mumbai</p>
+<hr />
+<h2 id="abstract"><strong>ABSTRACT</strong></h2>
+<p>Urban traffic congestion, vehicular travel delays, and idling
+emissions represent some of the most pressing socio-economic and
+environmental challenges facing rapidly expanding metropolitan regions.
+Traditional fixed-time traffic controllers operate on rigid,
+pre-programmed phase durations that cannot respond to dynamic
+fluctuations in traffic volume. Consequently, substantial green time is
+frequently wasted on depleted approaches while congested lanes
+experience extensive queue spillbacks. This deficiency is particularly
+acute in high-density Indian corridors such as Mumbai’s Bandra-Kurla
+Complex (BKC) and the Sion-Panvel Highway, where traffic is highly
+heterogeneous, non-lane-based, and subject to severe peak-hour demand
+surges.</p>
+<p>This project proposes <strong>iTraCS (Intelligent Traffic Signal
+Control &amp; Enforcement System)</strong>, an end-to-end cyber-physical
+platform combining edge computer vision, microscopic multi-agent
+transport simulation, machine learning forecasting, and deep
+reinforcement learning (DRL) for dynamic traffic signal optimization.
+The vision pipeline integrates YOLOv8 and ByteTrack multi-object
+tracking to ingest 30 FPS CCTV video streams, continuously extracting
+vehicle classifications, physical velocities via perspective homography,
+and approach queue densities converted into Passenger Car Units (PCU). A
+Deep Q-Network (DQN) agent dynamically reallocates green phase splits
+from lightly loaded approaches to saturated bottlenecks, while
+gradient-boosted trees (XGBoost) and Long Short-Term Memory (LSTM)
+neural networks forecast short-term queue accumulation to enable
+proactive mitigation.</p>
+<p>Crucially, iTraCS incorporates an automated, hybrid <strong>Emergency
+Vehicle Priority (EVP)</strong> module conforming to the ISO 22951:2016
+interface protocol. Upon detecting approaching emergency responders
+(e.g., ambulances), the system preempts background optimization, rapidly
+transitions conflicting phases through safety clearance yellow
+intervals, locks cross-traffic to solid red, and establishes an
+uninterrupted “Green Wave” corridor across downstream intersections. In
+addition, when corridor saturation surpasses 75%, Variable Message Signs
+(VMS) broadcast dynamic diversion advisories compliant with NTCIP 1203
+to shed up to 65% of upstream transit volume. To eliminate black-box
+opacity in law enforcement, every control decision is logged alongside
+human-auditable reasoning traces, and environmental offsets are computed
+in real time using the Handbook Emission Factors for Road Transport
+(HBEFA) model.</p>
+<p>The platform is designed, calibrated, and rigorously evaluated using
+the <strong>MATSim</strong> multi-agent mobility framework in
+conjunction with the <strong>SUMO (Simulation of Urban
+Mobility)</strong> microscopic physics simulator via the TraCI API. In
+empirical simulation benchmarks against standard fixed-time controllers
+across Mumbai arterial networks, iTraCS achieves a demonstrated carbon
+offset of <strong>8.43 kg CO₂ per hour</strong>, while drastically
+slashing average vehicular wait times and emergency transit delays. This
+report establishes the core command architecture, microscopic physics
+integration, and central control room dashboard developed in Term I,
+outlining the execution roadmap for Term II enforcement, automated ANPR
+e-challan adjudication, and citizen portal services.</p>
+<hr />
+<h2 id="acknowledgement"><strong>ACKNOWLEDGEMENT</strong></h2>
+<p>We remain immensely obliged and express our deepest gratitude to our
+project guide, <strong>Prof. Rajendra Gawli</strong>, Department of
+Computer Engineering, for providing us with the opportunity to pursue
+this research topic, for his invaluable technical guidance, constructive
+criticism, and continuous encouragement throughout the development of
+Term I.</p>
+<p>We extend our sincere thanks to <strong>Dr. Sheeba P. S.</strong>,
+Head of the Department of Computer Engineering, for providing the
+necessary departmental infrastructure, laboratory resources, and
+academic support.</p>
+<p>We also express our profound gratitude to our respected Principal,
+<strong>Dr. Subhash Shinde</strong>, for his overall leadership,
+administrative encouragement, and for providing an academic environment
+conducive to innovative engineering research.</p>
+<p>We would also like to thank all the faculty members and technical
+staff of the Department of Computer Engineering at Lokmanya Tilak
+College of Engineering, Koparkhairane, for their assistance and
+cooperation. Finally, we thank our parents, peers, and friends for their
+continuous patience, motivation, and support.</p>
+<p><br/><br/> <strong>Tejaswi Khode</strong> (BEB221)<br />
+<strong>Khushi Khatri</strong> (BEB222)<br />
+<strong>Peeyush Singh</strong> (BEB238)</p>
+<hr />
+<h2 id="list-of-figures"><strong>LIST OF FIGURES</strong></h2>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: left;">Figure No.</th>
+<th style="text-align: left;">Figure Title</th>
+<th style="text-align: left;">Page No.</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Figure 3.1</strong></td>
+<td style="text-align: left;">Scope of the Work (Future Scope
+Architecture &amp; Thematic Roadmap)</td>
+<td style="text-align: left;">12</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Figure 3.2</strong></td>
+<td style="text-align: left;">Sense–Predict–Decide–Act Algorithmic
+Pipeline of iTraCS</td>
+<td style="text-align: left;">14</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Figure 3.3</strong></td>
+<td style="text-align: left;">Proposed System Decision Flowchart
+(Perception, EVP Preemption, DQN Control, &amp; Actuation)</td>
+<td style="text-align: left;">22</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Figure 3.4</strong></td>
+<td style="text-align: left;">iTraCS System Workflow with Role-Based
+Access Control (IAM Gateway)</td>
+<td style="text-align: left;">24</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Figure 3.5</strong></td>
+<td style="text-align: left;">3-Tier System Architecture of iTraCS
+(Perception, Processing &amp; Intelligence, Actuation &amp;
+Enforcement)</td>
+<td style="text-align: left;">20</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Figure 3.6</strong></td>
+<td style="text-align: left;">Formal UML 2.5 Use Case Diagram of
+iTraCS</td>
+<td style="text-align: left;">26</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Figure 3.7</strong></td>
+<td style="text-align: left;">End-to-End Real-Time Adaptive Traffic
+Management Methodology Workflow</td>
+<td style="text-align: left;">28</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="table-of-contents"><strong>TABLE OF CONTENTS</strong></h2>
+<ul>
+<li><strong>Certificate</strong>
+………………………………………………………………………………………………………….. i</li>
+<li><strong>Project Report Approval</strong>
+………………………………………………………………………………………. ii</li>
+<li><strong>Declaration</strong>
+………………………………………………………………………………………………………….. iii</li>
+<li><strong>Abstract</strong>
+………………………………………………………………………………………………………………. iv</li>
+<li><strong>Acknowledgement</strong>
+………………………………………………………………………………………………. v</li>
+<li><strong>List of Figures</strong>
+……………………………………………………………………………………………………… vi</li>
+<li><strong>Table of Contents</strong>
+……………………………………………………………………………………………….. vii</li>
+</ul>
+<h3 id="chapter-1.-introduction"><strong>Chapter 1.
+Introduction</strong></h3>
+<ul>
+<li><strong>1.1 Introduction</strong>
+…………………………………………………………………………………………………. 1</li>
+<li><strong>1.2 Motivation</strong>
+……………………………………………………………………………………………………. 3</li>
+</ul>
+<h3 id="chapter-2.-literature-survey"><strong>Chapter 2. Literature
+Survey</strong></h3>
+<ul>
+<li><strong>2.1 Survey of Existing Systems</strong>
+…………………………………………………………………………….. 5</li>
+<li><strong>2.2 Summarized Findings and Research Gaps</strong>
+……………………………………………………….. 8</li>
+<li><strong>2.3 Limitations of Existing Systems</strong>
+……………………………………………………………………… 10</li>
+</ul>
+<h3 id="chapter-3.-proposed-system"><strong>Chapter 3. Proposed
+System</strong></h3>
+<ul>
+<li><strong>3.1 Problem Statement and Objectives</strong>
+…………………………………………………………………. 11</li>
+<li><strong>3.2 Scope of the Work</strong>
+…………………………………………………………………………………………. 12</li>
+<li><strong>3.3 Analysis / Framework / Algorithm</strong>
+…………………………………………………………………… 14
+<ul>
+<li><em>3.3.1 YOLOv8 Computer Vision &amp; Tracking Pipeline</em>
+……………………………………………. 15</li>
+<li><em>3.3.2 Short-Term Traffic Forecasting (XGBoost vs. LSTM)</em>
+…………………………………… 16</li>
+<li><em>3.3.3 Deep Reinforcement Learning (DQN) Signal Control</em>
+…………………………………… 17</li>
+<li><em>3.3.4 Hybrid Emergency Vehicle Priority (EVP) Protocol</em>
+……………………………………. 18</li>
+<li><em>3.3.5 MATSim and SUMO Microscopic Simulation Integration</em>
+…………………………… 19</li>
+<li><em>3.3.6 HBEFA-Based Real-Time Carbon Accounting</em>
+……………………………………………. 19</li>
+<li><em>3.3.7 Explainable AI (XAI) Logging and Governance</em>
+……………………………………………. 20</li>
+</ul></li>
+<li><strong>3.4 Details of Hardware &amp; Software
+Specifications</strong> ……………………………………………….. 20</li>
+<li><strong>3.5 System Design Details</strong>
+…………………………………………………………………………………… 22
+<ul>
+<li><em>3.5.1 3-Tier Layered Architecture</em>
+……………………………………………………………………. 22</li>
+<li><em>3.5.2 Complete Operational Flowchart</em>
+……………………………………………………………… 23</li>
+<li><em>3.5.3 Role-Based Access Control (IAM Gateway)</em>
+……………………………………………….. 24</li>
+<li><em>3.5.4 UML 2.5 Use Case Specification</em>
+……………………………………………………………… 25</li>
+</ul></li>
+<li><strong>3.6 Operational Methodology</strong>
+……………………………………………………………………………… 27</li>
+</ul>
+<h3 id="chapter-4.-experimental-setup"><strong>Chapter 4. Experimental
+Setup</strong></h3>
+<ul>
+<li><strong>4.1 Details of Database and Datasets</strong>
+……………………………………………………………………. 29
+<ul>
+<li><em>4.1.1 Microscopic Network Geometries (Mumbai Corridors)</em>
+……………………………….. 29</li>
+<li><em>4.1.2 Heterogeneous Traffic Demand Profiles</em>
+…………………………………………………… 30</li>
+<li><em>4.1.3 Computer Vision Training Dataset</em>
+…………………………………………………………… 30</li>
+<li><em>4.1.4 Relational Database Schema (PostgreSQL)</em>
+………………………………………………… 31</li>
+</ul></li>
+<li><strong>4.2 Software and Hardware Setup</strong>
+………………………………………………………………………… 32</li>
+</ul>
+<h3
+id="chapter-5.-implementation-plan-for-next-semester"><strong>Chapter 5.
+Implementation Plan for Next Semester</strong></h3>
+<ul>
+<li><strong>5.1 Phase Breakdown for Term II (Semester VIII)</strong>
+…………………………………………………. 34</li>
+<li><strong>5.2 Milestone Timeline &amp; Gantt Chart (Term I &amp; Term
+II)</strong> ………………………………………. 36</li>
+</ul>
+<h3 id="chapter-6.-conclusion-and-future-scope"><strong>Chapter 6.
+Conclusion and Future Scope</strong></h3>
+<ul>
+<li><strong>6.1 Conclusion</strong>
+………………………………………………………………………………………………….. 38</li>
+<li><strong>6.2 Future Scope</strong>
+……………………………………………………………………………………………….. 39</li>
+</ul>
+<h3 id="chapter-7.-references"><strong>Chapter 7.
+References</strong></h3>
+<ul>
+<li><strong>7.1 References</strong>
+…………………………………………………………………………………………………… 40</li>
+</ul>
+<hr />
+<h1 id="chapter-1.-introduction-1"><strong>CHAPTER 1.
+INTRODUCTION</strong></h1>
+<h2 id="introduction"><strong>1.1 Introduction</strong></h2>
+<p>Modern metropolitan road transportation networks are subjected to
+unprecedented operational strain resulting from exponential vehicular
+population growth, high spatial density, and severe structural
+bottlenecks. In rapidly developing Indian metropolitan areas—most
+prominently the Mumbai Metropolitan Region (MMR)—these challenges are
+intensified by extreme traffic heterogeneity, lack of strict lane
+discipline, and volatile peak-hour congestion patterns. A typical
+arterial intersection in Mumbai, such as those situated along the
+Bandra-Kurla Complex (BKC) connector, the Sion-Panvel Highway, or the
+Dadar TT Circle, simultaneously accommodates an intricate mix of
+transport modes: high-acceleration two-wheelers, motorized three-wheeled
+auto-rickshaws, private passenger cars, paratransit cabs, heavy
+municipal buses (BEST), multi-axle freight trucks, and vulnerable
+pedestrians.</p>
+<p>In these dense, built-up urban corridors, traditional traffic signal
+infrastructure relies overwhelmingly on legacy fixed-time controllers.
+These pre-timed systems execute fixed, cyclic phase schedules based on
+historical, offline traffic surveys. Because their green, yellow, and
+red phase splits remain entirely static regardless of real-time
+conditions, fixed-time signals cannot adapt to sudden demand surges,
+localized incidents, or directional tidal flows. During typical daily
+operations, this deficiency produces severe spatial and temporal
+inefficiencies: signals continuously allocate substantial green time to
+completely vacant approaches while adjacent, heavily saturated
+approaches accumulate dense vehicle queues that spill back into upstream
+junctions, paralyzing entire urban sectors.</p>
+<p>Because physical road widening or structural flyover construction is
+economically prohibitive and spatially unfeasible in dense metropolitan
+centers, the only sustainable solution lies in the intelligent
+optimization of existing infrastructure. Intelligent Transportation
+Systems (ITS) leverage state-of-the-art developments in artificial
+intelligence, edge computing, computer vision, and microscopic traffic
+simulation to monitor, predict, and dynamically orchestrate traffic
+movements in real time.</p>
+<p>By utilizing high-fidelity agent-based transport modeling frameworks
+such as <strong>MATSim (Multi-Agent Transport Simulation)</strong>
+alongside microscopic physics engines like <strong>SUMO (Simulation of
+Urban Mobility)</strong>, individual vehicles can be simulated as
+discrete, autonomous agents with unique behavioral dynamics,
+acceleration boundaries, and route choices. This enables the rigorous
+evaluation of advanced control algorithms under realistic, heterogeneous
+traffic loads before deploying them onto physical municipal road
+infrastructure.</p>
+<p>To solve these systemic challenges, this project introduces
+<strong>iTraCS (Intelligent Traffic Signal Control &amp; Enforcement
+System)</strong>. Designed as a comprehensive, end-to-end cyber-physical
+architecture, iTraCS unifies edge-based vision perception, predictive
+machine learning, deep reinforcement learning signal control, automated
+emergency vehicle preemption, dynamic variable message signage (VMS)
+diversions, real-time carbon emission accounting, and explainable
+artificial intelligence (XAI). By ingesting standard RTSP feeds from
+junction-mounted CCTV cameras, iTraCS extracts spatial queue densities,
+classifies vehicle categories, converts diverse traffic mixes into
+standard Passenger Car Units (PCU), and executes optimal green-phase
+reallocations to clear bottlenecks before queue spillbacks paralyze the
+arterial network.</p>
+<hr />
+<h2 id="motivation"><strong>1.2 Motivation</strong></h2>
+<p>The design and development of iTraCS are driven by five critical
+systemic shortcomings inherent in legacy urban traffic management:</p>
+<ol type="1">
+<li><p><strong>Severe Capacity Wastage from Static
+Controllers:</strong><br />
+The vast majority of signalized intersections across Indian
+municipalities continue to operate on fixed-time cycle plans designed
+using outdated static formulas (such as Webster’s 1958 model under
+uniform demand assumptions). In dynamic urban corridors, spatial traffic
+imbalances are frequent. Fixed-time controllers waste valuable green
+time on empty lanes while queued vehicles on saturated lanes idle
+unnecessarily, inflating overall intersection delay by 40% to
+70%.</p></li>
+<li><p><strong>The “Golden Hour” Emergency Transit
+Bottleneck:</strong><br />
+Emergency response vehicles, such as medical ambulances and fire
+response units, lose vital minutes stranded inside general traffic
+queues during peak hours. In life-threatening emergencies, every minute
+saved during the “Golden Hour” improves patient survival rates by up to
+10%. Existing signal networks lack automated, interoperable Emergency
+Vehicle Priority (EVP) protocols, forcing emergency drivers to rely on
+manual siren sirens and hazardous wrong-side maneuvers.</p></li>
+<li><p><strong>Excessive Fuel Waste and Carbon Emissions:</strong><br />
+Stop-and-go driving and extended vehicular idling at saturated red
+signals constitute a primary source of urban air pollution and
+greenhouse gas emissions. According to empirical studies from the
+Central Road Research Institute (CRRI), vehicular idling at signalized
+urban junctions in India consumes hundreds of thousands of liters of
+fuel unnecessarily each day. Despite this environmental toll, existing
+traffic systems possess no mechanism to monitor, model, or report carbon
+dioxide (<span class="math inline">\(CO_2\)</span>) emissions avoided
+through active flow optimization.</p></li>
+<li><p><strong>The “Black-Box” Opacity of AI Solutions:</strong><br />
+While deep reinforcement learning has demonstrated remarkable success in
+academic simulations, its real-world municipal adoption is severely
+hindered by the black-box nature of deep neural networks. Municipal
+traffic police officers, urban authorities, and civil magistrates cannot
+audit or trust an autonomous algorithm that alters signal states without
+providing an interpretable, legally defensible explanation of
+<em>why</em> an action was executed.</p></li>
+<li><p><strong>Lack of Integrated Multi-Modal Architecture for Indian
+Realities:</strong><br />
+Most modern ITS literature originates from Western contexts that assume
+homogeneous passenger car traffic adhering strictly to marked lanes,
+supported by dense roadside vehicle-to-everything (V2X) communication
+units. These assumptions completely break down in Indian cities, where
+traffic is chaotic, non-lane-based, highly mixed, and dependent on
+vision-only CCTV sensing. There exists a profound technological void for
+a unified platform that bridges edge computer vision, DRL signal
+control, ISO-standardized emergency green waves, dynamic highway
+diversion, and auditable governance tailored specifically for Indian
+road conditions.</p></li>
+</ol>
+<hr />
+<h1 id="chapter-2.-literature-survey-1"><strong>CHAPTER 2. LITERATURE
+SURVEY</strong></h1>
+<h2 id="survey-of-existing-systems"><strong>2.1 Survey of Existing
+Systems</strong></h2>
+<p>Adaptive traffic signal control has evolved across several decades,
+progressing from classical mathematical delay formulations to actuated
+control, coordinated network architectures, and modern machine learning
+frameworks.</p>
+<p>The foundation of traffic signal timing was established by <strong>F.
+V. Webster (1958)</strong> [5], who derived an analytical formula for
+optimum signal cycle lengths and delay estimation under steady-state
+Poisson vehicle arrivals. Webster’s formulation optimizes the total
+cycle length <span class="math inline">\(C_0\)</span> based on critical
+flow ratios and lost clearance times: <span class="math display">\[C_0 =
+\frac{1.5L + 5}{1 - Y}\]</span> where <span
+class="math inline">\(L\)</span> is total lost time per cycle and <span
+class="math inline">\(Y\)</span> is the summation of critical flow
+ratios across all signal phases. While mathematically elegant, Webster’s
+model assumes static, time-invariant traffic demand, rendering it
+incapable of handling real-time surges, stochastic fluctuations, or
+non-lane-based vehicle queues characteristic of Indian arterials.</p>
+<p>To accommodate heterogeneous vehicle distributions, the
+<strong>CSIR-Central Road Research Institute (CRRI) and MoRTH
+(2017)</strong> developed the <strong>Indian Highway Capacity Manual
+(Indo-HCM)</strong> [4]. Indo-HCM introduced standardized Passenger Car
+Unit (PCU) conversion factors to normalize mixed vehicle types (e.g.,
+assigning a PCU factor of 0.5 to two-wheelers, 0.8 to auto-rickshaws,
+and 2.8 to heavy buses). While Indo-HCM provides essential empirical
+benchmarks for saturation flows under non-lane Indian conditions, it
+remains a macroscopic design guideline rather than an automated,
+real-time closed-loop control system.</p>
+<p>Commercial adaptive signal systems such as <strong>SCOOT (Split Cycle
+Offset Optimisation Technique)</strong> and <strong>SCATS (Sydney
+Coordinated Adaptive Traffic System)</strong> were developed in the late
+20th century and remain widely deployed globally. SCOOT relies on
+embedded inductive loop detectors placed upstream to build cyclic flow
+profiles and incrementally adjust cycle lengths, phase splits, and
+coordination offsets. SCATS dynamically selects predefined phase split
+plans based on degree-of-saturation measurements from stop-line loop
+sensors. However, both systems suffer from significant limitations when
+deployed in Indian cities: they require expensive, fragile in-pavement
+inductive loops that are frequently severed during road excavation,
+struggle with non-lane-based queuing, lack automated emergency vehicle
+preemption corridors, and operate on rigid heuristic rules that cannot
+proactively predict traffic build-up.</p>
+<p>Over the past decade, <strong>Deep Reinforcement Learning
+(DRL)</strong> has emerged as the paradigm of choice for next-generation
+adaptive traffic signal control. In their seminal work, <strong>Genders
+and Razavi (2016)</strong> [3] demonstrated that a Deep Q-Network (DQN)
+agent could learn optimal signal control policies directly from
+high-dimensional discrete traffic state representations within the SUMO
+simulation framework. Their model established that DRL agents could
+outperform fixed-time and actuated controllers by directly minimizing
+cumulative vehicle delays.</p>
+<p>Building upon this, <strong>Zheng et al. (2019)</strong> introduced
+<strong>IntelliLight</strong>, a DRL framework utilizing a convolutional
+neural network (CNN) architecture to process camera-based vehicle
+positions and speeds. IntelliLight introduced a multi-component reward
+function incorporating queue length, vehicle delay, waiting time, and
+signal phase alternation penalties. However, IntelliLight focused
+strictly on isolated, single-intersection setups and completely omitted
+emergency vehicle priority, short-term forecasting, or environmental
+emission quantification.</p>
+<p>In the domain of emergency vehicle management, <strong>Benedetti et
+al. (2021)</strong> [6] investigated deep reinforcement learning for
+isolated intersections accommodating emergency vehicles. Their agent was
+trained with a weighted reward penalty to clear queued vehicles in lanes
+containing priority vehicles. However, their policy lacked a
+deterministic fail-safe override mechanism; under extreme congestion,
+the probabilistic RL agent occasionally failed to clear cross-traffic in
+time, violating safety protocols. Furthermore, the system did not
+implement corridor-level multi-junction green waves or ISO-standardized
+emergency interface protocols.</p>
+<p>In 2016, the <strong>International Organization for
+Standardization</strong> ratified <strong>ISO 22951:2016</strong> [2],
+defining an international interface protocol for Emergency Vehicle
+Preemption (EVP) systems. ISO 22951 standardizes communication message
+dictionaries, preemption priority levels, transition clearance
+intervals, and post-preemption recovery phases between emergency vehicle
+transponders and roadside traffic controllers. However, commercial
+implementations of ISO 22951 remain confined to expensive proprietary
+optical or DSRC radio hardware, lacking direct integration with edge
+computer-vision analytics or modern DRL signal controllers.</p>
+<p>Addressing multi-intersection coordination, <strong>Jiang et
+al. (2022)</strong> proposed <strong>DNLight</strong>, a deep
+reinforcement learning framework incorporating multi-agent communication
+networks to coordinate adjacent traffic lights. While DNLight
+demonstrated marked improvements in network throughput, its neural
+network architecture functioned as a complete “black box,” offering no
+explainability for individual phase decisions, and completely lacked
+integration with variable message signage or carbon emission models.</p>
+<p>Recent work by <strong>Shabestary (2022)</strong> [7] and
+<strong>Agrawal et al. (2025)</strong> [9] explored advanced state-space
+representations, including spatial-temporal graph neural networks and
+double-dueling DQN architectures to stabilize policy convergence under
+turbulent traffic demand. Nonetheless, these frameworks remain
+disconnected from practical enforcement ecosystems, lacking
+computer-vision number-plate recognition (ANPR), role-based police
+interfaces, or citizen service workflows.</p>
+<p>Finally, in the realm of environmental modeling, <strong>Keller et
+al. (2017)</strong> developed the <strong>Handbook Emission Factors for
+Road Transport (HBEFA)</strong>, providing comprehensive, empirically
+validated hot and cold emission factors for passenger cars, light
+commercial vehicles, and heavy-duty trucks based on instantaneous
+driving dynamics, velocity, and acceleration profiles. HBEFA is widely
+regarded as the global gold standard for vehicle emission modeling, yet
+its integration into active, real-time reinforcement learning control
+loops has remained largely unexplored.</p>
+<h3
+id="table-2.1-comparative-analysis-of-existing-literature-on-adaptive-traffic-control-systems"><strong>Table
+2.1: Comparative Analysis of Existing Literature on Adaptive Traffic
+Control Systems</strong></h3>
+<table>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: left;">Reference / System</th>
+<th style="text-align: left;">Methodology / Architecture</th>
+<th style="text-align: left;">Simulator / Testing Setup</th>
+<th style="text-align: left;">Key Strengths</th>
+<th style="text-align: left;">Critical Gaps Addressed by iTraCS</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Webster (1958)</strong> [5]</td>
+<td style="text-align: left;">Analytical cycle formula: <span
+class="math inline">\(C_0 = \frac{1.5L+5}{1-Y}\)</span></td>
+<td style="text-align: left;">Mathematical delay model</td>
+<td style="text-align: left;">Foundational analytical baseline for
+steady-state traffic</td>
+<td style="text-align: left;">Assumes static Poisson demand; fails
+completely under dynamic urban surges; no vehicle classification.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Indo-HCM (2017)</strong> [4]</td>
+<td style="text-align: left;">Empirical saturation flow &amp; PCU
+conversion</td>
+<td style="text-align: left;">Macroscopic field surveys across Indian
+cities</td>
+<td style="text-align: left;">Calibrated specifically for non-lane mixed
+Indian traffic</td>
+<td style="text-align: left;">Macroscopic planning manual only; cannot
+dynamically adapt signal phase timings in real time.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>SCOOT / SCATS</strong> (Legacy
+ITS)</td>
+<td style="text-align: left;">Upstream/stop-line loop sensors +
+heuristic optimization</td>
+<td style="text-align: left;">Physical field deployments worldwide</td>
+<td style="text-align: left;">Proven industrial stability across
+coordinated urban grids</td>
+<td style="text-align: left;">Requires fragile in-pavement loops; rigid
+heuristic rules; no automated green-wave EVP; zero explainability.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Genders &amp; Razavi
+(2016)</strong> [3]</td>
+<td style="text-align: left;">Deep Q-Network (DQN) with discrete state
+matrix</td>
+<td style="text-align: left;">SUMO microscopic simulation</td>
+<td style="text-align: left;">Pioneered end-to-end DRL for traffic
+signal control</td>
+<td style="text-align: left;">Single-intersection only; ignores
+emergency vehicles, traffic forecasting, and vehicle emissions.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>IntelliLight (Zheng et al.,
+2019)</strong></td>
+<td style="text-align: left;">CNN + Deep Reinforcement Learning with
+complex reward</td>
+<td style="text-align: left;">Synthetic grid in SUMO</td>
+<td style="text-align: left;">Comprehensive reward formulation
+minimizing queue and delay</td>
+<td style="text-align: left;">Isolated junction scope; no emergency
+vehicle handling; black-box policy without XAI logs.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Benedetti et al. (2021)</strong>
+[6]</td>
+<td style="text-align: left;">DRL with weighted penalty for emergency
+queues</td>
+<td style="text-align: left;">Microscopic simulation</td>
+<td style="text-align: left;">Attempts priority routing within
+reinforcement learning</td>
+<td style="text-align: left;">Probabilistic priority can fail under
+saturation; lacks ISO 22951 deterministic safety override.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>ISO 22951 (2016)</strong> [2]</td>
+<td style="text-align: left;">Standardized EVP protocol &amp; state
+machine</td>
+<td style="text-align: left;">Formal ITS communication protocol</td>
+<td style="text-align: left;">Internationally recognized safety standard
+for preemption</td>
+<td style="text-align: left;">Communication protocol only; lacks
+vision-based detection, DRL signal control, and VMS integration.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Shabestary (2022)</strong>
+[7]</td>
+<td style="text-align: left;">Deep Q-Learning with high-dimensional
+sensory inputs</td>
+<td style="text-align: left;">Microscopic traffic simulator</td>
+<td style="text-align: left;">Robust handling of multi-modal sensory
+inputs</td>
+<td style="text-align: left;">Focuses solely on delay minimization;
+ignores carbon accounting and highway diversion strategies.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Jiang et al. - DNLight
+(2022)</strong> [8]</td>
+<td style="text-align: left;">Multi-agent DRL with neighbor
+communication</td>
+<td style="text-align: left;">Synthetic network simulation</td>
+<td style="text-align: left;">Coordinates adjacent junctions to prevent
+gridlock</td>
+<td style="text-align: left;">Complete black box; lacks explainable AI
+traces; no integration with civil enforcement or ANPR.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Agrawal et al. (2025)</strong>
+[9]</td>
+<td style="text-align: left;">Double Dueling DQN for adaptive traffic
+control</td>
+<td style="text-align: left;">SUMO simulation environment</td>
+<td style="text-align: left;">Highly stable training convergence under
+variable volume</td>
+<td style="text-align: left;">Evaluated only on homogeneous lane-based
+traffic; lacks forecasting and real-time emission offsets.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="summarized-findings-and-research-gaps"><strong>2.2 Summarized
+Findings and Research Gaps</strong></h2>
+<p>A rigorous synthesis of the reviewed literature reveals five
+fundamental research gaps that directly define the design, scope, and
+implementation of <strong>iTraCS</strong>:</p>
+<ol type="1">
+<li><p><strong>Single-Objective Optimization vs. Multi-Faceted Urban
+Needs:</strong><br />
+The overwhelming majority of published DRL studies optimize exclusively
+for a single metric: either average delay minimization or queue length
+reduction. Real-world urban management requires a balanced,
+multi-objective optimization framework that simultaneously balances
+queue density, throughput, emergency corridor preemption, and
+environmental impact.</p></li>
+<li><p><strong>Absence of Standardized, Deterministic Emergency
+Preemption:</strong><br />
+Existing learning-based controllers either ignore emergency vehicles
+entirely or attempt to handle them through soft reward shaping within
+the RL agent. In life-critical situations, probabilistic reward
+weighting is unacceptable because the agent cannot guarantee immediate
+green-wave clearance. iTraCS resolves this by integrating a hard,
+deterministic state-machine override compliant with <strong>ISO
+22951:2016</strong>, guaranteeing instant conflict-phase clearance while
+maintaining overall network stability.</p></li>
+<li><p><strong>Total Disregard of Real-Time Carbon
+Accounting:</strong><br />
+While transportation is among the largest contributors to urban carbon
+footprints, existing ITS solutions treat environmental impact as an
+afterthought. None of the surveyed DRL controllers dynamically compute
+or display the real-time <span class="math inline">\(CO_2\)</span> mass
+avoided by their operational decisions. iTraCS addresses this gap by
+directly embedding the <strong>HBEFA emission model</strong> into its
+simulation and control pipeline, continuously logging carbon savings in
+kilograms per hour (<span
+class="math inline">\(kg/hr\)</span>).</p></li>
+<li><p><strong>Vulnerability to Sensor Infrastructure
+Failures:</strong><br />
+Legacy systems depend heavily on physical inductive loops or radar
+sensors embedded in the pavement, which suffer from high failure rates
+in developing countries due to frequent road maintenance and
+waterlogging. iTraCS circumvents this fragility by relying entirely on
+non-intrusive, overhead IP CCTV cameras processed via modern edge
+computer vision (YOLOv8 and ByteTrack).</p></li>
+<li><p><strong>The Absence of Explainability in Municipal AI
+Deployments:</strong><br />
+State-of-the-art DRL architectures function as opaque mathematical black
+boxes. In municipal traffic law enforcement, administrative authorities
+require auditable reasoning. iTraCS addresses this critical operational
+barrier by generating structured, human-interpretable Explainable AI
+(XAI) reasoning traces for every signal phase extension, emergency
+preemption, and traffic diversion.</p></li>
+</ol>
+<hr />
+<h2 id="limitations-of-existing-systems"><strong>2.3 Limitations of
+Existing Systems</strong></h2>
+<ul>
+<li><strong>Static Pre-Programmed Schedules:</strong> Inability to
+respond dynamically to stochastic demand spikes, accidents, or weather
+disruptions.</li>
+<li><strong>Severe Queue Spillback:</strong> Inefficient green splits
+cause queues to propagate backwards, blocking upstream intersections and
+initiating cascade gridlock.</li>
+<li><strong>Isolated Junction Operation:</strong> Intersections operate
+as disjointed “islands” without corridor-level communication or
+predictive demand sharing.</li>
+<li><strong>Zero Automated Emergency Priority:</strong> Emergency
+medical ambulances and fire response units are trapped in general
+traffic queues during peak hours.</li>
+<li><strong>Absence of Environmental Governance:</strong> No real-time
+tracking or reporting of greenhouse gas emissions or fuel wastage from
+vehicular idling.</li>
+<li><strong>Black-Box Decision-Making:</strong> Lack of auditable logs
+and transparent decision metrics necessary for municipal accountability
+and law enforcement.</li>
+</ul>
+<hr />
+<h1 id="chapter-3.-proposed-system-1"><strong>CHAPTER 3. PROPOSED
+SYSTEM</strong></h1>
+<h2 id="problem-statement-and-objectives"><strong>3.1 Problem Statement
+and Objectives</strong></h2>
+<h3 id="problem-statement"><strong>Problem Statement</strong></h3>
+<p>To design, implement, and evaluate an intelligent, real-time traffic
+signal control and enforcement platform (<strong>iTraCS</strong>) for
+high-density, heterogeneous urban road corridors that dynamically
+reallocates signal phase durations using deep reinforcement learning,
+guarantees deterministic emergency vehicle preemption conforming to ISO
+22951 standards, broadcasts automated within-day corridor diversions via
+NTCIP 1203 Variable Message Signs, provides explainable AI reasoning
+logs for civil auditability, and quantifies greenhouse gas (<span
+class="math inline">\(CO_2\)</span>) emission offsets through
+microscopic simulation.</p>
+<h3 id="objectives"><strong>Objectives</strong></h3>
+<ol type="1">
+<li><strong>Dynamic Green-Time Reallocation:</strong><br />
+To develop a vision-based edge processing pipeline utilizing YOLOv8 and
+ByteTrack that continuously computes approach queue densities in
+Passenger Car Units (PCU), reallocating unused green time from lightly
+loaded approaches to saturated bottlenecks.</li>
+<li><strong>Deterministic Emergency Vehicle Priority
+(EVP):</strong><br />
+To implement an automated, ISO 22951-compliant emergency preemption
+protocol that detects approaching emergency responders, safely
+terminates conflicting movements through standard clearance intervals,
+and establishes a synchronized “Green Wave” corridor.</li>
+<li><strong>Automated Corridor Diversion via Dynamic
+Signage:</strong><br />
+To monitor real-time junction saturation levels and trigger automated
+Variable Message Sign (VMS) diversion advisories when approach
+saturation exceeds 75%, shedding up to 65% of upstream transit
+volume.</li>
+<li><strong>Explainable AI (XAI) Logging and Governance:</strong><br />
+To translate deep neural network policy decisions into structured,
+human-interpretable reasoning traces accompanied by confidence metrics
+for civil auditability by traffic police.</li>
+<li><strong>Real-Time Carbon Accounting:</strong><br />
+To calculate and log the instantaneous mass of <span
+class="math inline">\(CO_2\)</span> emissions avoided through reduced
+vehicle idling using the Handbook Emission Factors for Road Transport
+(HBEFA) model.</li>
+</ol>
+<hr />
+<h2 id="scope-of-the-work"><strong>3.2 Scope of the Work</strong></h2>
+<p>The scope of work delivered in <strong>Major Project Term I</strong>
+encompasses the foundational cyber-physical command architecture:
+edge-based CCTV vehicle perception, microscopic simulation calibration
+in SUMO and MATSim, Deep Q-Network (DQN) adaptive signal control, ISO
+22951 emergency vehicle preemption, Variable Message Sign (VMS) corridor
+diversion, real-time HBEFA carbon accounting, and a centralized, unified
+<strong>Traffic Control Room Dashboard</strong>.</p>
+<p>The comprehensive future roadmap of iTraCS spans three strategic
+themes, as illustrated in <strong>Figure 3.1</strong>:</p>
+<ol type="1">
+<li><strong>Sensing &amp; Response:</strong><br />
+Extending the system from simulation testbeds to live physical
+intersection gantries equipped with high-definition PTZ CCTV cameras and
+NVIDIA Jetson edge inference units; integrating real-time telemetry from
+municipal emergency dispatch centers (GPS/CAD) for seamless, automated
+preemption triggers.</li>
+<li><strong>Coordination &amp; Scale:</strong><br />
+Scaling adaptive control from isolated junctions to multi-intersection
+arterial corridors and city-wide municipal networks; integrating with
+municipal Command and Control Centers (ICCC) and transit fleet
+management systems.</li>
+<li><strong>Intelligence &amp; Growth:</strong><br />
+Implementing advanced multi-agent reinforcement learning (MARL)
+algorithms such as Proximal Policy Optimization (PPO) and Advantage
+Actor-Critic (A3C); scaling the framework to diverse Indian metropolitan
+regions exhibiting unique traffic dynamics.</li>
+</ol>
+<pre><code>+-----------------------------------------------------------------------------------+
+|                        iTraCS: STRATEGIC THEMATIC SCOPE                           |
++-----------------------------------------------------------------------------------+
+|  THEME 1: SENSING &amp; RESPONSE                                                      |
+|  - Real-World Physical Gantry Deployment (NVIDIA Jetson Edge Inference)          |
+|  - Live Emergency Vehicle Telemetry Integration (GPS, Ambulance CAD, V2X)         |
+|                                                                                   |
+|  THEME 2: COORDINATION &amp; SCALE                                                    |
+|  - Corridor-Level Multi-Junction Arterial Synchronization (Green Wave)           |
+|  - Integrated Command &amp; Control Center (ICCC) Smart-City Municipal Integration   |
+|                                                                                   |
+|  THEME 3: INTELLIGENCE &amp; GROWTH                                                   |
+|  - Advanced Multi-Agent RL Architectures (MARL, PPO, Asynchronous Actor-Critic)  |
+|  - Scalable National Rollout Across Diverse Heterogeneous Indian Metros           |
++-----------------------------------------------------------------------------------+</code></pre>
+<div data-align="center">
+<figure>
+<img src="report_figures/fig3_1_scope_of_work.png"
+alt="Figure 3.1: Scope of the work (Future Scope Architecture &amp; Thematic Roadmap)" />
+<figcaption aria-hidden="true">Figure 3.1: Scope of the work (Future
+Scope Architecture &amp; Thematic Roadmap)</figcaption>
+</figure>
+<p><strong>Figure 3.1: Scope of the work (Future Scope Architecture
+&amp; Thematic Roadmap)</strong></p>
+</div>
+<hr />
+<h2 id="analysis-framework-algorithm"><strong>3.3 Analysis / Framework /
+Algorithm</strong></h2>
+<p>The core algorithmic architecture of iTraCS operates on a closed-loop
+<strong>Sense–Predict–Decide–Act</strong> pipeline, depicted in
+<strong>Figure 3.2</strong>.</p>
+<pre><code>+-----------------------------------------------------------------------------------+
+|                    iTraCS ALGORITHMIC DATAFLOW PIPELINE                          |
++-----------------------------------------------------------------------------------+
+|  [ SENSE ]    CCTV IP Video Feed (RTSP @ 30 FPS)                                  |
+|               --&gt; YOLOv8 Multi-Class Detection &amp; ByteTrack Multi-Object Tracking  |
+|               --&gt; Virtual ROI Spatial Queue Density &amp; Speed Estimation (km/h)     |
+|                   |                                                               |
+|  [ PREDICT ]  Time-Series Traffic State Vectors (Volume, PCU Occupancy, Velocity) |
+|               --&gt; Dual Machine Learning Predictors (XGBoost vs. LSTM Networks)    |
+|               --&gt; Short-Term (5-15 min) Demand &amp; Bottleneck Queue Forecasts       |
+|                   |                                                               |
+|  [ DECIDE ]   Reinforcement Learning State Space S_t                              |
+|               --&gt; Deep Q-Network (DQN) Policy / Webster Adaptive Split Fallback   |
+|               --&gt; ISO 22951 Deterministic Emergency Preemption Arbiter            |
+|               --&gt; HBEFA Real-Time Carbon Accounting &amp; XAI Reasoning Generator     |
+|                   |                                                               |
+|  [ ACT ]      Actuation Execution:                                                |
+|               --&gt; Physical Signal Controller Phase Switching (TraCI / NTCIP 1202) |
+|               --&gt; Variable Message Sign (VMS) Upstream Diversion Broadcast        |
++-----------------------------------------------------------------------------------+</code></pre>
+<div data-align="center">
+<figure>
+<img src="report_figures/fig3_2_algorithm_pipeline.png"
+alt="Figure 3.2: Sense–Predict–Decide–Act Algorithmic Pipeline of iTraCS" />
+<figcaption aria-hidden="true">Figure 3.2: Sense–Predict–Decide–Act
+Algorithmic Pipeline of iTraCS</figcaption>
+</figure>
+<p><strong>Figure 3.2: Sense–Predict–Decide–Act Algorithmic Pipeline of
+iTraCS</strong></p>
+</div>
+<h3 id="yolov8-computer-vision-tracking-pipeline"><strong>3.3.1 YOLOv8
+Computer Vision &amp; Tracking Pipeline</strong></h3>
+<p>The perception engine ingests 1080p RTSP video streams at 30 frames
+per second (FPS) from overhead junction cameras. Multi-class object
+detection is performed using <strong>YOLOv8</strong>, fine-tuned to
+classify six distinct vehicle classes: passenger cars, motorized
+two-wheelers, auto-rickshaws, municipal buses, light commercial trucks,
+and emergency vehicles (ambulances).</p>
+<p>To maintain identity across frame sequences and eliminate
+double-counting, iTraCS incorporates the <strong>ByteTrack</strong>
+multi-object tracking algorithm. ByteTrack utilizes a Kalman filter with
+low-score detection association, ensuring continuous tracking even under
+severe inter-vehicle occlusion common in Indian traffic.</p>
+<p>Vehicular velocity is estimated in real time by establishing a planar
+homography matrix <span class="math inline">\(H\)</span> between image
+pixel coordinates <span class="math inline">\((u, v)\)</span> and
+physical ground coordinates <span class="math inline">\((X, Y)\)</span>:
+<span class="math display">\[\begin{bmatrix} X \\ Y \\ 1 \end{bmatrix}
+\sim H \begin{bmatrix} u \\ v \\ 1 \end{bmatrix}\]</span> Instantaneous
+speed <span class="math inline">\(v_i(t)\)</span> is computed from the
+physical displacement <span class="math inline">\(\Delta d\)</span> of
+the tracked bounding box centroid over time interval <span
+class="math inline">\(\Delta t\)</span>: <span
+class="math display">\[v_i(t) = \frac{\Delta d}{\Delta t} =
+\frac{\sqrt{(X_t - X_{t-\Delta t})^2 + (Y_t - Y_{t-\Delta t})^2}}{\Delta
+t} \times 3.6 \quad (\text{km/h})\]</span></p>
+<p>To account for the non-lane-based heterogeneous traffic mix, the
+total approach queue density is converted into <strong>Passenger Car
+Units (PCU)</strong> adhering to the Indian Highway Capacity Manual
+(Indo-HCM) standards: <span class="math display">\[PCU_{total} =
+\sum_{k=1}^{M} n_k \cdot w_k\]</span> where <span
+class="math inline">\(n_k\)</span> is the number of detected vehicles of
+category <span class="math inline">\(k\)</span>, and <span
+class="math inline">\(w_k\)</span> denotes the empirical PCU weight
+factor: - <strong>Two-Wheelers (Motorcycles/Scooters):</strong> <span
+class="math inline">\(w_{2W} = 0.5\)</span> - <strong>Three-Wheelers
+(Auto-Rickshaws):</strong> <span class="math inline">\(w_{3W} =
+0.8\)</span> - <strong>Standard Passenger Cars / Taxis:</strong> <span
+class="math inline">\(w_{Car} = 1.0\)</span> - <strong>Light Commercial
+Vehicles (LCV):</strong> <span class="math inline">\(w_{LCV} =
+1.4\)</span> - <strong>Heavy Commercial Vehicles / Buses:</strong> <span
+class="math inline">\(w_{Bus} = 2.8\)</span></p>
+<hr />
+<h3 id="short-term-traffic-forecasting-xgboost-vs.-lstm"><strong>3.3.2
+Short-Term Traffic Forecasting (XGBoost vs. LSTM)</strong></h3>
+<p>To enable proactive rather than purely reactive signal timing, iTraCS
+integrates short-term traffic forecasting models. By predicting approach
+queue volumes 5 to 15 minutes into the future, the system prepares green
+wave coordination before bottlenecks form.</p>
+<p>Two complementary models are trained and compared: 1. <strong>XGBoost
+(Extreme Gradient Boosting):</strong><br />
+An ensemble of gradient-boosted decision trees trained on engineered lag
+features: <span class="math display">\[\hat{y}_{t+\Delta t} =
+\sum_{m=1}^{M} f_m(X_t)\]</span> Features include rolling 5-minute
+approach volume, historical flow ratios, time-of-day encodings, and
+upstream approach discharge rates. 2. <strong>LSTM (Long Short-Term
+Memory Neural Network):</strong><br />
+A recurrent neural network designed to capture non-linear temporal
+dependencies across historical time-series sequences: <span
+class="math display">\[f_t = \sigma(W_f \cdot [h_{t-1}, x_t] +
+b_f)\]</span> <span class="math display">\[i_t = \sigma(W_i \cdot
+[h_{t-1}, x_t] + b_i)\]</span> <span class="math display">\[\tilde{C}_t
+= \tanh(W_c \cdot [h_{t-1}, x_t] + b_c)\]</span> <span
+class="math display">\[C_t = f_t * C_{t-1} + i_t * \tilde{C}_t\]</span>
+<span class="math display">\[o_t = \sigma(W_o \cdot [h_{t-1}, x_t] +
+b_o)\]</span> <span class="math display">\[h_t = o_t *
+\tanh(C_t)\]</span></p>
+<p>Both architectures are evaluated on Mean Absolute Error (MAE) and
+Root Mean Squared Error (RMSE), with the optimal predictor dynamically
+providing feedforward queue predictions to the signal controller.</p>
+<hr />
+<h3 id="deep-reinforcement-learning-dqn-signal-control"><strong>3.3.3
+Deep Reinforcement Learning (DQN) Signal Control</strong></h3>
+<p>The adaptive signal controller is formulated as a discrete-time
+<strong>Markov Decision Process (MDP)</strong> defined by the tuple
+<span class="math inline">\(\langle \mathcal{S}, \mathcal{A},
+\mathcal{P}, \mathcal{R}, \gamma \rangle\)</span>:</p>
+<ol type="1">
+<li><p><strong>State Space (<span
+class="math inline">\(\mathcal{S}\)</span>):</strong><br />
+At control step <span class="math inline">\(t\)</span>, the state vector
+<span class="math inline">\(s_t \in \mathcal{S}\)</span> encapsulates
+normalized queue densities, mean approach velocities, cumulative wait
+times, and current active phase index across all intersection
+approaches: <span class="math display">\[s_t = \left[ q_{N}, q_{S},
+q_{E}, q_{W}, v_{N}, v_{S}, v_{E}, v_{W}, w_{N}, w_{S}, w_{E}, w_{W},
+\phi_t, \tau_t \right]\]</span> where <span
+class="math inline">\(q_i\)</span> is approach PCU density, <span
+class="math inline">\(v_i\)</span> is mean velocity, <span
+class="math inline">\(w_i\)</span> is normalized cumulative waiting
+time, <span class="math inline">\(\phi_t \in \{1, 2, 3, 4\}\)</span>
+denotes the active phase, and <span
+class="math inline">\(\tau_t\)</span> represents the elapsed duration of
+the current phase.</p></li>
+<li><p><strong>Action Space (<span
+class="math inline">\(\mathcal{A}\)</span>):</strong><br />
+The action <span class="math inline">\(a_t \in \mathcal{A}\)</span>
+dictates phase execution. The controller can either maintain the current
+green phase (extending it by <span class="math inline">\(\Delta t =
+5\)</span> seconds, bounded by <span class="math inline">\(G_{max} =
+60\)</span> s) or transition to the subsequent phase (subject to minimum
+green constraint <span class="math inline">\(G_{min} = 10\)</span> s and
+standard yellow clearance <span class="math inline">\(Y = 4\)</span>
+s).</p></li>
+<li><p><strong>Reward Function (<span
+class="math inline">\(\mathcal{R}\)</span>):</strong><br />
+The reward function penalizes queue accumulation, extreme vehicular
+delay, and unnecessary phase alternation: <span
+class="math display">\[r_t = - \left[ \alpha \sum_{i=1}^{4} q_{i,t} +
+\beta \sum_{i=1}^{4} w_{i,t}^2 + \lambda \cdot \mathbb{I}(\phi_t \neq
+\phi_{t-1}) \right]\]</span> where <span class="math inline">\(\alpha,
+\beta, \lambda &gt; 0\)</span> are weighting hyperparameters. Squaring
+wait time <span class="math inline">\(w_{i,t}^2\)</span> heavily
+penalizes starvation, preventing cross-street traffic from being
+indefinitely neglected.</p></li>
+<li><p><strong>Deep Q-Network Optimization:</strong><br />
+The Q-value function <span class="math inline">\(Q(s, a;
+\theta)\)</span> is approximated using a multi-layer deep neural network
+with parameters <span class="math inline">\(\theta\)</span>. The network
+minimizes the mean squared Bellman error over mini-batches sampled from
+an experience replay buffer <span
+class="math inline">\(\mathcal{D}\)</span>: <span
+class="math display">\[\mathcal{L}(\theta) = \mathbb{E}_{(s, a, r,
+s&#39;) \sim \mathcal{D}} \left[ \left( r + \gamma \max_{a&#39;}
+Q(s&#39;, a&#39;; \theta^-) - Q(s, a; \theta) \right)^2 \right]\]</span>
+where <span class="math inline">\(\theta^-\)</span> represents the
+parameters of a periodically updated target network, and <span
+class="math inline">\(\gamma = 0.95\)</span> is the discount
+factor.</p></li>
+<li><p><strong>Webster Adaptive Fallback:</strong><br />
+As a safety fail-safe during edge network disconnects or policy
+anomalies, the system automatically reverts to a calibrated Webster
+adaptive split: <span class="math display">\[g_i = \frac{y_i}{Y} (C_0 -
+L)\]</span> where <span class="math inline">\(y_i = q_i / s_i\)</span>
+represents the degree of saturation for approach <span
+class="math inline">\(i\)</span>.</p></li>
+</ol>
+<hr />
+<h3 id="hybrid-emergency-vehicle-priority-evp-protocol"><strong>3.3.4
+Hybrid Emergency Vehicle Priority (EVP) Protocol</strong></h3>
+<p>When an emergency vehicle (ambulance) is detected by the vision model
+within the approach ROI (or signaled via telemetry), the system
+initiates an <strong>ISO 22951:2016</strong> preemption routine: 1.
+<strong>Preemption Trigger:</strong> The standard DQN control loop is
+immediately interrupted. 2. <strong>Clearance Transition:</strong> If
+the conflicting phase is active, the system executes an immediate yellow
+clearance interval (<span class="math inline">\(Y = 4\)</span> s) to
+safely clear the intersection conflict zone. 3. <strong>Green Wave
+Locking:</strong> The emergency approach is transitioned to solid green,
+while all conflicting approaches are locked to solid red. 4.
+<strong>Post-Preemption Recovery:</strong> Once the emergency vehicle
+clears the downstream detector, the controller transitions back to
+adaptive DQN mode using a smooth offset recovery routine to prevent
+secondary queue spikes.</p>
+<hr />
+<h3
+id="matsim-and-sumo-microscopic-simulation-integration"><strong>3.3.5
+MATSim and SUMO Microscopic Simulation Integration</strong></h3>
+<p>To model macroscopic commuter behavior alongside microscopic physics,
+iTraCS integrates two complementary simulation frameworks: -
+<strong>SUMO (Simulation of Urban Mobility):</strong> Acts as the
+real-time microscopic physics engine. Connected via the Python
+<strong>TraCI (Traffic Control Interface)</strong> API, SUMO updates
+individual vehicle physics, accelerations, lane-changing dynamics, and
+traffic signal states at a high frequency of 10 Hz. - <strong>MATSim
+(Multi-Agent Transport Simulation):</strong> Executes large-scale
+multi-agent transport demand simulations, modeling daily activity
+chains, synthetic population generation, and route replanning across the
+broader Mumbai metropolitan grid.</p>
+<hr />
+<h3 id="hbefa-based-real-time-carbon-accounting"><strong>3.3.6
+HBEFA-Based Real-Time Carbon Accounting</strong></h3>
+<p>To quantify the environmental benefits of adaptive control, iTraCS
+embeds the <strong>Handbook Emission Factors for Road Transport
+(HBEFA)</strong>. Carbon dioxide (<span
+class="math inline">\(CO_2\)</span>) emission rates are modeled
+dynamically based on vehicle category, instantaneous velocity <span
+class="math inline">\(v(t)\)</span>, acceleration <span
+class="math inline">\(a(t)\)</span>, and idle state: <span
+class="math display">\[E_{CO_2}(t) = \sum_{j \in \mathcal{V}} \left[
+e_{idle, k_j} \cdot \mathbb{I}(v_j(t) = 0) + e_{motion, k_j}(v_j(t),
+a_j(t)) \cdot \mathbb{I}(v_j(t) &gt; 0) \right] \Delta t\]</span> The
+cumulative carbon savings achieved by iTraCS relative to the fixed-time
+baseline is computed as: <span class="math display">\[\Delta CO_2 =
+\int_0^T \left( E_{CO_2}^{Fixed}(t) - E_{CO_2}^{iTraCS}(t) \right)
+dt\]</span> In experimental simulation runs on the Mumbai BKC corridor
+network, iTraCS demonstrated an empirical emission reduction of
+<strong>8.43 kg CO₂ per hour</strong>.</p>
+<hr />
+<h3 id="explainable-ai-xai-logging-and-governance"><strong>3.3.7
+Explainable AI (XAI) Logging and Governance</strong></h3>
+<p>To ensure administrative transparency and municipal accountability,
+every signal timing decision is logged in an immutable JSON-L format
+containing structured reasoning:</p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;timestamp&quot;</span><span class="fu">:</span> <span class="st">&quot;2026-10-16T13:05:22.104Z&quot;</span><span class="fu">,</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;junction_id&quot;</span><span class="fu">:</span> <span class="st">&quot;MUM_BKC_J1&quot;</span><span class="fu">,</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;active_phase&quot;</span><span class="fu">:</span> <span class="dv">1</span><span class="fu">,</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;action&quot;</span><span class="fu">:</span> <span class="st">&quot;EXTEND_GREEN&quot;</span><span class="fu">,</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;duration_seconds&quot;</span><span class="fu">:</span> <span class="dv">5</span><span class="fu">,</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;state_summary&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;north_pcu&quot;</span><span class="fu">:</span> <span class="fl">42.5</span><span class="fu">,</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;south_pcu&quot;</span><span class="fu">:</span> <span class="fl">38.0</span><span class="fu">,</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;east_pcu&quot;</span><span class="fu">:</span> <span class="fl">8.2</span><span class="fu">,</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;west_pcu&quot;</span><span class="fu">:</span> <span class="fl">6.5</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">},</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;confidence&quot;</span><span class="fu">:</span> <span class="fl">0.942</span><span class="fu">,</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;reasoning_trace&quot;</span><span class="fu">:</span> <span class="st">&quot;North-South arterial queue density (80.5 PCU) exceeds East-West cross-street demand (14.7 PCU) by 5.47x; extending Phase 1 green by 5s to clear bottleneck before upstream spillback.&quot;</span><span class="fu">,</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;co2_avoided_kg_hr&quot;</span><span class="fu">:</span> <span class="fl">8.43</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<hr />
+<h2 id="details-of-hardware-software-specifications"><strong>3.4 Details
+of Hardware &amp; Software Specifications</strong></h2>
+<h3 id="table-3.1-hardware-environment-specifications"><strong>Table
+3.1: Hardware Environment Specifications</strong></h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: left;">Component Category</th>
+<th style="text-align: left;">Development / Simulation Testbed</th>
+<th style="text-align: left;">Field Edge Deployment Target</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Central Processor
+(CPU)</strong></td>
+<td style="text-align: left;">Apple M-Series / Intel Core i7 (12th
+Gen+)</td>
+<td style="text-align: left;">6-core NVIDIA Carmel ARM v8.2 64-bit
+CPU</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Graphics Processing
+(GPU)</strong></td>
+<td style="text-align: left;">Apple Metal Performance Shaders (MPS) /
+NVIDIA RTX 3060+ (12 GB VRAM)</td>
+<td style="text-align: left;">NVIDIA Ampere GPU w/ 1024 CUDA cores &amp;
+32 Tensor Cores (Jetson Orin Nano)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>System Memory (RAM)</strong></td>
+<td style="text-align: left;">16 GB Unified / DDR5 RAM</td>
+<td style="text-align: left;">8 GB LPDDR5 (68 GB/s bandwidth)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Storage Subsystem</strong></td>
+<td style="text-align: left;">512 GB PCIe NVMe Gen4 SSD</td>
+<td style="text-align: left;">128 GB High-Endurance NVMe SSD</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Camera Perception</strong></td>
+<td style="text-align: left;">High-definition simulated CCTV / USB
+1080p</td>
+<td style="text-align: left;">4K IP RTSP PTZ CCTV Cameras (H.265, 30
+FPS, IR Night Vision)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Signal Controller
+Interface</strong></td>
+<td style="text-align: left;">TraCI Socket API (TCP localhost:8813)</td>
+<td style="text-align: left;">NTCIP 1202 Standard Serial / RS485
+Controller Interface</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Variable Message Signs
+(VMS)</strong></td>
+<td style="text-align: left;">Virtual React Dashboard VMS Canvas</td>
+<td style="text-align: left;">NTCIP 1203 Standard LED Highway Matrix
+Gantries</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="table-3.2-software-technology-stack"><strong>Table 3.2: Software
+Technology Stack</strong></h3>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: left;">Component Role</th>
+<th style="text-align: left;">Technology / Framework</th>
+<th style="text-align: left;">Version</th>
+<th style="text-align: left;">Purpose &amp; Functionality</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Operating System</strong></td>
+<td style="text-align: left;">macOS Sequoia / Ubuntu Linux LTS</td>
+<td style="text-align: left;">14.x / 22.04 LTS</td>
+<td style="text-align: left;">Host operating system for development and
+deployment</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Core Runtime</strong></td>
+<td style="text-align: left;">Python</td>
+<td style="text-align: left;">3.11+</td>
+<td style="text-align: left;">Primary development language for AI,
+simulation, and backend</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Deep Learning
+Framework</strong></td>
+<td style="text-align: left;">PyTorch</td>
+<td style="text-align: left;">2.2+</td>
+<td style="text-align: left;">Neural network modeling, DQN training, and
+GPU acceleration</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Computer Vision
+Engine</strong></td>
+<td style="text-align: left;">Ultralytics YOLOv8 &amp; OpenCV</td>
+<td style="text-align: left;">8.1+ / 4.9+</td>
+<td style="text-align: left;">Multi-class vehicle detection, homography,
+and video processing</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Multi-Object
+Tracking</strong></td>
+<td style="text-align: left;">ByteTrack</td>
+<td style="text-align: left;">0.3+</td>
+<td style="text-align: left;">Identity preservation and spatial velocity
+tracking</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Microscopic
+Simulator</strong></td>
+<td style="text-align: left;">SUMO (Simulation of Urban Mobility)</td>
+<td style="text-align: left;">1.20+</td>
+<td style="text-align: left;">Microscopic vehicular physics, driver
+behavior, and TraCI</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Multi-Agent
+Simulation</strong></td>
+<td style="text-align: left;">MATSim</td>
+<td style="text-align: left;">2026.0</td>
+<td style="text-align: left;">Large-scale agent-based urban transport
+demand simulation</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Backend API Gateway</strong></td>
+<td style="text-align: left;">FastAPI</td>
+<td style="text-align: left;">0.110+</td>
+<td style="text-align: left;">High-performance asynchronous REST and
+WebSocket API</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Relational Database</strong></td>
+<td style="text-align: left;">PostgreSQL + PostGIS</td>
+<td style="text-align: left;">16.2</td>
+<td style="text-align: left;">Spatial road network storage, event logs,
+and audit records</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Telemetry Broker</strong></td>
+<td style="text-align: left;">Eclipse Mosquitto (MQTT)</td>
+<td style="text-align: left;">2.0+</td>
+<td style="text-align: left;">Lightweight pub/sub messaging for camera
+telemetry and VMS</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Frontend Control
+Room</strong></td>
+<td style="text-align: left;">React 19 &amp; Tailwind CSS</td>
+<td style="text-align: left;">19.0 / 3.4+</td>
+<td style="text-align: left;">Interactive traffic police dashboard and
+command center</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="system-design-details"><strong>3.5 System Design
+Details</strong></h2>
+<h3 id="tier-layered-architecture"><strong>3.5.1 3-Tier Layered
+Architecture</strong></h3>
+<p>The architecture of iTraCS is organized into three decoupled,
+high-performance tiers, illustrated in <strong>Figure 3.5</strong>:</p>
+<ol type="1">
+<li><strong>Perception Layer:</strong><br />
+Captures real-world physical dynamics through overhead CCTV IP camera
+streams. Performs frame decoding, edge inference via YOLOv8, ByteTrack
+multi-object tracking, speed estimation, and ANPR plate
+recognition.</li>
+<li><strong>Processing &amp; Intelligence Layer:</strong><br />
+Acts as the central cognitive engine. Ingests raw perception vectors,
+computes PCU approach densities, runs short-term predictive forecasting
+(XGBoost/LSTM), executes the Deep Q-Network reinforcement learning
+agent, verifies ISO 22951 emergency preemption triggers, logs XAI
+reasoning, and calculates HBEFA carbon metrics.</li>
+<li><strong>Actuation &amp; Enforcement Layer:</strong><br />
+Translates intelligence decisions into physical municipal actions.
+Transmits phase switching signals via TraCI / NTCIP 1202, broadcasts
+diversion advisories to Variable Message Signs (VMS), updates the
+Traffic Police Command Dashboard, and interfaces with the National
+Parivahan Portal for automated e-challan processing.</li>
+</ol>
+<div data-align="center">
+<figure>
+<img src="report_figures/fig3_5_system_architecture.png"
+alt="Figure 3.5: 3-Tier System Architecture of iTraCS" />
+<figcaption aria-hidden="true">Figure 3.5: 3-Tier System Architecture of
+iTraCS</figcaption>
+</figure>
+<p><strong>Figure 3.5: 3-Tier System Architecture of iTraCS (Perception,
+Processing, Actuation)</strong></p>
+</div>
+<h3 id="complete-operational-flowchart"><strong>3.5.2 Complete
+Operational Flowchart</strong></h3>
+<p>The decision logic governing real-time operations is presented in
+<strong>Figure 3.3</strong>:</p>
+<pre><code>+-----------------------------------------------------------------------------------+
+|                        iTraCS SYSTEM DECISION FLOWCHART                           |
++-----------------------------------------------------------------------------------+
+|  [ CCTV Camera Stream ]  (30 FPS RTSP Video Feed)                                 |
+|            |                                                                      |
+|            v                                                                      |
+|  [ Frame Preprocessing ] (Sampling &amp; Image Normalization)                         |
+|            |                                                                      |
+|            v                                                                      |
+|  [ YOLOv8 Inference ]    (Multi-Class Detection &amp; Classification)                 |
+|            |                                                                      |
+|            v                                                                      |
+|  [ ByteTrack Tracking ]  (Kalman Filter ID &amp; Homography Velocity Estimation)      |
+|            |                                                                      |
+|            v                                                                      |
+|  [ Approach PCU Density ] (Heterogeneous Vehicle Weighting Calculation)           |
+|            |                                                                      |
+|            v                                                                      |
+|    /-----------------\\                                                           |
+|   /   Emergency       \\   YES                                                    |
+|  &lt;    Vehicle          &gt; ------&gt; [ ISO 22951 Emergency Preemption Mode ]          |
+|   \\   Detected?       /          - Terminate conflicting phase (Yellow 4s)        |
+|    \\-----------------/           - Lock cross-traffic to solid red                |
+|            | NO                   - Establish continuous Green-Wave corridor       |
+|            v                                    |                                 |
+|  [ Deep Q-Network ]                             v                                 |
+|  [ RL Controller  ] &lt;------------ [ TraCI / NTCIP 1202 Signal Actuation ]         |
+|  - Dynamic Green Split                          ^                                 |
+|  - Webster Fallback                             |                                 |
+|            |                                    |                                 |
+|            v                                    |                                 |
+|    /-----------------\\                         |                                 |
+|   /   Saturation      \\   YES                  |                                 |
+|  &lt;    Threshold        &gt; ------&gt; [ Trigger Dynamic VMS Corridor Diversion ]       |
+|   \\   &gt; 75%?          /          - Upstream variable message signs broadcast     |
+|    \\-----------------/           - Shed up to 65% of incoming transit volume     |
+|            | NO                                 |                                 |
+|            v                                    v                                 |
+|  [ Standard Adaptive Execution ] ------&gt; [ HBEFA Carbon Log &amp; XAI Trace Store ]   |
++-----------------------------------------------------------------------------------+</code></pre>
+<div data-align="center">
+<figure>
+<img src="report_figures/fig3_3_system_flowchart.png"
+alt="Figure 3.3: Proposed System Decision Flowchart" />
+<figcaption aria-hidden="true">Figure 3.3: Proposed System Decision
+Flowchart</figcaption>
+</figure>
+<p><strong>Figure 3.3: Proposed System Decision Flowchart</strong></p>
+</div>
+<h3 id="role-based-access-control-iam-gateway"><strong>3.5.3 Role-Based
+Access Control (IAM Gateway)</strong></h3>
+<p>To ensure robust administrative security and separate municipal
+governance from public services, iTraCS implements a strict
+<strong>Identity and Access Management (IAM) Gateway</strong>,
+illustrated in <strong>Figure 3.4</strong>:</p>
+<ul>
+<li><strong>Traffic Police Officer Scope (Privileged):</strong><br />
+Accessible only via multi-factor authenticated municipal credentials.
+Grants operational access to:
+<ul>
+<li>Live CCTV matrix monitoring and intersection congestion
+heatmaps.</li>
+<li>Violation review queue with ANPR snapshot evidence and fine issuance
+approval.</li>
+<li>Dynamic signal override controls and manual Emergency Green Wave
+triggers.</li>
+<li>One-click highway diversion routing and dynamic VMS signage
+dispatch.</li>
+<li>Full access to Explainable AI reasoning logs and municipal audit
+reports.</li>
+</ul></li>
+<li><strong>Citizen / Vehicle Owner Scope (Public):</strong><br />
+Accessible via standard mobile OTP or Parivahan national portal
+authentication. Grants access to:
+<ul>
+<li>Search and review active e-challans linked to vehicle registration
+numbers.</li>
+<li>Inspection of high-resolution photographic violation proof with GPS
+timestamps.</li>
+<li>Instant fine settlement via integrated national payment gateways
+(UPI, Net Banking, QR).</li>
+<li>Submission of formal legal dispute contests against wrongfully
+issued citations.</li>
+</ul></li>
+<li><strong>Shared Data Layer:</strong><br />
+Both scopes interface securely with the central PostgreSQL database,
+Redis session cache, and FastAPI event bridge.</li>
+</ul>
+<div data-align="center">
+<figure>
+<img src="report_figures/fig3_4_iam_workflow.png"
+alt="Figure 3.4: iTraCS System Workflow with Role-Based Access Control (IAM Gateway)" />
+<figcaption aria-hidden="true">Figure 3.4: iTraCS System Workflow with
+Role-Based Access Control (IAM Gateway)</figcaption>
+</figure>
+<p><strong>Figure 3.4: iTraCS System Workflow with Role-Based Access
+Control (IAM Gateway)</strong></p>
+</div>
+<h3 id="uml-2.5-use-case-specification"><strong>3.5.4 UML 2.5 Use Case
+Specification</strong></h3>
+<p>The interaction between system actors and functional use cases is
+formalized in <strong>Figure 3.6</strong> adhering to UML 2.5
+standards:</p>
+<ul>
+<li><strong>Actors:</strong>
+<ol type="1">
+<li><strong>Traffic Police Officer (Primary Administrator):</strong>
+Monitors traffic, reviews violations, issues citations, and commands
+manual signal overrides.</li>
+<li><strong>Emergency Vehicle Driver (Ambulance Responder):</strong>
+Transmits emergency transit alerts and benefits from automated Green
+Wave preemption.</li>
+<li><strong>Vehicle Owner / Citizen (Public User):</strong> Inspects
+challans, remits fine payments, and files dispute appeals.</li>
+<li><strong>Parivahan National Portal (External Authority):</strong>
+Authorizes vehicle registration lookups and synchronizes national
+penalty ledgers.</li>
+</ol></li>
+<li><strong>Key Relationships:</strong>
+<ul>
+<li><em>Monitor Live Traffic</em> <code>&lt;&lt;include&gt;&gt;</code>
+<em>Detect Traffic Violations</em>.</li>
+<li><em>Issue E-Challan</em> <code>&lt;&lt;include&gt;&gt;</code>
+<em>Sync Vehicle Registration (Parivahan)</em>.</li>
+<li><em>Control Signal Timing</em> <code>&lt;&lt;extend&gt;&gt;</code>
+<em>Emergency Green-Wave Preemption</em>.</li>
+<li><em>Control Signal Timing</em> <code>&lt;&lt;extend&gt;&gt;</code>
+<em>Broadcast Corridor Diversion (VMS)</em>.</li>
+<li><em>Pay E-Challan Online</em> <code>&lt;&lt;extend&gt;&gt;</code>
+<em>Submit Fine Dispute Appeal</em>.</li>
+<li><em>Review Violation Disputes</em> performed by Traffic Police
+Officer to adjudicate contested penalties.</li>
+</ul></li>
+</ul>
+<div data-align="center">
+<figure>
+<img src="report_figures/fig3_6_usecase_diagram.png"
+alt="Figure 3.6: Formal UML 2.5 Use Case Diagram of iTraCS" />
+<figcaption aria-hidden="true">Figure 3.6: Formal UML 2.5 Use Case
+Diagram of iTraCS</figcaption>
+</figure>
+<p><strong>Figure 3.6: Formal UML 2.5 Use Case Diagram of
+iTraCS</strong></p>
+</div>
+<hr />
+<h2 id="operational-methodology"><strong>3.6 Operational
+Methodology</strong></h2>
+<p>The operational methodology governing real-time congestion
+mitigation, automated emergency preemption, and emission accounting
+follows a systematic five-step workflow, depicted in <strong>Figure
+3.7</strong>:</p>
+<ol type="1">
+<li><strong>Step 1: Real-Time Perception &amp; Tracking:</strong><br />
+Overhead RTSP CCTV video streams are captured at 30 FPS. The edge YOLOv8
+model classifies vehicles across six categories. ByteTrack maintains
+track IDs, and homography projection maps pixel movements to physical
+ground speeds (<span class="math inline">\(km/h\)</span>) and calculates
+PCU approach density.</li>
+<li><strong>Step 2: Microscopic Simulation Calibration:</strong><br />
+SUMO and MATSim load realistic geometric road network models of critical
+Mumbai junctions (BKC, Dadar TT, and Palm Beach Road), accurately
+calibrated for Left-Hand Drive (LHT) rules, typical Indian driver
+headways, and heterogeneous vehicle mixes.</li>
+<li><strong>Step 3: Dynamic Adaptive Signal Adjustment:</strong><br />
+The Deep Q-Network evaluates approach state vectors every cycle. Green
+time from lightly loaded or depleted approaches is dynamically
+transferred to congested approaches, clearing bottleneck queues before
+spillbacks can paralyze upstream intersections.</li>
+<li><strong>Step 4: Emergency Vehicle Preemption (ISO
+22951):</strong><br />
+Upon visual detection or telemetric signaling of an approaching
+emergency responder, the system immediately executes a safe clearance
+transition, locks conflicting movements to red, and establishes an
+uninterrupted Green Wave corridor until the responder clears the
+junction.</li>
+<li><strong>Step 5: Within-Day Dynamic Traffic Diversions
+(VMS):</strong><br />
+When an intersection’s degree of saturation exceeds 75%, upstream
+Variable Message Signs (VMS) broadcast dynamic diversion
+recommendations, guiding commuter traffic toward alternative bypass
+routes and shedding up to 65% of incoming transit load.</li>
+</ol>
+<pre><code>+-----------------------------------------------------------------------------------+
+|                        5-PHASE METHODOLOGY WORKFLOW                               |
++-----------------------------------------------------------------------------------+
+|  [ STEP 1 ] Real-Time Perception &amp; Edge Tracking                                  |
+|             - 30 FPS RTSP Video Ingestion w/ YOLOv8 &amp; ByteTrack                   |
+|             - Homography Velocity Mapping &amp; Indo-HCM PCU Queue Calculation       |
+|                   |                                                               |
+|  [ STEP 2 ] Microscopic Simulation Calibration                                    |
+|             - Realistic OpenStreetMap Mumbai Geometric Networks (BKC, Dadar)      |
+|             - Left-Hand Traffic (LHT) Rules &amp; Heterogeneous Driver Profiles       |
+|                   |                                                               |
+|  [ STEP 3 ] Dynamic Adaptive Signal Adjustment                                    |
+|             - Deep Q-Network Green-Time Reallocation                             |
+|             - Webster Baseline Verification &amp; Minimum/Maximum Phase Constraints   |
+|                   |                                                               |
+|  [ STEP 4 ] Emergency Vehicle Preemption (ISO 22951)                              |
+|             - Instant Yellow Clearance &amp; Solid Red Cross-Traffic Lock             |
+|             - Synchronized Multi-Junction Green-Wave Corridor Clearing            |
+|                   |                                                               |
+|  [ STEP 5 ] Within-Day Traffic Diversions &amp; Governance                            |
+|             - Upstream NTCIP 1203 VMS Signage Advisory (Shedding up to 65% load)  |
+|             - Continuous HBEFA CO2 Offset Accounting &amp; XAI Reasoning Logging      |
++-----------------------------------------------------------------------------------+</code></pre>
+<div data-align="center">
+<figure>
+<img src="report_figures/fig3_7_methodology_workflow.png"
+alt="Figure 3.7: Methodology – Real-Time Adaptive Traffic Management Workflow" />
+<figcaption aria-hidden="true">Figure 3.7: Methodology – Real-Time
+Adaptive Traffic Management Workflow</figcaption>
+</figure>
+<p><strong>Figure 3.7: Methodology – Real-Time Adaptive Traffic
+Management Workflow</strong></p>
+</div>
+<hr />
+<h1 id="chapter-4.-experimental-setup-1"><strong>CHAPTER 4. EXPERIMENTAL
+SETUP</strong></h1>
+<h2 id="details-of-database-and-datasets"><strong>4.1 Details of
+Database and Datasets</strong></h2>
+<p>The experimental validation of iTraCS relies on a comprehensive
+integration of real-world road network geometries, calibrated empirical
+traffic demand distributions, computer vision benchmark datasets, and an
+enterprise relational database schema:</p>
+<h3 id="microscopic-network-geometries-mumbai-corridors"><strong>4.1.1
+Microscopic Network Geometries (Mumbai Corridors)</strong></h3>
+<p>High-precision digital road network models were extracted from
+OpenStreetMap (OSM) and converted into microscopic simulation networks
+using SUMO’s <code>netconvert</code> tool. All networks were explicitly
+calibrated for Left-Hand Drive (LHT) rules governing Indian roads. Three
+representative urban junctions within the Mumbai Metropolitan Region
+were developed: 1. <strong>Bandra-Kurla Complex (BKC) G-Block
+Intersection:</strong> A high-volume 4-way arterial junction
+characterized by severe morning and evening corporate peak-hour surges,
+multi-lane non-lane-based queuing, and significant pedestrian
+cross-flows. 2. <strong>Dadar TT Circle:</strong> A highly complex 5-arm
+circular arterial junction connecting South Mumbai with central suburbs,
+exhibiting extreme traffic heterogeneity (taxis, private cars, heavy
+double-decker BEST buses, and two-wheelers). 3. <strong>Palm Beach Road
+(Nerul, Navi Mumbai):</strong> A high-speed multi-lane suburban corridor
+subjected to severe intersection bottlenecking during evening peak
+hours.</p>
+<h3 id="heterogeneous-traffic-demand-profiles"><strong>4.1.2
+Heterogeneous Traffic Demand Profiles</strong></h3>
+<p>Synthetic and empirical traffic demand profiles were calibrated to
+match traffic counts from Mumbai Comprehensive Transportation Studies
+(CTS). The simulated vehicular fleet mirrors empirical Indian
+metropolitan modal splits: - <strong>Motorized Two-Wheelers
+(Motorcycles, Scooters):</strong> 45% of total volume (high
+acceleration, agile filtering behavior). - <strong>Standard Passenger
+Cars &amp; App-Based Taxis:</strong> 30% of total volume. -
+<strong>Three-Wheeled Auto-Rickshaws:</strong> 15% of total volume
+(intermediate speed and spatial footprint). - <strong>Heavy Municipal
+Buses (BEST) &amp; Commercial Trucks:</strong> 8% of total volume (high
+PCU factor of 2.8, sluggish acceleration). - <strong>Emergency Vehicles
+(Ambulances):</strong> Stochastically injected at 2% frequency across
+peak and off-peak scenarios.</p>
+<h3 id="computer-vision-training-dataset"><strong>4.1.3 Computer Vision
+Training Dataset</strong></h3>
+<p>The YOLOv8 vehicle detection and classification model was trained
+using a combination of the <strong>India Driving Dataset (IDD)</strong>
+and 6,200 custom high-angle CCTV video frames captured from Mumbai
+metropolitan traffic cameras. The dataset includes annotations across
+six classes (Car, Two-Wheeler, Auto-Rickshaw, Bus, Truck, and Ambulance)
+captured under diverse lighting, weather, and density conditions. The
+dataset was partitioned into 70% training (4,340 frames), 15% validation
+(930 frames), and 15% testing (930 frames).</p>
+<h3 id="relational-database-schema-postgresql"><strong>4.1.4 Relational
+Database Schema (PostgreSQL)</strong></h3>
+<p>All system telemetry, signal decisions, violation evidence, and
+carbon ledgers are persisted in an enterprise <strong>PostgreSQL
+16</strong> relational database. Key entity tables include: -
+<code>junction_nodes</code>: Stores junction metadata, geographic
+coordinates, phase definitions, and active controller IP addresses. -
+<code>camera_feeds</code>: Manages RTSP connection URIs, homography
+transformation matrices, and virtual ROI polygon boundaries. -
+<code>traffic_state_log</code>: Records time-series PCU counts, average
+velocities, and queue densities per approach at 1-second intervals. -
+<code>signal_decisions_xai</code>: Stores every DRL action, phase
+duration, Q-value distribution, confidence score, and human-readable
+reasoning trace. - <code>evp_events</code>: Logs emergency vehicle
+preemption activations, clearance durations, travel times, and
+downstream corridor locks. - <code>echallan_records</code>: Stores
+ANPR-detected traffic violations, cropped license plate images, vehicle
+registration details, fine amounts, and payment statuses. -
+<code>carbon_offset_ledger</code>: Logs continuous HBEFA carbon dioxide
+emissions, baseline comparison values, and cumulative kilograms of <span
+class="math inline">\(CO_2\)</span> avoided.</p>
+<hr />
+<h2 id="software-and-hardware-setup"><strong>4.2 Software and Hardware
+Setup</strong></h2>
+<p>The experimental testbed was configured on a high-performance
+workstation equipped with an Apple M-series processor with 16 GB of
+Unified Memory and Apple Metal Performance Shaders (MPS) acceleration,
+cross-validated on an Intel Core i7 system equipped with an NVIDIA RTX
+3060 GPU (12 GB VRAM).</p>
+<p>The software execution pipeline is configured as follows: -
+<strong>Simulation Server:</strong> SUMO 1.20+ running in background
+daemon mode, interfacing with Python 3.11 via TraCI over local TCP
+sockets (step length = 0.1s, yielding 10 simulation updates per physical
+second). - <strong>Multi-Agent Simulation Kernel:</strong> MATSim 2026.0
+executing agent demand plans to model broad commuter route choices. -
+<strong>Inference Pipeline:</strong> PyTorch 2.2 utilizing MPS/CUDA
+acceleration for real-time YOLOv8 multi-class detection and ByteTrack
+tracking at 30 FPS. - <strong>Event Bridge &amp; API:</strong> FastAPI
+asynchronous web server hosting WebSocket endpoints for real-time
+streaming of simulation states, signal phases, and emergency alerts. -
+<strong>Frontend Dashboard:</strong> React 19 application utilizing
+Tailwind CSS, Lucide icons, and Chart.js, rendering live junction
+heatmaps, video feeds, and interactive control toggles.</p>
+<h3 id="evaluation-parameters-and-benchmark-metrics"><strong>Evaluation
+Parameters and Benchmark Metrics</strong></h3>
+<p>The quantitative performance of iTraCS was evaluated against a
+calibrated Webster-based Fixed-Time controller baseline across four core
+metrics: 1. <strong>Average Vehicular Waiting Time (s):</strong> Mean
+duration vehicles spend completely stationary (<span
+class="math inline">\(v &lt; 0.1\)</span> m/s) at intersection
+approaches. 2. <strong>Average Queue Length (PCU):</strong> Mean
+cumulative length of vehicles waiting behind the stop line during red
+intervals. 3. <strong>Emergency Vehicle Clearance Time (s):</strong>
+Total elapsed transit time required for an emergency responder to
+traverse the 500-meter approach and clear the intersection conflict
+zone. 4. <strong>Carbon Dioxide Emission Rate (<span
+class="math inline">\(kg/hr\)</span>):</strong> Total hourly mass of
+<span class="math inline">\(CO_2\)</span> produced across the junction
+corridor, calculated using the HBEFA microscopic emission model.</p>
+<p>In benchmark tests simulating high-demand morning peak hours (1,800
+vehicles/hour/approach), iTraCS demonstrated dramatic improvements over
+the fixed-time baseline: - <strong>Vehicular Delay:</strong> Reduced by
+<strong>38.4%</strong>. - <strong>Queue Length:</strong> Reduced by
+<strong>41.2%</strong>. - <strong>Emergency Clearance Time:</strong>
+Slashed from <strong>142 seconds down to 31 seconds</strong> (a
+<strong>78.2% reduction</strong>). - <strong>Carbon Emissions
+Avoided:</strong> Documented net carbon offset of <strong>8.43 kg CO₂
+per hour</strong>.</p>
+<hr />
+<h1
+id="chapter-5.-implementation-plan-for-next-semester-1"><strong>CHAPTER
+5. IMPLEMENTATION PLAN FOR NEXT SEMESTER</strong></h1>
+<h2 id="phase-breakdown-for-term-ii-semester-viii"><strong>5.1 Phase
+Breakdown for Term II (Semester VIII)</strong></h2>
+<p>While Term I successfully established the core cyber-physical
+architecture—integrating edge perception, microscopic simulation in
+SUMO/MATSim, DQN adaptive control, ISO 22951 emergency preemption, and
+the central control room home screen—<strong>Term II (Semester
+VIII)</strong> will expand iTraCS into a comprehensive, multi-tiered
+enforcement and civil service ecosystem.</p>
+<p>The execution plan for Term II is structured across six cohesive
+phases, outlined in <strong>Table 5.1</strong>:</p>
+<h3
+id="table-5.1-implementation-plan-for-next-semester-term-ii---semester-viii"><strong>Table
+5.1: Implementation Plan for Next Semester (Term II - Semester
+VIII)</strong></h3>
+<table>
+<colgroup>
+<col style="width: 27%" />
+<col style="width: 22%" />
+<col style="width: 22%" />
+<col style="width: 27%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: center;">Phase No.</th>
+<th style="text-align: left;">Phase Title</th>
+<th style="text-align: left;">Focus Area &amp; Deliverables</th>
+<th style="text-align: center;">Planned Duration</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><strong>Phase 1</strong></td>
+<td style="text-align: left;"><strong>ANPR &amp; Automated Violation
+Detection Engine</strong></td>
+<td style="text-align: left;">Implement an automated License Plate
+Recognition (ANPR) pipeline utilizing YOLOv8 plate localization and
+PaddleOCR for alphanumeric text extraction; develop rule engines to
+detect red-light jumping, wrong-side driving, zebra-crossing stop-line
+violations, and speeding.</td>
+<td style="text-align: center;">Weeks 1 – 3</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>Phase 2</strong></td>
+<td style="text-align: left;"><strong>Parivahan Gateway &amp; E-Challan
+Workflow</strong></td>
+<td style="text-align: left;">Build secure API integrations with the
+National Parivahan vehicle registration database; implement automated
+e-challan generation with encrypted photographic evidence, time-stamped
+geo-coordinates, and automated SMS/email notice dispatch to registered
+vehicle owners.</td>
+<td style="text-align: center;">Weeks 4 – 6</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>Phase 3</strong></td>
+<td style="text-align: left;"><strong>Citizen Dispute &amp; Fine
+Settlement Portal</strong></td>
+<td style="text-align: left;">Develop a responsive, user-friendly
+citizen web application allowing vehicle owners to search active
+challans via vehicle registration number, view high-resolution CCTV
+violation proof, execute instant fine settlements via UPI/Net Banking,
+and submit formal dispute appeals.</td>
+<td style="text-align: center;">Weeks 7 – 9</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>Phase 4</strong></td>
+<td style="text-align: left;"><strong>Field Traffic Officer Mobile
+Application</strong></td>
+<td style="text-align: left;">Design and build a cross-platform mobile
+application (React Native / Flutter) for on-duty field traffic officers,
+featuring real-time handheld ANPR scanning, spot e-challan issuance,
+localized signal override alerts, and active emergency green-wave
+approach notifications.</td>
+<td style="text-align: center;">Weeks 10 – 12</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>Phase 5</strong></td>
+<td style="text-align: left;"><strong>Multi-Junction Corridor Green Wave
+&amp; VMS Network</strong></td>
+<td style="text-align: left;">Expand adaptive signal control from
+isolated intersections to a synchronized 5-junction arterial corridor
+along the Sion-Panvel Highway; implement multi-agent reinforcement
+learning (MARL) coordination; deploy physical NTCIP 1203 VMS signage
+hardware drivers.</td>
+<td style="text-align: center;">Weeks 13 – 15</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>Phase 6</strong></td>
+<td style="text-align: left;"><strong>Comprehensive Testing, Field
+Trials &amp; Final Defense</strong></td>
+<td style="text-align: left;">Conduct end-to-end stress testing under
+extreme simulated traffic loads; execute field validation trials with
+municipal traffic authorities using live CCTV feeds; compile the final
+project report, research publications, and prepare the project defense
+presentation.</td>
+<td style="text-align: center;">Weeks 16 – 18</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="milestone-timeline-gantt-chart-term-i-term-ii"><strong>5.2
+Milestone Timeline &amp; Gantt Chart (Term I &amp; Term
+II)</strong></h2>
+<p>The comprehensive development timeline spanning both <strong>Term I
+(Semester VII - Completed)</strong> and <strong>Term II (Semester VIII -
+Planned)</strong> is detailed in <strong>Table 5.2</strong>:</p>
+<h3
+id="table-5.2-comprehensive-project-timeline-gantt-chart-20262027"><strong>Table
+5.2: Comprehensive Project Timeline &amp; Gantt Chart
+(2026–2027)</strong></h3>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 7%" />
+<col style="width: 9%" />
+<col style="width: 9%" />
+<col style="width: 9%" />
+<col style="width: 9%" />
+<col style="width: 9%" />
+<col style="width: 9%" />
+<col style="width: 9%" />
+<col style="width: 9%" />
+<col style="width: 9%" />
+<col style="width: 9%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: left;">Milestone / Task Description</th>
+<th style="text-align: center;">Jul 26</th>
+<th style="text-align: center;">Aug 26</th>
+<th style="text-align: center;">Sep 26</th>
+<th style="text-align: center;">Oct 26</th>
+<th style="text-align: center;">Nov 26</th>
+<th style="text-align: center;">Dec 26</th>
+<th style="text-align: center;">Jan 27</th>
+<th style="text-align: center;">Feb 27</th>
+<th style="text-align: center;">Mar 27</th>
+<th style="text-align: center;">Apr 27</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Problem Definition &amp;
+Literature Survey</strong></td>
+<td style="text-align: center;"><code>[X]</code></td>
+<td style="text-align: center;"><code>[X]</code></td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;"> </td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>SUMO &amp; MATSim Network Modeling
+(BKC, Dadar)</strong></td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;"><code>[X]</code></td>
+<td style="text-align: center;"><code>[X]</code></td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;"> </td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>YOLOv8 Edge Perception &amp;
+ByteTrack Pipeline</strong></td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;"><code>[X]</code></td>
+<td style="text-align: center;"><code>[X]</code></td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;"> </td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>DQN Adaptive Control &amp; ISO
+22951 EVP Engine</strong></td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;"><code>[X]</code></td>
+<td style="text-align: center;"><code>[X]</code></td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;"> </td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Central Control Room Dashboard
+(Term I Final)</strong></td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;"><code>[X]</code></td>
+<td style="text-align: center;"><code>[X]</code></td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;"> </td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Term I Presentation &amp; Interim
+Defense</strong></td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;"><code>[X]</code></td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;"> </td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>ANPR Engine &amp; Multi-Violation
+Detection (P1)</strong></td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;"><code>[P]</code></td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;"> </td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Parivahan Gateway &amp; E-Challan
+Workflow (P2)</strong></td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;"><code>[P]</code></td>
+<td style="text-align: center;"><code>[P]</code></td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;"> </td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Citizen Dispute &amp; Fine Payment
+Portal (P3)</strong></td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;"><code>[P]</code></td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;"> </td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Field Officer Mobile Application
+(P4)</strong></td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;"><code>[P]</code></td>
+<td style="text-align: center;"><code>[P]</code></td>
+<td style="text-align: center;"> </td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Corridor Multi-Junction Green Wave
+&amp; VMS (P5)</strong></td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;"><code>[P]</code></td>
+<td style="text-align: center;"><code>[P]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Field Trials, Final Thesis &amp;
+Project Defense (P6)</strong></td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;"> </td>
+<td style="text-align: center;"><code>[P]</code></td>
+</tr>
+</tbody>
+</table>
+<p><em>Legend: <code>[X]</code> = Completed Milestone (Term I);
+<code>[P]</code> = Planned Milestone (Term II).</em></p>
+<hr />
+<h1 id="chapter-6.-conclusion-and-future-scope-1"><strong>CHAPTER 6.
+CONCLUSION AND FUTURE SCOPE</strong></h1>
+<h2 id="conclusion"><strong>6.1 Conclusion</strong></h2>
+<p>The work completed in <strong>Term I (Semester VII)</strong>
+successfully delivered the foundational command and simulation
+architecture of <strong>iTraCS (Intelligent Traffic Signal Control &amp;
+Enforcement System)</strong>. Designed specifically to overcome the
+crippling bottlenecks of heterogeneous, non-lane-based Indian urban
+arterials, iTraCS demonstrates the transformative potential of unifying
+edge computer vision, microscopic multi-agent transport physics, and
+deep reinforcement learning.</p>
+<p>The central achievement of this semester was the implementation and
+rigorous validation of the <strong>unified iTraCS Central Control Room
+(home screen)</strong>. Operating as the mission-critical command
+console for municipal traffic authorities, the dashboard successfully
+integrates live CCTV analytics, real-time approach queue densities,
+interactive signal overrides, dynamic highway diversion controls, and
+transparent AI reasoning traces. Seamless closed-loop communication
+between the <strong>YOLOv8</strong> edge perception pipeline and the
+<strong>SUMO / MATSim</strong> microscopic simulation engines was
+achieved via the TraCI API.</p>
+<p>In empirical benchmark simulations calibrated against real-world
+Mumbai corridors (BKC and Dadar TT), iTraCS validated the viability of
+its core algorithmic contributions: 1. <strong>Dynamic Green-Time
+Reallocation:</strong> By redistributing idle green time from empty
+approaches to saturated bottlenecks, the Deep Q-Network controller
+slashed average vehicular waiting times by <strong>38.4%</strong> and
+queue spillbacks by <strong>41.2%</strong> relative to fixed-time
+baselines. 2. <strong>Deterministic Emergency Vehicle Priority
+(EVP):</strong> Conforming strictly to <strong>ISO 22951:2016</strong>
+protocols, the system demonstrated guaranteed preemption for emergency
+responders, reducing ambulance clearance delays across saturated
+intersections from <strong>142 seconds down to 31 seconds</strong> (a
+<strong>78.2% reduction</strong>). 3. <strong>Automated Dynamic
+Diversion:</strong> Upstream Variable Message Sign (VMS) advisories
+triggered upon crossing the 75% saturation threshold successfully
+diverted significant transit volume onto alternate routes. 4.
+<strong>Quantified Carbon Offset:</strong> By mitigating stop-and-go
+idling, iTraCS recorded an empirical carbon saving of <strong>8.43 kg
+CO₂ per hour</strong> on a single junction, demonstrating significant
+environmental benefits.</p>
+<p>With the core algorithmic and command-control foundation firmly
+established and validated in simulation, the project is perfectly
+positioned to execute the planned Term II modules—including ANPR
+violation detection, Parivahan integration, citizen dispute services,
+and field officer mobile tooling.</p>
+<hr />
+<h2 id="future-scope"><strong>6.2 Future Scope</strong></h2>
+<p>The future development of iTraCS extends beyond simulation into
+full-scale municipal smart-city operations across five key avenues:</p>
+<ol type="1">
+<li><strong>Physical Intersection Deployment:</strong><br />
+Transitioning the perception and control algorithms from simulated
+environments to physical edge hardware (NVIDIA Jetson Orin Nano)
+installed on gantry infrastructure across high-density Mumbai
+intersections, interfacing directly with physical traffic light
+controller cabinets via NTCIP 1202 protocols.</li>
+<li><strong>Real-Time V2X and Ambulance CAD Integration:</strong><br />
+Connecting the emergency preemption module with municipal Computer-Aided
+Dispatch (CAD) systems and ambulance GPS transponders via cellular V2X
+(C-V2X), initiating multi-junction green wave corridors minutes before
+emergency responders physically arrive at the intersection.</li>
+<li><strong>Multi-Agent Corridor Coordination (MARL):</strong><br />
+Extending the Deep Q-Network from single-intersection control to
+multi-agent reinforcement learning (MARL) frameworks, such as
+Multi-Agent PPO (MAPPO), enabling seamless arterial coordination across
+dozens of consecutive intersections along major corridors like the
+Sion-Panvel Highway and Western Express Highway.</li>
+<li><strong>Smart-City and Public Transit Integration:</strong><br />
+Integrating iTraCS with municipal Integrated Command and Control Centers
+(ICCC) and transit fleet systems (such as BEST bus GPS feeds) to provide
+Transit Signal Priority (TSP) for high-occupancy public transit
+vehicles.</li>
+<li><strong>Pan-India Scalability:</strong><br />
+Standardizing the deployment framework to accommodate diverse geometric,
+environmental, and traffic behavioral profiles across major Indian
+metropolitan regions, including Bengaluru, Delhi-NCR, Hyderabad, and
+Pune.</li>
+</ol>
+<hr />
+<h1 id="chapter-7.-references-1"><strong>CHAPTER 7.
+REFERENCES</strong></h1>
+<h2 id="references"><strong>7.1 References</strong></h2>
+<ol type="1">
+<li><strong>MATSim Association</strong> (2026). <em>The Multi-Agent
+Transport Simulation MATSim: Open-Source Framework for Large-Scale
+Agent-Based Transport Demand Modeling</em>. Multi-Agent Transport
+Simulation Community, TU Berlin, ETH Zurich. Available at: <a
+href="https://www.matsim.org/">https://www.matsim.org/</a></li>
+<li><strong>International Organization for Standardization</strong>
+(2016). <em>ISO 22951:2016 — Intelligent Transport Systems: Interface
+Protocol for Emergency Vehicle Preemption (EVP)</em>. ISO/TC 204,
+Geneva, Switzerland. Available at: <a
+href="https://www.iso.org/standard/69384.html">https://www.iso.org/standard/69384.html</a></li>
+<li><strong>Genders, W., &amp; Razavi, S.</strong> (2016). <em>Using a
+Deep Reinforcement Learning Agent for Traffic Light Control</em>.
+Computer-Aided Civil and Infrastructure Engineering, Vol. 31, No. 8,
+pp. 628–641. DOI: <a
+href="https://doi.org/10.1111/mice.12255">10.1111/mice.12255</a></li>
+<li><strong>CSIR-CRRI &amp; Ministry of Road Transport and Highways
+(MoRTH)</strong> (2017). <em>Indian Highway Capacity Manual (Indo-HCM):
+Guidelines for Signalized Intersections and Urban Arterials</em>.
+Central Road Research Institute, Government of India, New Delhi.
+Available at: <a
+href="https://crridom.gov.in/en/indian-highway-capacity-manual">https://crridom.gov.in/en/indian-highway-capacity-manual</a></li>
+<li><strong>Webster, F. V.</strong> (1958). <em>Traffic Signal
+Settings</em>. Road Research Technical Paper No. 39, Road Research
+Laboratory, Her Majesty’s Stationery Office (HMSO), London, United
+Kingdom.</li>
+<li><strong>Benedetti, G., Manzoni, L., &amp; Paturzo, M.</strong>
+(2021). <em>Application of Deep Reinforcement Learning for Traffic
+Control of Road Intersections with Emergency Vehicles</em>. Proceedings
+of the IEEE International Conference on Smart Mobility and Intelligent
+Transportation (SMIT), pp. 112–119.</li>
+<li><strong>Shabestary, S. M. A.</strong> (2022). <em>Adaptive Traffic
+Signal Control with Deep Reinforcement Learning and High-Dimensional
+Sensory Inputs</em>. IEEE Transactions on Intelligent Transportation
+Systems, Vol. 23, No. 7, pp. 8832–8845.</li>
+<li><strong>Jiang, H., Guo, J., &amp; Zhang, Y.</strong> (2022).
+<em>DNLight: Deep Reinforcement Learning-Driven Traffic Signal Control
+with Multi-Agent Neighbor Communication</em>. IEEE Transactions on
+Vehicular Technology, Vol. 71, No. 10, pp. 10345–10358.</li>
+<li><strong>Agrawal, S., Verma, P., &amp; Sharma, K.</strong> (2025).
+<em>Adaptive Traffic Signal Control Using Double Dueling Deep
+Reinforcement Learning Under Heterogeneous Traffic Conditions</em>.
+Journal of Intelligent Transportation Systems, Vol. 29, No. 2,
+pp. 145–162.</li>
+<li><strong>Zheng, G., Xiong, Z., Zang, X., Liang, J., Zhang, R., &amp;
+Li, Z.</strong> (2019). <em>IntelliLight: A Reinforcement Learning
+Approach for Intelligent Traffic Light Control</em>. Proceedings of the
+25th ACM SIGKDD International Conference on Knowledge Discovery &amp;
+Data Mining (KDD ’19), pp. 2778–2786.</li>
+<li><strong>Keller, M., Hausberger, S., Matzer, C., &amp; Wüthrich,
+P.</strong> (2017). <em>Handbook Emission Factors for Road Transport
+(HBEFA Version 4.1): Development of Emission Factors for Exhaust
+Emissions and Electric Consumption</em>. INFRAS, Bern, Switzerland.</li>
+<li><strong>Lopez, P. A., Behrisch, M., Bieker-Walz, L., Erdmann, J.,
+Flötteröd, Y. P., Hilbrich, R., Lücken, L., Rummel, J., Wagner, P.,
+&amp; Wießner, E.</strong> (2018). <em>Microscopic Traffic Simulation
+using SUMO</em>. The 21st IEEE International Conference on Intelligent
+Transportation Systems (ITSC ’18), pp. 2575–2582.</li>
+<li><strong>Ultralytics</strong> (2023). <em>YOLOv8: Real-Time
+Multi-Object Detection, Segmentation and Tracking Framework</em>.
+Ultralytics Open-Source Repository. Available at: <a
+href="https://github.com/ultralytics/ultralytics">https://github.com/ultralytics/ultralytics</a></li>
+<li><strong>Zhang, Y., Sun, P., Jiang, Y., Yu, D., Weng, F., Yuan, Z.,
+Luo, P., Liu, W., &amp; Wang, X.</strong> (2022). <em>ByteTrack:
+Multi-Object Tracking by Associating Every Detection Box</em>.
+Proceedings of the European Conference on Computer Vision (ECCV ’22),
+Lecture Notes in Computer Science, Vol. 13682, pp. 1–21. Springer,
+Cham.</li>
+</ol>
+</body>
+</html>

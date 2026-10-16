@@ -224,7 +224,7 @@ export const DiversionPanel = () => {
                 </>
               ) : (
                 <>
-                  <Zap className="w-4 h-4 text-slate-950 animate-bounce" />
+                  <Zap className="w-4 h-4 text-slate-950" />
                   <span>Activate 1-Click Diversion Protocol</span>
                 </>
               )}

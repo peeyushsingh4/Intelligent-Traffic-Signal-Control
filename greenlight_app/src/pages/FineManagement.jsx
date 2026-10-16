@@ -6,7 +6,7 @@ import {
 } from 'lucide-react';
 
 export const FineManagement = () => {
-  const { fines, setFines } = useApp();
+  const { fines, setFines, showSuccess, showInfo } = useApp();
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('ALL');
   const [selectedDispute, setSelectedDispute] = useState(null);
@@ -20,6 +20,7 @@ export const FineManagement = () => {
   });
 
   const handleResolveDispute = (fineId, action) => {
+    const target = fines.find(f => f.id === fineId);
     setFines(prev => prev.map(f => {
       if (f.id === fineId) {
         return {
@@ -31,6 +32,35 @@ export const FineManagement = () => {
       return f;
     }));
     setSelectedDispute(null);
+    if (action === 'APPROVE') {
+      showSuccess(`Dispute for ${target?.plateNumber || 'vehicle'} accepted: Fine waived under judicial review.`, 'Dispute Approved');
+    } else {
+      showInfo(`Dispute for ${target?.plateNumber || 'vehicle'} rejected: Payment enforced per MV Act.`, 'Dispute Rejected');
+    }
+  };
+
+  const handleExportCSV = () => {
+    const headers = ['ChallanNo', 'PlateNumber', 'OwnerName', 'Offense', 'Amount', 'Status', 'Date'];
+    const rows = filteredFines.map(f => [
+      f.challanNo,
+      `"${f.plateNumber}"`,
+      `"${f.ownerName}"`,
+      `"${f.offense || f.violationType}"`,
+      f.amount,
+      f.status,
+      f.dueDate || '2026-09-15'
+    ]);
+    const csvContent = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `itracs_rto_echallans_${Date.now()}.csv`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+    showSuccess(`Exported ${filteredFines.length} e-challan records to CSV successfully!`, 'CSV Export Complete');
   };
 
   return (
@@ -47,9 +77,9 @@ export const FineManagement = () => {
               <h2 className="text-xl font-bold text-white font-display">Fine Lifecycle & Dispute Adjudication Workspace</h2>
               <div className="flex items-center space-x-2 mt-0.5">
                 <span className="text-xs text-slate-400">Motor Vehicles (Amendment) Act Compliance Engine</span>
-                <span className="px-2 py-0.5 text-[9px] font-mono bg-amber-500/10 text-amber-400 border border-amber-500/20 rounded-full flex items-center space-x-1">
+                <span className="px-2 py-0.5 text-[9px] font-mono bg-amber-500/10 text-amber-400 border border-amber-500/20 rounded-md flex items-center space-x-1">
                   <Database className="w-3 h-3" />
-                  <span>Synthetic demo records — not connected to a vehicle-owner database</span>
+                  <span>Synthetic demo records : not connected to a vehicle-owner database</span>
                 </span>
               </div>
             </div>
@@ -58,7 +88,10 @@ export const FineManagement = () => {
 
         {/* Export & Actions */}
         <div className="flex items-center space-x-3">
-          <button className="flex items-center space-x-2 px-4 py-2 bg-slate-900 hover:bg-slate-800 text-slate-200 border border-slate-800 rounded-xl text-xs transition font-mono">
+          <button 
+            onClick={handleExportCSV}
+            className="flex items-center space-x-2 px-4 py-2 bg-slate-900 hover:bg-slate-800 text-slate-200 border border-slate-800 rounded-xl text-xs transition font-mono cursor-pointer"
+          >
             <Download className="w-4 h-4 text-emerald-400" />
             <span>Export RTO E-Challan CSV</span>
           </button>
@@ -154,14 +187,14 @@ export const FineManagement = () => {
                   <td className="p-4">
                     <div className="text-slate-300">{fine.offense}</div>
                     {fine.flaggedForSuspension && (
-                      <span className="inline-block mt-1 px-2 py-0.5 text-[9px] bg-red-500/20 text-red-400 border border-red-500/30 rounded-full font-bold">
-                        ⚠ License Suspension Recommended
+                      <span className="inline-block mt-1 px-2 py-0.5 text-[9px] bg-red-500/20 text-red-400 border border-red-500/30 rounded-md font-bold">
+                        License Suspension Recommended
                       </span>
                     )}
                   </td>
                   <td className="p-4 text-right font-bold text-emerald-400 text-sm">₹ {fine.amount}</td>
                   <td className="p-4">
-                    <span className={`px-2.5 py-1 text-[10px] font-bold rounded-full ${
+                    <span className={`px-2.5 py-1 text-[10px] font-bold rounded-md ${
                       fine.status === 'PAID' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' :
                       fine.status === 'DISPUTED' ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30 animate-pulse' :
                       fine.status === 'WAIVED' ? 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/30' :

@@ -1,19 +1,45 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="overflow-x-hidden">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>iTraCS — Intelligent Traffic & Challan System</title>
+    <link rel="alternate icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+    
+    <!-- Primary Page Metadata -->
+    <title>iTraCS : Intelligent Traffic & Challan System</title>
+    <meta name="description" content="iTraCS (Intelligent Traffic & Challan System) : Autonomous multi-agent urban traffic signal optimization, YOLOv8 CCTV violation enforcement, and real-time highway diversion management for Greater Mumbai and Navi Mumbai." />
+    <meta name="keywords" content="traffic control, smart city, YOLOv8, MATSim, e-challan, Mumbai traffic police, ANPR, green wave preemption, emergency vehicle priority, iTraCS" />
+    <meta name="author" content="iTraCS Intelligence Command" />
+    <meta name="theme-color" content="#020617" />
+    <meta name="application-name" content="iTraCS" />
+    <meta name="apple-mobile-web-app-title" content="iTraCS" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+    <!-- Open Graph / Social Sharing -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="iTraCS : Intelligent Traffic & Challan System" />
+    <meta property="og:description" content="Autonomous multi-agent urban traffic signal optimization, YOLOv8 CCTV violation enforcement, and real-time highway diversion management." />
+    <meta property="og:image" content="/itracs_signal_flowchart_white.jpg" />
+    <meta property="og:site_name" content="iTraCS" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="iTraCS : Intelligent Traffic & Challan System" />
+    <meta name="twitter:description" content="AI-powered traffic signal reallocation and Parivahan e-challan enforcement command platform." />
+    <meta name="twitter:image" content="/itracs_signal_flowchart_white.jpg" />
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
   </head>
-  <body class="bg-slate-950 text-slate-100 antialiased selection:bg-emerald-500 selection:text-slate-950">
-    <div id="root"></div>
+  <body class="bg-slate-950 text-slate-100 antialiased selection:bg-emerald-500 selection:text-slate-950 overflow-x-hidden min-w-[320px]">
+    <div id="root" class="overflow-x-hidden"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

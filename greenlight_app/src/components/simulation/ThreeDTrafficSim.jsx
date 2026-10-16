@@ -282,7 +282,7 @@ export const ThreeDTrafficSim = () => {
         {/* Live HUD Overlay */}
         <div className="absolute top-4 left-4 z-20 space-y-2 pointer-events-none font-mono text-xs">
           <div className="bg-slate-950/80 backdrop-blur-md px-3 py-1.5 rounded-xl border border-slate-800 flex items-center space-x-2 text-emerald-400">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+            <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
             <span className="font-bold">BKC Junction (3D WebGL)</span>
           </div>
 
